@@ -1,0 +1,20 @@
+Package: gemini.R
+Title: R package to use Google's gemini via API on R
+Version: 0.1.0
+Authors@R: 
+    person("Jinhwan", "Kim", , "hwanistic@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0009-0009-3217-2417"))
+Maintainer: Jinhwan Kim <hwanistic@gmail.com>
+Description: Use google's large language models with API. This package utilizes
+    some functions of gemini API. For more information, please visit
+    <https://ai.google.dev/docs/gemini_api_overview>
+License: MIT + file LICENSE
+URL: https://github.com/jhk0530/gemini.studio
+BugReports: https://github.com/jhk0530/gemini.studio/issues
+Encoding: UTF-8
+Imports: 
+    httr,
+    jsonlite,
+    base64enc
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
