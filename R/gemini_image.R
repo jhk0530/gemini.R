@@ -15,7 +15,7 @@
 #'
 
 gemini_image <- function(prompt, image) {
-  model_query <- "gemini-pro-vision::generateContent"
+  model_query <- "gemini-pro-vision:generateContent"
 
   response <- POST(
     url = paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query),
