@@ -9,8 +9,8 @@ Description: Use google's large language models with API. This package utilizes
     some functions of gemini API. For more information, please visit
     <https://ai.google.dev/docs/gemini_api_overview>
 License: MIT + file LICENSE
-URL: https://github.com/jhk0530/gemini.studio
-BugReports: https://github.com/jhk0530/gemini.studio/issues
+URL: https://github.com/jhk0530/gemini.R
+BugReports: https://github.com/jhk0530/gemini.R/issues
 Encoding: UTF-8
 Imports: 
     httr,
