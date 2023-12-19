@@ -38,6 +38,7 @@ and I recommend to use shiny app with `fileInput` function.
 library(shiny)
 library(gemini.R)
 
+setAPI("YOUR KEY")
 ui <- fluidPage(
   sidebarLayout(
     NULL,
