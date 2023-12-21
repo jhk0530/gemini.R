@@ -14,8 +14,7 @@
 #' @seealso https://ai.google.dev/docs/gemini_api_overview#text_input
 #'
 gemini <- function(prompt) {
-
-  if(Sys.getenv("GEMINI_API_KEY")=="") {
+  if (Sys.getenv("GEMINI_API_KEY") == "") {
     cat("Please set the GEMINI_API_KEY environment variable with setAPI function.\n")
     return(NULL)
   }

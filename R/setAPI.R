@@ -9,6 +9,6 @@
 #' @seealso https://makersuite.google.com/app/apikey
 #'
 
-setAPI <- function(api_key){
+setAPI <- function(api_key) {
   api_key <- Sys.setenv(GEMINI_API_KEY = api_key)
 }

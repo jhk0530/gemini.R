@@ -22,9 +22,8 @@
 #' @seealso https://ai.google.dev/docs/gemini_api_overview#chat
 #'
 #'
-gemini_chat <- function(prompt, history = list()){
-
-  if(Sys.getenv("GEMINI_API_KEY")=="") {
+gemini_chat <- function(prompt, history = list()) {
+  if (Sys.getenv("GEMINI_API_KEY") == "") {
     cat("Please set the GEMINI_API_KEY environment variable with setAPI function.\n")
     return(NULL)
   }
@@ -32,7 +31,7 @@ gemini_chat <- function(prompt, history = list()){
   model_query <- "gemini-pro:generateContent"
 
   history <- history |>
-    addHistory(role = 'user', item = prompt)
+    addHistory(role = "user", item = prompt)
   response <- POST(
     url = paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query),
     query = list(key = Sys.getenv("GEMINI_API_KEY")),
@@ -51,7 +50,7 @@ gemini_chat <- function(prompt, history = list()){
   outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
 
   history <- history |>
-    addHistory(role = 'model', item = outputs[[1]])
+    addHistory(role = "model", item = outputs[[1]])
 
   return(list(outputs = outputs, history = history))
 }
@@ -63,8 +62,8 @@ gemini_chat <- function(prompt, history = list()){
 #' @param item The item of chat: "prompt" or "output"
 #' @return The history of chat
 #'
-addHistory <- function(history, role, item){
-  history[[length(history)+1]] <-
+addHistory <- function(history, role, item) {
+  history[[length(history) + 1]] <-
     list(
       role = role,
       parts = list(
