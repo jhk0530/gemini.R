@@ -8,7 +8,7 @@ R package to use Google's gemini via API on R
 
 ## Installation
 
-You can install the development version of gemini.R from [GitHub](https://github.com/) with:
+You can install the development version of gemini.R from GitHub with:
 
 ``` r
 # install.packages("devtools")
@@ -20,7 +20,7 @@ devtools::install_github("jhk0530/gemini.R")
 ``` r
 library(gemini.R)
 
-setAPI("your API key")
+setAPI("your API key") # check https://makersuite.google.com/app/apikey
 gemini("Explain about the gemini in astrology in one line")
 
 # text 
@@ -84,6 +84,8 @@ shinyApp(ui = ui, server = server)
   <img src='shiny.png' width = '70%'>
 </p>
 
-> Note, 
+> [!note] 
 >
 > image is from [Google AI for Developers](https://ai.google.dev/tutorials/rest_quickstart)
+>
+> I've got many inspiration from [Deepanshu Bhalla](https://www.linkedin.com/in/deepanshubhalla/)'s [article](https://www.listendata.com/2023/12/google-gemini-r.html)
