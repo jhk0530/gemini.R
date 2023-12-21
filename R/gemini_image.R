@@ -6,15 +6,23 @@
 #' @return Generated text
 #' @export
 #' @examples
+#' library(gemini.R)
+#' setAPI("YOUR_API_KEY")
 #' gemini_image("Explain this image", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Sidney_Hall_-_Urania%27s_Mirror_-_Gemini.jpg/560px-Sidney_Hall_-_Urania%27s_Mirror_-_Gemini.jpg")
 #'
 #' @importFrom httr POST content_type_json
 #' @importFrom base64enc base64encode
 #'
-#' @seealso https://ai.google.dev/docs/gemini_api_overview
+#' @seealso https://ai.google.dev/docs/gemini_api_overview#text_image_input
 #'
 
 gemini_image <- function(prompt, image) {
+
+  if(Sys.getenv("GEMINI_API_KEY")=="") {
+    cat("Please set the GEMINI_API_KEY environment variable with setAPI function.\n")
+    return(NULL)
+  }
+
   model_query <- "gemini-pro-vision:generateContent"
 
   response <- POST(

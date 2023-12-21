@@ -5,13 +5,21 @@
 #' @return Generated text
 #' @export
 #' @examples
+#' library(gemini.R)
+#' setAPI("YOUR_API_KEY")
 #' gemini("Explain dplyr's mutate function")
 #'
 #' @importFrom httr POST content content_type_json
 #'
-#' @seealso https://ai.google.dev/docs/gemini_api_overview
+#' @seealso https://ai.google.dev/docs/gemini_api_overview#text_input
 #'
 gemini <- function(prompt) {
+
+  if(Sys.getenv("GEMINI_API_KEY")=="") {
+    cat("Please set the GEMINI_API_KEY environment variable with setAPI function.\n")
+    return(NULL)
+  }
+
   model_query <- "gemini-pro:generateContent"
 
   response <- POST(

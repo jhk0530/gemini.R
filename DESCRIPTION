@@ -1,6 +1,6 @@
 Package: gemini.R
 Title: R package to use Google's gemini via API on R
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person("Jinhwan", "Kim", , "hwanistic@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0009-3217-2417"))
@@ -18,3 +18,6 @@ Imports:
     base64enc
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
