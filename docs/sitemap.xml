@@ -13,7 +13,13 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/addHistory.html</loc>
+  </url>
+  <url>
     <loc>/reference/gemini.html</loc>
+  </url>
+  <url>
+    <loc>/reference/gemini_chat.html</loc>
   </url>
   <url>
     <loc>/reference/gemini_image.html</loc>

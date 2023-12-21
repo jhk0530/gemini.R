@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gemini.R</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,7 +25,7 @@
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
       <ul class="navbar-nav"><li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/jhk0530/gemini.studio/" aria-label="github">
+  <a class="external-link nav-link" href="https://github.com/jhk0530/gemini.R/" aria-label="github">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -38,7 +38,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Generate text from text with Gemini</h1>
-      <small class="dont-index">Source: <a href="https://github.com/jhk0530/gemini.studio/blob/HEAD/R/gemini.R" class="external-link"><code>R/gemini.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jhk0530/gemini.R/blob/HEAD/R/gemini.R" class="external-link"><code>R/gemini.R</code></a></small>
       <div class="d-none name"><code>gemini.Rd</code></div>
     </div>
 
@@ -65,14 +65,15 @@
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p>https://ai.google.dev/docs/gemini_api_overview</p></div>
+    <div class="dont-index"><p>https://ai.google.dev/docs/gemini_api_overview#text_input</p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">gemini</span><span class="op">(</span><span class="st">"Explain dplyr's mutate function"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    text </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "The mutate() function in dplyr is a powerful tool for transforming and enriching data frames in R. It allows you to add new columns to a data frame based on existing columns or perform calculations and transformations on existing data.\n\nHere's a breakdown of how the mutate() function works:\n\n1. **Data Input:** The mutate() function takes a data frame as its first argument. This data frame is the one you want to modify or add new columns to.\n\n2. **Transformation Expression:** The second argument to mutate() is a series of expressions that define the transformations you want to perform. These expressions are typically written using the %&gt;% (pipe) operator, which allows you to chain multiple transformations together.\n\n3. **Creating New Columns:** Within the transformation expressions, you can use various functions and operators to create new columns. For example, you can use the `mutate()` function to:\n\n   - Add a new column based on a calculation, such as `mutate(new_column = old_column * 2)`.\n   - Create a new column based on a logical condition, such as `mutate(new_column = ifelse(old_column &gt; 10, \"High\", \"Low\"))`.\n   - Combine multiple columns into a new column, such as `mutate(new_column = paste(first_name, last_name, sep = \" \"))`.\n\n4. **Preserving Existing Columns:** By default, the mutate() function preserves all existing columns in the data frame. This means that any new columns you create are added to the existing data frame, and no data is lost.\n\n5. **Output:** The output of the mutate() function is a new data frame that contains the original data along with the new columns you created. This new data frame can then be used for further analysis or visualization.\n\nHere's an example to illustrate how the mutate() function works:\n\n```\nlibrary(dplyr)\n\n# Create a data frame\ndf &lt;- data.frame(name = c(\"John\", \"Mary\", \"Bob\"), age = c(25, 30, 35))\n\n# Add a new column \"age_group\" based on age\ndf &lt;- df %&gt;%\n  mutate(age_group = ifelse(age &lt; 30, \"Young\", \"Old\"))\n\n# Print the modified data frame\nprint(df)\n\n# Output:\n#   name age age_group\n# 1 John  25    Young\n# 2 Mary  30    Young\n# 3 Bob   35     Old\n```\n\nIn this example, we used the mutate() function to add a new column called \"age_group\" to the df data frame. The age_group column classifies individuals as \"Young\" if their age is less than 30 and \"Old\" otherwise.\n\nThe mutate() function is a versatile tool that can be used for a wide range of data transformation tasks. It is particularly useful when working with large datasets, as it allows you to perform complex transformations efficiently and concisely." </span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhk0530/gemini.R" class="external-link">gemini.R</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="setAPI.html">setAPI</a></span><span class="op">(</span><span class="st">"YOUR_API_KEY"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">gemini</span><span class="op">(</span><span class="st">"Explain dplyr's mutate function"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
