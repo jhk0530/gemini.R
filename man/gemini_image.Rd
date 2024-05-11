@@ -18,9 +18,11 @@ Generated text
 Generate text from text and image with Gemini
 }
 \examples{
+\dontrun{
 library(gemini.R)
 setAPI("YOUR_API_KEY")
-gemini_image("Explain this image", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Sidney_Hall_-_Urania\%27s_Mirror_-_Gemini.jpg/560px-Sidney_Hall_-_Urania\%27s_Mirror_-_Gemini.jpg")
+gemini_image("Explain this image", <IMAGE_FILE_PATH>)
+}
 
 }
 \seealso{
