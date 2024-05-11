@@ -81,7 +81,7 @@ shinyApp(ui = ui, server = server)
 
 ```
 <p style = 'text-align:center;'>
-  <img src='shiny.png' width = '70%'>
+  <img src='./man/figures/shiny.png' width = '70%'>
 </p>
 
 > [!note] 
