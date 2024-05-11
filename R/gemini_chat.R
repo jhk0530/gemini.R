@@ -1,6 +1,7 @@
 #' @title Multi-turn conversations (chat)
 #' @description Generate text from text with Gemini
 #' @param prompt The prompt to generate text from
+#' @param history history object to keep track of the conversation
 #'
 #' @return Generated text
 #' @export

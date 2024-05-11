@@ -8,6 +8,8 @@ gemini_chat(prompt, history = list())
 }
 \arguments{
 \item{prompt}{The prompt to generate text from}
+
+\item{history}{history object to keep track of the conversation}
 }
 \value{
 Generated text
