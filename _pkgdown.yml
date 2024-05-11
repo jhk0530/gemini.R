@@ -3,5 +3,5 @@ template:
   bootstrap: 5
   navbar:
     structure:
-      left: [intro, reference, articles, tutorials, news]
+      left: [intro, reference, tutorials, news]
       right: [search, github]
