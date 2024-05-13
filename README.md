@@ -2,6 +2,7 @@
 # gemini.R
 
 <!-- badges: start -->
+![r-hub](https://github.com/jhk0530/gemini.R/actions/workflows/rhub.yaml/badge.svg)
 <!-- badges: end -->
 
 R package to use Google's gemini via API on R
