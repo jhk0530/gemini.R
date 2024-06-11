@@ -4,12 +4,12 @@
 \alias{gemini_image}
 \title{Generate text from text and image with Gemini}
 \usage{
-gemini_image(prompt, image)
+gemini_image(image = NULL, prompt = "Explain this image")
 }
 \arguments{
-\item{prompt}{The prompt to generate text}
-
 \item{image}{The image to generate text}
+
+\item{prompt}{The prompt to generate text, Default is "Explain this image"}
 }
 \value{
 Generated text
@@ -21,7 +21,7 @@ Generate text from text and image with Gemini
 \dontrun{
 library(gemini.R)
 setAPI("YOUR_API_KEY")
-gemini_image("Explain this image", <IMAGE_FILE_PATH>)
+gemini_image(image = system.file("docs/reference/figures/image.png", package = "gemini.R"))
 }
 
 }
