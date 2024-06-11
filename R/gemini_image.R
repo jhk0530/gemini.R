@@ -12,7 +12,7 @@
 #' gemini_image(image = system.file("docs/reference/figures/image.png", package = "gemini.R"))
 #' }
 #'
-#' @importFrom httr2 request req_url_query req_headers req_body_json req_perform
+#' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json
 #' @importFrom base64enc base64encode
 #' @importFrom cli cli_alert_danger cli_status_clear cli_status
 #'
