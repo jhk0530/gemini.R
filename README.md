@@ -14,8 +14,8 @@ R package to use Google's gemini via API on R
 You can install the development version of gemini.R from GitHub with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("jhk0530/gemini.R")
+# install.packages("pak")
+pak::pak("jhk0530/gemini.R")
 ```
 
 ## Example
@@ -29,6 +29,22 @@ gemini("Explain about the gemini in astrology in one line")
 # text 
 # "Gemini, the third astrological sign, is associated with 
 # communication, adaptability, and a thirst for knowledge." 
+
+```
+
+## gemini with image
+
+``` r
+
+# uses default prompt as "Explain this image"
+# uses included image of gemini.R package
+gemini_image(image = system.file("docs/reference/figures/image.png", package = "gemini.R"))
+
+# text 
+# " The image shows a table with a white tablecloth. On the table are two cups of coffee, 
+# a bowl of blueberries, and five scones. The scones are covered in blueberries and have 
+# a crumbly texture. There are also some pink flowers on the table. The background is a 
+# dark blue color. The image is taken from a top-down perspective." 
 
 ```
 
