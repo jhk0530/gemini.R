@@ -5,6 +5,8 @@
 ![r-hub](https://github.com/jhk0530/gemini.R/actions/workflows/rhub.yaml/badge.svg)
 <!-- badges: end -->
 
+![Alt](https://repobeats.axiom.co/api/embed/bc0595c11e22d5380cf10a646bc6049db9e5fc44.svg "Repobeats analytics image")
+
 R package to use Google's gemini via API on R
 
 ## Installation
