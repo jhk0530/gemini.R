@@ -7,8 +7,16 @@
 #' setAPI("my_api_key")
 #'
 #' @seealso https://makersuite.google.com/app/apikey
+#' @importFrom cli cli_alert_info cli_div cli_end cli_alert
 #'
 
 setAPI <- function(api_key) {
-  api_key <- Sys.setenv(GEMINI_API_KEY = api_key)
+  last <- substr(api_key, nchar(api_key) - 3, nchar(api_key))
+  Sys.setenv(GEMINI_API_KEY = api_key)
+
+  cli_div(theme = list(span.str = list("background-color" = "blue")))
+  cli_alert_info("API key {.str ...{last}} is set.")
+  cli_end()
+
+  cli_alert("You may try {.run gemini_chat('What is CRAN?')}")
 }

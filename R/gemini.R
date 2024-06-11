@@ -10,23 +10,38 @@
 #' gemini("Explain dplyr's mutate function")
 #'
 #' @importFrom httr POST content content_type_json
+#' @importFrom cli cli_alert_danger cli_status_clear cli_status
 #'
 #' @seealso https://ai.google.dev/docs/gemini_api_overview#text_input
 #'
+
 gemini <- function(prompt) {
+  if (is.null(prompt)) {
+    cli_alert_danger("{.arg prompt} must not NULL")
+    return(NULL)
+  }
+
+  if (!is.character(prompt)) {
+    cli_alert_danger("{.arg prompt} must be given as a STRING")
+    return(NULL)
+  }
+
   if (Sys.getenv("GEMINI_API_KEY") == "") {
-    cat("Please set the GEMINI_API_KEY environment variable with setAPI function.\n")
+    cli_alert_danger("Please set the {.envvar GEMINI_API_KEY} with {.fn setAPI} function.")
     return(NULL)
   }
 
   model_query <- "gemini-pro:generateContent"
 
-  response <- POST(
-    url = paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query),
-    query = list(key = Sys.getenv("GEMINI_API_KEY")),
-    content_type_json(),
-    encode = "json",
-    body = list(
+  url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query)
+  api_key <- Sys.getenv("GEMINI_API_KEY")
+
+  sb <- cli_status("Gemini is answering...")
+
+  req <- request(url) %>%
+    req_url_query(key = api_key) %>%
+    req_headers("Content-Type" = "application/json") %>%
+    req_body_json(list(
       contents = list(
         parts = list(
           list(text = prompt)
@@ -36,10 +51,13 @@ gemini <- function(prompt) {
         temperature = 0.5,
         maxOutputTokens = 1024
       )
-    )
-  )
+    ))
 
-  candidates <- content(response)$candidates
+  resp <- req_perform(req)
+
+  cli_status_clear(id = sb)
+
+  candidates <- resp_body_json(resp)$candidates
   outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
 
   return(outputs)
