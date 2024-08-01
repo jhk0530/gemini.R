@@ -103,10 +103,6 @@ shinyApp(ui = ui, server = server)
   <img src='./man/figures/shiny.png' width = '70%'>
 </p>
 
-## Stargazers
-
-[![Stargazers repo roster for @jhk0530/gemini.R](https://reporoster.com/stars/jhk0530/gemini.R)](https://github.com/jhk0530/gemini.R/stargazers)
-
 > [!note] 
 >
 > image is from [Google AI for Developers](https://ai.google.dev/tutorials/rest_quickstart)
