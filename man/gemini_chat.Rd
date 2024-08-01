@@ -4,12 +4,27 @@
 \alias{gemini_chat}
 \title{Multi-turn conversations (chat)}
 \usage{
-gemini_chat(prompt, history = list())
+gemini_chat(
+  prompt,
+  history = list(),
+  model = "1.5-flash",
+  temperature = 0.5,
+  maxOutputTokens = 1024
+)
 }
 \arguments{
 \item{prompt}{The prompt to generate text from}
 
 \item{history}{history object to keep track of the conversation}
+
+\item{model}{The model to use. Options are '1.5-flash', '1.5-pro', '1.0-pro'. Default is '1.5-flash'
+see https://ai.google.dev/gemini-api/docs/models/gemini}
+
+\item{temperature}{The temperature to use. Default is 0.5 value should be between 0 and 2
+see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
+
+\item{maxOutputTokens}{The maximum number of tokens to generate.
+Default is 1024 and 100 tokens correspond to roughly 60-80 words.}
 }
 \value{
 Generated text
@@ -29,7 +44,6 @@ print(chats$outputs)
 
 chats <- gemini_chat("How do you think about summer?", chats$history)
 print(chats$outputs)
-
 }
 \seealso{
 https://ai.google.dev/docs/gemini_api_overview#chat

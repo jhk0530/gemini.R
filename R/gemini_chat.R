@@ -2,6 +2,12 @@
 #' @description Generate text from text with Gemini
 #' @param prompt The prompt to generate text from
 #' @param history history object to keep track of the conversation
+#' @param model The model to use. Options are '1.5-flash', '1.5-pro', '1.0-pro'. Default is '1.5-flash'
+#'              see https://ai.google.dev/gemini-api/docs/models/gemini
+#' @param temperature The temperature to use. Default is 0.5 value should be between 0 and 2
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param maxOutputTokens The maximum number of tokens to generate.
+#'              Default is 1024 and 100 tokens correspond to roughly 60-80 words.
 #'
 #' @return Generated text
 #' @export
@@ -17,13 +23,12 @@
 #'
 #' chats <- gemini_chat("How do you think about summer?", chats$history)
 #' print(chats$outputs)
-#'
 #' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json
 #' @importFrom cli cli_alert_danger cli_status_clear cli_status
 #' @seealso https://ai.google.dev/docs/gemini_api_overview#chat
 #'
 
-gemini_chat <- function(prompt, history = list()) {
+gemini_chat <- function(prompt, history = list(), model = "1.5-flash", temperature = 0.5, maxOutputTokens = 1024) {
   if (is.null(prompt)) {
     cli_alert_danger("{.arg prompt} must not NULL")
     return(NULL)
@@ -39,7 +44,17 @@ gemini_chat <- function(prompt, history = list()) {
     return(NULL)
   }
 
-  model_query <- "gemini-pro:generateContent"
+  if (!(model %in% c("1.5-flash", "1.5-pro", "1.0-pro"))) {
+    cli_alert_danger("Error: Parameter 'a' must be one of '1.5-flash', '1.5-pro', '1.0-pro'")
+    return(NULL)
+  }
+
+  if (temperature < 0 | temperature > 2) {
+    cli_alert_danger("Error: Parameter 'temperature' must be between 0 and 2")
+    return(NULL)
+  }
+
+  model_query <- paste0("gemini-", model, "-latest:generateContent")
 
   history <- history |>
     addHistory(role = "user", item = prompt)
@@ -54,8 +69,8 @@ gemini_chat <- function(prompt, history = list()) {
     req_body_json(list(
       contents = history,
       generationConfig = list(
-        temperature = 0.5,
-        maxOutputTokens = 1024
+        temperature = temperature,
+        maxOutputTokens = maxOutputTokens
       )
     ))
 
