@@ -33,6 +33,7 @@ Generated text
 Generate text from text with Gemini
 }
 \examples{
+\dontrun{
 library(gemini.R)
 setAPI("YOUR_API_KEY")
 
@@ -44,6 +45,7 @@ print(chats$outputs)
 
 chats <- gemini_chat("How do you think about summer?", chats$history)
 print(chats$outputs)
+}
 }
 \seealso{
 https://ai.google.dev/docs/gemini_api_overview#chat

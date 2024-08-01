@@ -11,9 +11,11 @@
 #' @return Generated text
 #' @export
 #' @examples
+#' \dontrun{
 #' library(gemini.R)
 #' setAPI("YOUR_API_KEY")
 #' gemini("Explain dplyr's mutate function")
+#' }
 #' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json
 #' @importFrom cli cli_alert_danger cli_status_clear cli_status
 #'
@@ -54,9 +56,9 @@ gemini <- function(prompt, model = "1.5-flash", temperature = 0.5, maxOutputToke
 
   sb <- cli_status("Gemini is answering...")
 
-  req <- request(url) %>%
-    req_url_query(key = api_key) %>%
-    req_headers("Content-Type" = "application/json") %>%
+  req <- request(url) |>
+    req_url_query(key = api_key) |>
+    req_headers("Content-Type" = "application/json") |>
     req_body_json(list(
       contents = list(
         parts = list(

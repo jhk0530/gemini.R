@@ -70,9 +70,9 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "1
   mime_type <- paste0("image/", type)
 
   sb <- cli_status("Gemini is answering...")
-  req <- request(url) %>%
-    req_url_query(key = api_key) %>%
-    req_headers("Content-Type" = "application/json") %>%
+  req <- request(url) |>
+    req_url_query(key = api_key) |>
+    req_headers("Content-Type" = "application/json") |>
     req_body_json(list(
       contents = list(
         parts = list(

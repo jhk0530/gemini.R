@@ -12,6 +12,7 @@
 #' @return Generated text
 #' @export
 #' @examples
+#' \dontrun{
 #' library(gemini.R)
 #' setAPI("YOUR_API_KEY")
 #'
@@ -23,6 +24,7 @@
 #'
 #' chats <- gemini_chat("How do you think about summer?", chats$history)
 #' print(chats$outputs)
+#' }
 #' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json
 #' @importFrom cli cli_alert_danger cli_status_clear cli_status
 #' @seealso https://ai.google.dev/docs/gemini_api_overview#chat
@@ -63,9 +65,9 @@ gemini_chat <- function(prompt, history = list(), model = "1.5-flash", temperatu
   api_key <- Sys.getenv("GEMINI_API_KEY")
 
   sb <- cli_status("Gemini is answering...")
-  req <- request(url) %>%
-    req_url_query(key = api_key) %>%
-    req_headers("Content-Type" = "application/json") %>%
+  req <- request(url) |>
+    req_url_query(key = api_key) |>
+    req_headers("Content-Type" = "application/json") |>
     req_body_json(list(
       contents = history,
       generationConfig = list(
@@ -94,7 +96,15 @@ gemini_chat <- function(prompt, history = list(), model = "1.5-flash", temperatu
 #' @return The history of chat
 #'
 
-addHistory <- function(history, role, item) {
+addHistory <- function(history, role = NULL, item = NULL) {
+  if(is.null(role)){
+    cli_alert_danger("provide role")
+    return(NULL)
+  }
+  if(is.null(item)){
+    cli_alert_danger("provide item")
+    return(NULL)
+  }
   history[[length(history) + 1]] <-
     list(
       role = role,

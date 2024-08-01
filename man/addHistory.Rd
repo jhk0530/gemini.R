@@ -4,7 +4,7 @@
 \alias{addHistory}
 \title{Add history for chating context}
 \usage{
-addHistory(history, role, item)
+addHistory(history, role = NULL, item = NULL)
 }
 \arguments{
 \item{history}{The history of chat}

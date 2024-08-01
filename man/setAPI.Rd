@@ -13,9 +13,11 @@ setAPI(api_key)
 Set API key as an environment variable
 }
 \examples{
+\dontrun{
 setAPI("my_api_key")
-
+}
 }
 \seealso{
 https://makersuite.google.com/app/apikey
 }
+\keyword{internal}

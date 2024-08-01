@@ -5,3 +5,6 @@
 ^pkgdown$
 ^vignettes/articles$
 .github
+^CRAN-SUBMISSION$
+^cran-comments\.md$
+^LICENSE\.md$

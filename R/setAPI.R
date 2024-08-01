@@ -4,11 +4,12 @@
 #' @return NULL
 #' @export
 #' @examples
+#' \dontrun{
 #' setAPI("my_api_key")
-#'
+#' }
 #' @seealso https://makersuite.google.com/app/apikey
 #' @importFrom cli cli_alert_info cli_div cli_end cli_alert
-#'
+#' @keywords internal
 
 setAPI <- function(api_key) {
   last <- substr(api_key, nchar(api_key) - 3, nchar(api_key))
@@ -19,4 +20,5 @@ setAPI <- function(api_key) {
   cli_end()
 
   cli_alert("You may try {.run gemini_chat('What is CRAN?')}")
+  return(NULL)
 }

@@ -25,9 +25,11 @@ Generated text
 Generate text from text with Gemini
 }
 \examples{
+\dontrun{
 library(gemini.R)
 setAPI("YOUR_API_KEY")
 gemini("Explain dplyr's mutate function")
+}
 }
 \seealso{
 https://ai.google.dev/docs/gemini_api_overview#text_input
