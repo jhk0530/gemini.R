@@ -1,3 +1,5 @@
+# gemini.R 0.5.1
+
 ## 0.4.0
 
 - Updated to use [httr2](https://httr2.r-lib.org/)
