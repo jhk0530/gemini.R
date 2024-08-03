@@ -3,6 +3,7 @@
 
 <!-- badges: start -->
 ![r-hub](https://github.com/jhk0530/gemini.R/actions/workflows/rhub.yaml/badge.svg)
+[![gemini.R status badge](https://jhk0530.r-universe.dev/badges/gemini.R)](https://jhk0530.r-universe.dev/gemini.R)
 <!-- badges: end -->
 
 ![Alt](https://repobeats.axiom.co/api/embed/bc0595c11e22d5380cf10a646bc6049db9e5fc44.svg "Repobeats analytics image")
@@ -16,6 +17,13 @@ You can install the development version of gemini.R from GitHub with:
 ``` r
 # install.packages("pak")
 pak::pak("jhk0530/gemini.R")
+```
+
+Or install from [R-universe](https://r-universe.dev/search/)
+```r
+install.packages("gemini.R",
+  repos = c("https://jhk0530.r-universe.dev", "https://cloud.r-project.org")
+)
 ```
 
 ## Example
