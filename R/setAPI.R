@@ -1,7 +1,7 @@
 #' @title Set API key
 #' @description Set API key as an environment variable
 #' @param api_key The API key to set
-#' @return NULL
+#' @return No return value, called for side effects.
 #' @export
 #' @examples
 #' \dontrun{

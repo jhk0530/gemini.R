@@ -9,6 +9,9 @@ setAPI(api_key)
 \arguments{
 \item{api_key}{The API key to set}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 Set API key as an environment variable
 }
