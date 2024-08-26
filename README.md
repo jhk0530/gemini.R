@@ -2,6 +2,7 @@
 # gemini.R
 
 <!-- badges: start -->
+[![CRAN status badge](https://www.r-pkg.org/badges/version/gemini.R)](https://cran.r-project.org/web/packages/gemini.R/index.html)
 ![r-hub](https://github.com/jhk0530/gemini.R/actions/workflows/rhub.yaml/badge.svg)
 [![gemini.R status badge](https://jhk0530.r-universe.dev/badges/gemini.R)](https://jhk0530.r-universe.dev/gemini.R)
 <!-- badges: end -->
