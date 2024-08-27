@@ -8,6 +8,9 @@
 #' setAPI("my_api_key")
 #' }
 #' @seealso https://makersuite.google.com/app/apikey
+#' @note Please be aware you have to agree to the terms of service of the API provider.
+#' Any app that uses the API key is subject to the terms of service.
+#' Also, please be aware that the API key is a sensitive information.
 #' @importFrom cli cli_alert_info cli_div cli_end cli_alert
 #' @keywords internal
 

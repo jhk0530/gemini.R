@@ -15,6 +15,11 @@ No return value, called for side effects.
 \description{
 Set API key as an environment variable
 }
+\note{
+Please be aware you have to agree to the terms of service of the API provider.
+Any app that uses the API key is subject to the terms of service.
+Also, please be aware that the API key is a sensitive information.
+}
 \examples{
 \dontrun{
 setAPI("my_api_key")
