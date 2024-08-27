@@ -10,23 +10,37 @@
 
 R package to use Google's gemini via API on R
 
+## Terms
+
+Before use the API, I recommend that you to check the following.
+- [Google Cloud Platform Terms of Service](https://cloud.google.com/terms)
+- [Gemini API Additional Terms of Service](https://ai.google.dev/gemini-api/terms)
+
 ## Installation
 
-You can install the development version of gemini.R from GitHub with:
-
-``` r
-# install.packages("pak")
-pak::pak("jhk0530/gemini.R")
+#### From CRAN
+```r
+install.packages("gemini.R")
 ```
 
-Or install from [R-universe](https://r-universe.dev/search/)
+#### From [R-universe](https://r-universe.dev/search/) (development version)
+
 ```r
 install.packages("gemini.R",
   repos = c("https://jhk0530.r-universe.dev", "https://cloud.r-project.org")
 )
 ```
 
-## Example
+#### From Github (development version)
+
+``` r
+# install.packages("pak")
+pak::pak("jhk0530/gemini.R")
+```
+
+## Usage
+
+#### gemini with text
 
 ``` r
 library(gemini.R)
@@ -40,7 +54,7 @@ gemini("Explain about the gemini in astrology in one line")
 
 ```
 
-## gemini with image
+#### gemini with image
 
 ``` r
 
@@ -56,7 +70,7 @@ gemini_image(image = system.file("docs/reference/figures/image.png", package = "
 
 ```
 
-## gemini with image via Shiny
+#### gemini with image via Shiny
 
 To use `gemini_image` function, image file required. 
 and I recommend to use shiny app with `fileInput` function.
