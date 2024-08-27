@@ -12,9 +12,12 @@ R package to use Google's gemini via API on R
 
 ## Terms
 
-Before use the API, I recommend that you to check the following.
+Before use the API, I recommend that you to check at least the following.
 - [Google Cloud Platform Terms of Service](https://cloud.google.com/terms)
 - [Gemini API Additional Terms of Service](https://ai.google.dev/gemini-api/terms)
+
+There may be more terms and conditions that you need to check.
+Any app which uses the API should be compliant with the Google Terms of Service.
 
 ## Installation
 
