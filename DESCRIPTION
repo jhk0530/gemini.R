@@ -2,13 +2,8 @@ Package: gemini.R
 Title: Interface for 'Google Gemini' API
 Version: 0.5.2.9000
 Authors@R: c(
-  person("Jinhwan", "Kim", , "hwanistic@gmail.com",
-    role = c("aut", "cre", "cph"),
-    comment = c(ORCID = "0009-0009-3217-2417")
-  ),
-  person("Maciej", "Nasinski", role = "ctb")
-)
-    
+  person("Jinhwan", "Kim", , "hwanistic@gmail.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0009-0009-3217-2417")),
+  person("Maciej", "Nasinski", role = "ctb"))
 Maintainer: Jinhwan Kim <hwanistic@gmail.com>
 Description: Provides a comprehensive interface for Google Gemini API, 
             enabling users to access and utilize Gemini Large Language Model (LLM) functionalities directly from R. 
