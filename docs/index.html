@@ -38,7 +38,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/jhk0530/gemini.R/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="nav-link" href="https://github.com/jhk0530/gemini.R/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -47,7 +47,7 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="geminir-">gemini.R <img src="https://github.com/user-attachments/assets/331ba265-9852-4ca5-9c9a-ff19b9e494b3" width="120" align="right"><a class="anchor" aria-label="anchor" href="#geminir-"></a>
+<div class="page-header"><h1 id="geminir-">gemini.R <img alt="hexlogo" src="https://github.com/user-attachments/assets/331ba265-9852-4ca5-9c9a-ff19b9e494b3" width="120" align="right"><a class="anchor" aria-label="anchor" href="#geminir-"></a>
 </h1></div>
 <!-- badges: start -->
 
@@ -62,7 +62,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"gemini.R"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="from-r-universe-development-version">From <a href="https://r-universe.dev/search/" class="external-link">R-universe</a> (development version)<a class="anchor" aria-label="anchor" href="#from-r-universe-development-version"></a>
+<h4 id="from-r-universe-development-version">From <a href="https://r-universe.dev/search" class="external-link">R-universe</a> (development version)<a class="anchor" aria-label="anchor" href="#from-r-universe-development-version"></a>
 </h4>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"gemini.R"</span>,</span>
@@ -84,7 +84,7 @@
 <h4 id="gemini-with-text">gemini with text<a class="anchor" aria-label="anchor" href="#gemini-with-text"></a>
 </h4>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhk0530/gemini.R" class="external-link">gemini.R</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhk0530/gemini.R">gemini.R</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/setAPI.html">setAPI</a></span><span class="op">(</span><span class="st">"your API key"</span><span class="op">)</span> <span class="co"># check https://makersuite.google.com/app/apikey</span></span>
 <span><span class="fu"><a href="reference/gemini.html">gemini</a></span><span class="op">(</span><span class="st">"Explain about the gemini in astrology in one line"</span><span class="op">)</span></span>
@@ -114,7 +114,7 @@
 <p>To use <code>gemini_image</code> function, image file required. and I recommend to use shiny app with <code>fileInput</code> function.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhk0530/gemini.R" class="external-link">gemini.R</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhk0530/gemini.R">gemini.R</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/setAPI.html">setAPI</a></span><span class="op">(</span><span class="st">"YOUR KEY"</span><span class="op">)</span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
@@ -157,14 +157,14 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span><span class="op">)</span></span></code></pre></div>
 <p style="text-align:center;">
-<img src="./reference/figures/shiny.png" width="70%"></p>
+<img alt="shiny app example" src="./reference/figures/shiny.png" width="70%"></p>
 </div>
 <div class="section level4">
 <h4 id="gemini-for-roxygen-documentation-addin">gemini for roxygen documentation (Addin)<a class="anchor" aria-label="anchor" href="#gemini-for-roxygen-documentation-addin"></a>
 </h4>
 <p style="text-align:center;">
-<img src="./reference/figures/roxygen.gif" width="70%"></p>
-<p>You may customize shortcut for this feature. Check <a href="https://support.posit.co/hc/en-us/articles/206382178-Customizing-Keyboard-Shortcuts-in-the-RStudio-IDE" class="external-link">this</a>.</p>
+<img alt="gen_doc example" src="./reference/figures/roxygen.gif" width="70%"></p>
+<p>You may customize keyboard shortcut for this feature.</p>
 </div>
 </div>
 <div class="section level2">
@@ -183,8 +183,8 @@
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://cloud.r-project.org/package=gemini.R" class="external-link">View on CRAN</a></li>
-<li><a href="https://github.com/jhk0530/gemini.R/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/jhk0530/gemini.R/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://github.com/jhk0530/gemini.R/">Browse source code</a></li>
+<li><a href="https://github.com/jhk0530/gemini.R/issues">Report a bug</a></li>
 </ul>
 </div>
 

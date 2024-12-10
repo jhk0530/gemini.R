@@ -1,4 +1,4 @@
-# gemini.R <img src = 'https://github.com/user-attachments/assets/331ba265-9852-4ca5-9c9a-ff19b9e494b3' width = 120 align = 'right'></img>
+# gemini.R <img alt='hexlogo' src = 'https://github.com/user-attachments/assets/331ba265-9852-4ca5-9c9a-ff19b9e494b3' width = 120 align = 'right'></img>
 
 <!-- badges: start -->
 [![CRAN status badge](https://www.r-pkg.org/badges/version/gemini.R)](https://cran.r-project.org/web/packages/gemini.R/index.html)
@@ -17,7 +17,7 @@ R package to use Google's gemini via API on R
 install.packages("gemini.R")
 ```
 
-#### From [R-universe](https://r-universe.dev/search/) (development version)
+#### From [R-universe](https://r-universe.dev/search) (development version)
 
 ```r
 install.packages("gemini.R",
@@ -116,16 +116,16 @@ shinyApp(ui = ui, server = server)
 
 ```
 <p style = 'text-align:center;'>
-  <img src='./man/figures/shiny.png' width = '70%'>
+  <img alt='shiny app example' src='./man/figures/shiny.png' width = '70%'>
 </p>
 
 #### gemini for roxygen documentation (Addin)
 
 <p style = 'text-align:center;'>
-  <img src='./man/figures/roxygen.gif' width = '70%'>
+  <img alt='gen_doc example' src='./man/figures/roxygen.gif' width = '70%'>
 </p>
 
-You may customize shortcut for this feature. Check [this](https://support.posit.co/hc/en-us/articles/206382178-Customizing-Keyboard-Shortcuts-in-the-RStudio-IDE).
+You may customize keyboard shortcut for this feature.
 
 ## Terms
 

@@ -10,7 +10,7 @@ gen_docs(prompt = NULL)
 \item{prompt}{A character string specifying additional instructions for the LLM.  Defaults to a prompt requesting Roxygen2 documentation without the original code.}
 }
 \value{
-#' A character string containing the generated Roxygen2 documentation.  The documentation will start with \verb{#'}.
+A character string containing the generated Roxygen2 documentation.
 }
 \description{
 Generates Roxygen2 documentation for an R function based on the currently selected code.

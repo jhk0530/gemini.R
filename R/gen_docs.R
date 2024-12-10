@@ -5,8 +5,8 @@
 #' @param prompt  A character string specifying additional instructions for the LLM.  Defaults to a prompt requesting Roxygen2 documentation without the original code.
 #'
 #' @return
-#' #' A character string containing the generated Roxygen2 documentation.  The documentation will start with `#'`.
-#'
+#' A character string containing the generated Roxygen2 documentation.
+#' @importFrom rstudioapi getActiveDocumentContext executeCommand insertText
 #' @export
 gen_docs <- function(prompt = NULL) {
 
@@ -33,5 +33,5 @@ gen_docs <- function(prompt = NULL) {
   # last.cursor.row <- as.numeric(context$selection[[1]]$range$end[1])
 
   executeCommand("activateConsole")
-  rstudioapi::insertText(text = description)
+  insertText(text = description)
 }

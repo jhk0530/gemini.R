@@ -1,18 +1,18 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
-<url><loc>/404.html</loc></url>
-<url><loc>/LICENSE-text.html</loc></url>
-<url><loc>/LICENSE.html</loc></url>
-<url><loc>/articles/genimi-R.html</loc></url>
-<url><loc>/articles/index.html</loc></url>
-<url><loc>/authors.html</loc></url>
-<url><loc>/index.html</loc></url>
-<url><loc>/news/index.html</loc></url>
-<url><loc>/reference/addHistory.html</loc></url>
-<url><loc>/reference/gemini.html</loc></url>
-<url><loc>/reference/gemini_chat.html</loc></url>
-<url><loc>/reference/gemini_image.html</loc></url>
-<url><loc>/reference/gen_docs.html</loc></url>
-<url><loc>/reference/index.html</loc></url>
-<url><loc>/reference/setAPI.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/404.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/LICENSE-text.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/LICENSE.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/articles/genimi-R.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/articles/index.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/authors.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/index.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/news/index.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/reference/addHistory.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/reference/gemini.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/reference/gemini_chat.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/reference/gemini_image.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/reference/gen_docs.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/reference/index.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/reference/setAPI.html</loc></url>
 </urlset>
 
