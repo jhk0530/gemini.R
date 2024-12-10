@@ -1,6 +1,6 @@
 Package: gemini.R
 Title: Interface for 'Google Gemini' API
-Version: 0.5.2.9000
+Version: 0.6.1
 Authors@R: c(
   person("Jinhwan", "Kim", , "hwanistic@gmail.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0009-0009-3217-2417")),
   person("Maciej", "Nasinski", role = "ctb"))
@@ -18,7 +18,8 @@ Encoding: UTF-8
 Imports: 
     base64enc,
     cli,
-    httr2
+    httr2,
+    rstudioapi
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 

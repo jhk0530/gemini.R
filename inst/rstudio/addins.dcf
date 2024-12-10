@@ -1,0 +1,4 @@
+Name: Generate Roxygen docs with Gemini
+Description: Generates roxygen documentation for selected R functions.
+Binding: gen_docs
+Interactive: false

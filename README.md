@@ -10,15 +10,6 @@
 
 R package to use Google's gemini via API on R
 
-## Terms
-
-Before use the API, I recommend that you to check at least the following.
-- [Google Cloud Platform Terms of Service](https://cloud.google.com/terms)
-- [Gemini API Additional Terms of Service](https://ai.google.dev/gemini-api/terms)
-
-There may be more terms and conditions that you need to check.
-Any app which uses the API should be compliant with the Google Terms of Service.
-
 ## Installation
 
 #### From CRAN
@@ -127,6 +118,23 @@ shinyApp(ui = ui, server = server)
 <p style = 'text-align:center;'>
   <img src='./man/figures/shiny.png' width = '70%'>
 </p>
+
+#### gemini for roxygen documentation (Addin)
+
+<p style = 'text-align:center;'>
+  <img src='./man/figures/roxygen.gif' width = '70%'>
+</p>
+
+You may customize shortcut for this feature. Check [this](https://support.posit.co/hc/en-us/articles/206382178-Customizing-Keyboard-Shortcuts-in-the-RStudio-IDE).
+
+## Terms
+
+Before use the API, I recommend that you to check at least the following.
+- [Google Cloud Platform Terms of Service](https://cloud.google.com/terms)
+- [Gemini API Additional Terms of Service](https://ai.google.dev/gemini-api/terms)
+
+There may be more terms and conditions that you need to check.
+Any app which uses the API should be compliant with the Google Terms of Service.
 
 > [!note] 
 >

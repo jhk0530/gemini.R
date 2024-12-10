@@ -3,6 +3,7 @@
 export(gemini)
 export(gemini_chat)
 export(gemini_image)
+export(gen_docs)
 export(setAPI)
 importFrom(base64enc,base64encode)
 importFrom(cli,cli_alert)
