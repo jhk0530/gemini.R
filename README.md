@@ -6,7 +6,7 @@
 [![gemini.R status badge](https://jhk0530.r-universe.dev/badges/gemini.R)](https://jhk0530.r-universe.dev/gemini.R)
 <!-- badges: end -->
 
-![Alt](https://repobeats.axiom.co/api/embed/bc0595c11e22d5380cf10a646bc6049db9e5fc44.svg "Repobeats analytics image")
+
 
 R package to use Google's gemini via API on R
 
@@ -51,7 +51,6 @@ gemini("Explain about the gemini in astrology in one line")
 #### gemini with image
 
 ``` r
-
 # uses default prompt as "Explain this image"
 # uses included image of gemini.R package
 gemini_image(image = system.file("docs/reference/figures/image.png", package = "gemini.R"))
@@ -61,6 +60,20 @@ gemini_image(image = system.file("docs/reference/figures/image.png", package = "
 # a bowl of blueberries, and five scones. The scones are covered in blueberries and have 
 # a crumbly texture. There are also some pink flowers on the table. The background is a 
 # dark blue color. The image is taken from a top-down perspective." 
+
+```
+
+#### gemini with audio
+
+``` r
+# use default prompt as "Describe this audio"
+# uses included audio of gemini.R package
+gemini_audio(audio = system.file("docs/reference/helloworld.mp3", package = "gemini.R"))
+
+# text
+# "The audio contains a clear, crisp recording of a person saying \"Hello world\".  
+# Following the phrase is a distinct, repeated percussive sound, possibly a rhythmic 
+# tapping or clicking noise. The sound is consistent and mechanical in nature.\n"
 
 ```
 
