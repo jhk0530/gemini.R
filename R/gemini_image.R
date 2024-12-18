@@ -47,12 +47,12 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "1
   }
 
   if (!(type %in% c("png", "jpeg", "webp", "heic", "heif"))) {
-    cli_alert_danger("Error: Parameter 'a' must be one of 'png', 'jpeg', 'webp', 'heic', 'heif'")
+    cli_alert_danger("Error: Parameter 'type' must be one of 'png', 'jpeg', 'webp', 'heic', 'heif'")
     return(NULL)
   }
 
   if (!(model %in% c("1.5-flash", "1.5-pro"))) {
-    cli_alert_danger("Error: Parameter 'a' must be one of '1.5-flash', '1.5-pro'")
+    cli_alert_danger("Error: Parameter 'model' must be one of '1.5-flash', '1.5-pro'")
     return(NULL)
   }
 
