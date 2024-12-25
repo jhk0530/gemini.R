@@ -2,7 +2,7 @@ pandoc: '3.3'
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2024-12-18T04:01Z
+last_built: 2024-12-25T15:17Z
 urls:
   reference: https://github.com/jhk0530/gemini.R/reference
   article: https://github.com/jhk0530/gemini.R/articles

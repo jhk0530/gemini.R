@@ -3,7 +3,7 @@
 #'
 #' @param audio Path to the audio file (default: uses a sample file).  Must be an MP3.
 #' @param prompt A string describing what to do with the audio.
-#' @param model The Gemini model to use ("1.5-flash" or "1.5-pro"). Defaults to "1.5-flash".
+#' @param model The Gemini model to use ("1.5-flash" or "1.5-pro", "2.0-flash-exp"). Defaults to "1.5-flash".
 #' @param temperature Controls the randomness of the generated text (0-2).  Defaults to 0.5.
 #' @param maxOutputTokens The maximum number of tokens in the generated text. Defaults to 1024.
 #'
@@ -24,7 +24,6 @@
 #'
 #'
 gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "1.5-flash", temperature = 0.5, maxOutputTokens = 1024) {
-
   if (is.null(prompt)) {
     cli_alert_danger("{.arg prompt} must not NULL")
     return(NULL)
@@ -45,14 +44,8 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
     return(NULL)
   }
 
-  # VARIOUS TYPE NOT SUPPORTED YET
-  # if (!(type %in% c("mp3"))) {
-  #   cli_alert_danger("Error: Parameter 'type' must be one of 'mp3'")
-  #   return(NULL)
-  # }
-
-  if (!(model %in% c("1.5-flash", "1.5-pro"))) {
-    cli_alert_danger("Error: Parameter 'model' must be one of '1.5-flash', '1.5-pro'")
+  if (!(model %in% c("1.5-flash", "1.5-pro", "2.0-flash-exp"))) {
+    cli_alert_danger("Error: Parameter 'model' must be one of '1.5-flash', '1.5-pro', '2.0-flash-exp'")
     return(NULL)
   }
 
@@ -66,17 +59,17 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
   file_url <- "https://generativelanguage.googleapis.com/upload/v1beta/files" # Google API 기본 URL
 
   ext <- tolower(tools::file_ext(audio))
-  if(ext == 'mp3'){
+  if (ext == "mp3") {
     mime_type <- "audio/mp3"
-  } else if(ext == 'wav'){
+  } else if (ext == "wav") {
     mime_type <- "audio/wav"
-  } else if(ext == 'aiff'){
+  } else if (ext == "aiff") {
     mime_type <- "audio/aiff"
-  } else if(ext == 'aac'){
+  } else if (ext == "aac") {
     mime_type <- "audio/aac"
-  } else if(ext == 'ogg'){
+  } else if (ext == "ogg") {
     mime_type <- "audio/ogg"
-  } else if(ext == 'flac'){
+  } else if (ext == "flac") {
     mime_type <- "audio/flac"
   }
 

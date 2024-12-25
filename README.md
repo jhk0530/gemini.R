@@ -1,4 +1,4 @@
-# gemini.R <img alt='hexlogo' src = 'https://github.com/user-attachments/assets/331ba265-9852-4ca5-9c9a-ff19b9e494b3' width = 120 align = 'right'></img>
+# gemini.R
 
 <!-- badges: start -->
 [![CRAN status badge](https://www.r-pkg.org/badges/version/gemini.R)](https://CRAN.R-project.org/package=gemini.R)
@@ -139,6 +139,12 @@ shinyApp(ui = ui, server = server)
 </p>
 
 You may customize keyboard shortcut for this feature.
+
+#### gemini for unit testing as {testthat} (Addin)
+
+<p style = 'text-align:center;'>
+  <img alt='gen_test example' src='./man/figures/testing.gif' width = '70%'>
+</p>
 
 ## Terms
 

@@ -17,7 +17,7 @@ gemini_audio(
 
 \item{prompt}{A string describing what to do with the audio.}
 
-\item{model}{The Gemini model to use ("1.5-flash" or "1.5-pro"). Defaults to "1.5-flash".}
+\item{model}{The Gemini model to use ("1.5-flash" or "1.5-pro", "2.0-flash-exp"). Defaults to "1.5-flash".}
 
 \item{temperature}{Controls the randomness of the generated text (0-2).  Defaults to 0.5.}
 

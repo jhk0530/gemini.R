@@ -1,7 +1,7 @@
 #' @title Generate text from text with Gemini
 #' @description Generate text from text with Gemini
 #' @param prompt The prompt to generate text from
-#' @param model The model to use. Options are '1.5-flash', '1.5-pro', '1.0-pro'. Default is '1.5-flash'
+#' @param model The model to use. Options are '1.5-flash', '1.5-pro', '1.0-pro' and '2.0-flash-exp'. Default is '1.5-flash'
 #'              see https://ai.google.dev/gemini-api/docs/models/gemini
 #' @param temperature The temperature to use. Default is 0.5 value should be between 0 and 2
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
@@ -38,8 +38,8 @@ gemini <- function(prompt, model = "1.5-flash", temperature = 0.5, maxOutputToke
     return(NULL)
   }
 
-  if (!(model %in% c("1.5-flash", "1.5-pro", "1.0-pro"))) {
-    cli_alert_danger("Error: Parameter 'a' must be one of '1.5-flash', '1.5-pro', '1.0-pro'")
+  if (!(model %in% c("1.5-flash", "1.5-pro", "1.0-pro", "2.0-flash-exp"))) {
+    cli_alert_danger("Error: Parameter 'a' must be one of '1.5-flash', '1.5-pro', '1.0-pro', '2.0-flash-exp")
     return(NULL)
   }
 
@@ -48,7 +48,12 @@ gemini <- function(prompt, model = "1.5-flash", temperature = 0.5, maxOutputToke
     return(NULL)
   }
 
-  model_query <- paste0("gemini-", model, "-latest:generateContent")
+  if (model == "2.0-flash-exp") {
+    # exp is included, so remove -latest tag
+    model_query <- paste0("gemini-", model, ":generateContent")
+  } else {
+    model_query <- paste0("gemini-", model, "-latest:generateContent")
+  }
 
   url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query)
 

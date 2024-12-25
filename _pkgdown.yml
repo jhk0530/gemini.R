@@ -5,3 +5,5 @@ template:
     structure:
       left: [intro, reference, articles, tutorials, news]
       right: [search, github]
+  includes:
+    in_header: '<link rel="icon" type="image/x-icon" href="man/figures/favicon.svg">'

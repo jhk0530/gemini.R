@@ -18,7 +18,7 @@ gemini_image(
 
 \item{prompt}{The prompt to generate text, Default is "Explain this image"}
 
-\item{model}{The model to use. Options are '1.5-flash', '1.5-pro'. Default is '1.5-flash'
+\item{model}{The model to use. Options are '1.5-flash', '1.5-pro' and '2.0-flash-exp'. Default is '1.5-flash'
 see https://ai.google.dev/gemini-api/docs/models/gemini}
 
 \item{temperature}{The temperature to use. Default is 0.5 value should be between 0 and 2

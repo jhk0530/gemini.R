@@ -2,3 +2,8 @@ Name: Generate Roxygen docs with Gemini
 Description: Generates roxygen documentation for selected R functions.
 Binding: gen_docs
 Interactive: false
+
+Name: Generate Unit tests with Gemini
+Description: Generate Unit test code for selected R functions.
+Binding: gen_tests
+Interactive: false

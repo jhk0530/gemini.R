@@ -9,7 +9,7 @@ gemini(prompt, model = "1.5-flash", temperature = 0.5, maxOutputTokens = 1024)
 \arguments{
 \item{prompt}{The prompt to generate text from}
 
-\item{model}{The model to use. Options are '1.5-flash', '1.5-pro', '1.0-pro'. Default is '1.5-flash'
+\item{model}{The model to use. Options are '1.5-flash', '1.5-pro', '1.0-pro' and '2.0-flash-exp'. Default is '1.5-flash'
 see https://ai.google.dev/gemini-api/docs/models/gemini}
 
 \item{temperature}{The temperature to use. Default is 0.5 value should be between 0 and 2
