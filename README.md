@@ -149,6 +149,7 @@ You may customize keyboard shortcut for this feature.
 ## Terms
 
 Before use the API, I recommend that you to check at least the following.
+
 - [Google Cloud Platform Terms of Service](https://cloud.google.com/terms)
 - [Gemini API Additional Terms of Service](https://ai.google.dev/gemini-api/terms)
 
