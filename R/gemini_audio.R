@@ -18,6 +18,7 @@
 #' gemini_image(audio = system.file("docs/reference/helloworld.mp3", package = "gemini.R"))
 #' }
 #'
+#' @importFrom tools file_ext
 #' @importFrom cli cli_alert_danger
 #' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json req_method req_body_file resp_header
 #'
@@ -64,14 +65,21 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
   api_key <- Sys.getenv("GEMINI_API_KEY")
   file_url <- "https://generativelanguage.googleapis.com/upload/v1beta/files" # Google API 기본 URL
 
-  # WAV - audio/wav
-  # MP3 - audio/mp3
-  # AIFF - audio/aiff
-  # AAC - audio/aac
-  # OGG Vorbis - audio/ogg
-  # FLAC - audio/flac
+  ext <- tolower(tools::file_ext(audio))
+  if(ext == 'mp3'){
+    mime_type <- "audio/mp3"
+  } else if(ext == 'wav'){
+    mime_type <- "audio/wav"
+  } else if(ext == 'aiff'){
+    mime_type <- "audio/aiff"
+  } else if(ext == 'aac'){
+    mime_type <- "audio/aac"
+  } else if(ext == 'ogg'){
+    mime_type <- "audio/ogg"
+  } else if(ext == 'flac'){
+    mime_type <- "audio/flac"
+  }
 
-  mime_type <- "audio/mp3" # mp3 only
   num_bytes <- file.info(audio)$size
 
   # status bar
