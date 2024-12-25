@@ -1,3 +1,10 @@
+#' Generates unit test code for an R function.
+#'
+#' @param prompt A character string specifying the prompt for the Gemini model.  If NULL, a default prompt is used.
+#'
+#' @return
+#' #' A character string containing the generated unit test code.
+#'
 #' @export
 gen_tests <- function(prompt = NULL){
   if(is.null(prompt)){
