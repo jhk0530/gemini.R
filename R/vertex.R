@@ -21,16 +21,18 @@
 #' @importFrom httr2 jwt_claim jwt_encode_sig request req_body_form req_perform resp_body_json
 #'
 #' @export
-token.vertex <- function(jsonkey = NULL, model_id = NULL, expTime = 3600){
+token.vertex <- function(jsonkey = NULL, model_id = NULL, expTime = 3600, region = "us-central1"){
   account <- fromJSON(jsonkey)
   project_id <- account$project_id
 
   model_id <- paste0('gemini-', model_id, ':generateContent')
 
   endpoint_url <- paste0(
-    "https://us-central1-aiplatform.googleapis.com/v1/projects/",
+    "https://",
+    region,
+    "-aiplatform.googleapis.com/v1/projects/",
     project_id,
-    "/locations/us-central1/publishers/google/models/",
+    "/locations/", region, "/publishers/google/models/",
     model_id
   )
 

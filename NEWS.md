@@ -1,6 +1,9 @@
 # gemini.R
 
-# gemini.R 0.8.0
+# gemini.R 0.8.1
+
+## 0.8.1
+- requires `region` from user in Vertex AI API
 
 ## 0.8.0
 - Add Vertex AI with new functions: `token.vertex()`, `gemini.vertex()`, `gemini_image.vertex()`, `gemini_audio.vertex()`
