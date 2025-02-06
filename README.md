@@ -154,8 +154,9 @@ tokens <- token.vertex("YOUR_API_KEY.json", model_id = "1.5-flash")
 
 gemini_image.vertex(image = "YOUR_IMAGE.png", type, tokens)
 ```
+
 <p style = 'text-align:center;'>
-  <img alt='Most lovely cat in the world' src='./man/figures/dawn.png' width = '50%'>
+  <img alt='Most lovely cat in the world' src='https://github.com/user-attachments/assets/63bb6245-aa8e-4ce3-aad8-7e9113715aba' width = '50%'>
 </p>
 
 <p style = 'text-align:center;'>
