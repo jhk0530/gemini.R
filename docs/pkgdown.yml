@@ -1,8 +1,8 @@
-pandoc: '3.3'
+pandoc: 3.6.2
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2024-12-25T15:54Z
+last_built: 2025-02-06T01:59Z
 urls:
   reference: https://github.com/jhk0530/gemini.R/reference
   article: https://github.com/jhk0530/gemini.R/articles

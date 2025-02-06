@@ -6,8 +6,6 @@
 [![gemini.R status badge](https://jhk0530.r-universe.dev/badges/gemini.R)](https://jhk0530.r-universe.dev/gemini.R)
 <!-- badges: end -->
 
-
-
 R package to use Google's gemini via API on R
 
 ## Installation
@@ -34,7 +32,9 @@ pak::pak("jhk0530/gemini.R")
 
 ## Usage
 
-#### gemini with text
+### Gemini with AI Studio API
+
+#### Text
 
 ``` r
 library(gemini.R)
@@ -48,7 +48,7 @@ gemini("Explain about the gemini in astrology in one line")
 
 ```
 
-#### gemini with image
+#### Image
 
 ``` r
 # uses default prompt as "Explain this image"
@@ -63,7 +63,7 @@ gemini_image(image = system.file("docs/reference/figures/image.png", package = "
 
 ```
 
-#### gemini with audio
+#### Audio
 
 ``` r
 # use default prompt as "Describe this audio"
@@ -77,7 +77,7 @@ gemini_audio(audio = system.file("docs/reference/helloworld.mp3", package = "gem
 
 ```
 
-#### gemini with image via Shiny
+#### Image via Shiny
 
 To use `gemini_image` function, image file required. 
 and I recommend to use shiny app with `fileInput` function.
@@ -132,7 +132,55 @@ shinyApp(ui = ui, server = server)
   <img alt='shiny app example' src='./man/figures/shiny.png' width = '70%'>
 </p>
 
-#### gemini for roxygen documentation (Addin)
+### Gemini with Vertex AI API
+
+#### Text
+
+```r
+tokens <- token.vertex("YOUR_API_KEY.json", model_id = "1.5-flash")
+prompt <- "What is sachins Jersy number?"
+
+gemini.vertex(prompt, tokens)
+```
+
+<p style = 'text-align:center;'>
+  <img alt='vertex AI text example' src='./man/figures/vertex_text.png' width = '100%'>
+</p>
+
+#### Image
+
+```r
+tokens <- token.vertex("YOUR_API_KEY.json", model_id = "1.5-flash")
+
+gemini_image.vertex(image = "YOUR_IMAGE.png", type, tokens)
+```
+<p style = 'text-align:center;'>
+  <img alt='Most lovely cat in the world' src='./man/figures/dawn.png' width = '50%'>
+</p>
+
+<p style = 'text-align:center;'>
+  <img alt='vertex AI image example' src='./man/figures/vertex_image.png' width = '100%'>
+</p>
+
+#### Audio
+
+```r
+tokens <- token.vertex("YOUR_API_KEY.json", model_id = "1.5-flash")
+
+gemini_audio.vertex(audio = "YOUR_AUDIO.mp3", tokens)
+```
+
+- File upload to Google Cloud using API not supported.
+- Instead you must use uploaded file. (e.g. Google Cloud Storage)
+- Example sound from [soundbible](https://soundbible.com/2210-SOS-Morse-Code.html)
+
+<p style = 'text-align:center;'>
+  <img alt='vertex AI audio example' src='./man/figures/vertex_audio.png' width = '100%'>
+</p>
+
+### Rstudio Addins
+
+#### Function documentation (Roxygen)
 
 <p style = 'text-align:center;'>
   <img alt='gen_doc example' src='./man/figures/roxygen.gif' width = '70%'>
@@ -140,7 +188,7 @@ shinyApp(ui = ui, server = server)
 
 You may customize keyboard shortcut for this feature.
 
-#### gemini for unit testing as {testthat} (Addin)
+#### Unit testing (testthat)
 
 <p style = 'text-align:center;'>
   <img alt='gen_test example' src='./man/figures/testing.gif' width = '70%'>
