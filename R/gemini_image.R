@@ -1,7 +1,7 @@
 #' @title Generate text from text and image with Gemini
 #' @description Generate text from text and image with Gemini
-#' @param prompt The prompt to generate text, Default is "Explain this image"
 #' @param image The image to generate text
+#' @param prompt The prompt to generate text, Default is "Explain this image"
 #' @param model The model to use. Options are '1.5-flash', '1.5-pro' and '2.0-flash-exp'. Default is '1.5-flash'
 #'             see https://ai.google.dev/gemini-api/docs/models/gemini
 #' @param temperature The temperature to use. Default is 0.5 value should be between 0 and 2
@@ -52,7 +52,7 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "1
   }
 
   if (!(model %in% c("1.5-flash", "1.5-pro"))) {
-    cli_alert_danger("Error: Parameter 'model' must be one of '1.5-flash', '1.5-pro', '2.0-flash-exp'")
+    cli_alert_danger("Error: Parameter 'model' must be one of '1.5-flash', '1.5-pro'")
     return(NULL)
   }
 
@@ -105,4 +105,64 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "1
 
   outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
   return(outputs)
+}
+
+
+#' @title Generate text from text and image with Gemini Vertex API
+#' @description Generate text from text and image with Gemini Vertex API
+#'
+#' @param image The image to generate text
+#' @param prompt A character string specifying the prompt to use with the image. Defaults to "Explain this image".  Currently ignored.
+#' @param type A character string specifying the image type ("png", "jpeg", "webp", "heic", "heif"). Defaults to "png".
+#' @param tokens A list containing the API URL and key from token.vertex() function.
+#'
+#' @return A character string containing Gemini's description of the image.
+#'
+#' @importFrom cli cli_alert_danger cli_status cli_status_clear
+#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json
+#' @importFrom base64enc base64encode
+#'
+#' @export
+gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", type = "png", tokens = NULL){
+
+  if (!(type %in% c("png", "jpeg", "webp", "heic", "heif"))) {
+    cli_alert_danger("Error: Parameter 'type' must be one of 'png', 'jpeg', 'webp', 'heic', 'heif'")
+    return(NULL)
+  }
+
+  mime_type <- paste0("image/", type)
+
+  request_body <- list(
+    contents = list(
+      list(
+        role = "user",
+        parts = list(
+          list(
+            inline_data = list(
+              mime_type = mime_type,
+              data = base64encode(image)
+            )
+          ),
+          list(
+            text = prompt
+          )
+        )
+      )
+    )
+  )
+
+  sb <- cli_status("Gemini is answering...")
+
+  response <- request(tokens$url) |>
+    req_headers(
+      "Authorization" = paste0("Bearer ", tokens$key),
+      "Content-Type" = "application/json"
+    ) |>
+    req_body_json(request_body) |>
+    req_perform() |>
+    resp_body_json()
+
+  cli_status_clear(id = sb)
+
+  return(response$candidates[[1]]$content$parts[[1]]$text)
 }

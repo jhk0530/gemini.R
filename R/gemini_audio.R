@@ -157,3 +157,53 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
   outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
   return(outputs)
 }
+
+#' @title Analyze Audio using Gemini Vertex API
+#' @description This function sends audio to the Gemini API and returns a text description.
+#'
+#' @param audio Path to the audio file (character string). only supports "mp3".
+#' @param prompt A prompt to guide the Gemini API's analysis (character string, defaults to "Describe this audio").
+#' @param tokens A list containing the API URL and key from token.vertex() function.
+#'
+#' @return A character vector containing the Gemini API's description of the audio.
+#'
+#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json
+#'
+#' @export
+gemini_audio.vertex <- function(audio = NULL, prompt = "Describe this audio", tokens = NULL){
+
+  sb <- cli_status("Gemini is answering...")
+
+  generate_req <- request(tokens$url) |>
+    req_headers(
+      "Authorization" = paste0("Bearer ", tokens$key),
+      "Content-Type" = "application/json"
+    ) |>
+    req_body_json(list(
+      contents = list(
+        list(
+          role = "user",
+          parts = list(
+            list(
+              file_data = list(
+                mime_type = 'audio/mp3',
+                file_uri = audio
+              )
+            ),
+            list(
+              text = "Describe this audio"
+            )
+          )
+        )
+      )
+    )) |>
+    req_perform()
+
+  cli_status_clear(id = sb)
+
+  response <- resp_body_json(generate_req)
+  candidates <- response$candidates
+
+  outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
+  return(outputs)
+}

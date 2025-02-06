@@ -1,6 +1,23 @@
-# gemini.R (development version)
+# gemini.R
 
-# gemini.R 0.5.1
+# gemini.R 0.8.0
+
+## 0.8.0
+- Add Vertex AI with new functions: `token.vertex()`, `gemini.vertex()`, `gemini_image.vertex()`, `gemini_audio.vertex()`
+- These functions are in experimental stage and may change in future versions.
+
+## 0.7.0
+- Generate unit test using `gen_test()` added.
+- `gemini_audio` supports more than `mp3`.
+- gemini.R supports `2.0-flash-exp` as model.
+
+## 0.6.1
+- Generate roxygen with `gen_docs()` added.
+- Some terms are improved.
+
+## 0.5.0
+- gemini.R supports `1.5=flash` model.
+- gemini functions require `temperature`, `maxTokenOutput`
 
 ## 0.4.0
 
