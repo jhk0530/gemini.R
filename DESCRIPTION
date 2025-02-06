@@ -11,7 +11,7 @@ Description: Provides a comprehensive interface for Google Gemini API,
             text generation, and other AI-driven capabilities within the R environment.
             For more information, please visit <https://ai.google.dev/docs/gemini_api_overview>.
 License: MIT + file LICENSE
-Depends: R (>= 4.0.0)
+Depends: R (>= 4.1.0)
 URL: https://github.com/jhk0530/gemini.R
 BugReports: https://github.com/jhk0530/gemini.R/issues
 Encoding: UTF-8
