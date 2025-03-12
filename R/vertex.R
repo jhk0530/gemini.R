@@ -4,11 +4,16 @@
 #' @param jsonkey A path to JSON file containing the service account key from Vertex AI.
 #' @param model_id The ID of the Gemini model. This will be prepended with "gemini-".
 #' @param expTime The expiration time of the access token in seconds (default is 3600 seconds, or 1 hour).
+#' @param region The Google Cloud region where your Vertex AI resources are located (default is "us-central1").
+#'        See https://cloud.google.com/vertex-ai/docs/general/locations for available regions.
 #'
 #' @examples
 #' \dontrun{
 #' library(gemini.R)
 #' tokens <- token.vertex(jsonkey = "YOURAPIKEY.json", model_id = "1.5-flash")
+#' 
+#' # Specify a different region
+#' tokens <- token.vertex(jsonkey = "YOURAPIKEY.json", model_id = "1.5-flash", region = "europe-west4")
 #' }
 #'
 #' @return A list containing:
