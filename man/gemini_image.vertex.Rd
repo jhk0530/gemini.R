@@ -8,17 +8,37 @@ gemini_image.vertex(
   image = NULL,
   prompt = "Explain this image",
   type = "png",
-  tokens = NULL
+  tokens = NULL,
+  temperature = 1,
+  maxOutputTokens = 8192,
+  topK = 40,
+  topP = 0.95,
+  seed = 1234
 )
 }
 \arguments{
 \item{image}{The image to generate text}
 
-\item{prompt}{A character string specifying the prompt to use with the image. Defaults to "Explain this image".  Currently ignored.}
+\item{prompt}{A character string specifying the prompt to use with the image. Defaults to "Explain this image".}
 
 \item{type}{A character string specifying the image type ("png", "jpeg", "webp", "heic", "heif"). Defaults to "png".}
 
 \item{tokens}{A list containing the API URL and key from token.vertex() function.}
+
+\item{temperature}{The temperature to use. Default is 1 value should be between 0 and 2
+see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
+
+\item{maxOutputTokens}{The maximum number of tokens to generate.
+Default is 8192 and 100 tokens correspond to roughly 60-80 words.}
+
+\item{topK}{The top-k value to use. Default is 40 value should be between 0 and 100
+see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
+
+\item{topP}{The top-p value to use. Default is 0.95 value should be between 0 and 1
+see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
+
+\item{seed}{The seed to use. Default is 1234 value should be integer
+see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
 }
 \value{
 A character string containing Gemini's description of the image.

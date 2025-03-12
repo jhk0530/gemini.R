@@ -4,7 +4,12 @@
 \alias{token.vertex}
 \title{Generate Gemini Access Token and Endpoint URL}
 \usage{
-token.vertex(jsonkey = NULL, model_id = NULL, expTime = 3600)
+token.vertex(
+  jsonkey = NULL,
+  model_id = NULL,
+  expTime = 3600,
+  region = "us-central1"
+)
 }
 \arguments{
 \item{jsonkey}{A path to JSON file containing the service account key from Vertex AI.}
@@ -25,8 +30,6 @@ Generates an access token for the Gemini model and constructs the corresponding 
 \dontrun{
 library(gemini.R)
 tokens <- token.vertex(jsonkey = "YOURAPIKEY.json", model_id = "1.5-flash")
-
 }
-
 
 }

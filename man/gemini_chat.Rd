@@ -7,9 +7,12 @@
 gemini_chat(
   prompt,
   history = list(),
-  model = "1.5-flash",
-  temperature = 0.5,
-  maxOutputTokens = 1024
+  model = "2.0-flash",
+  temperature = 1,
+  maxOutputTokens = 8192,
+  topK = 40,
+  topP = 0.95,
+  seed = 1234
 )
 }
 \arguments{
@@ -17,14 +20,23 @@ gemini_chat(
 
 \item{history}{history object to keep track of the conversation}
 
-\item{model}{The model to use. Options are '1.5-flash', '1.5-pro', '1.0-pro' and '2.0-flash-exp'. Default is '1.5-flash'
+\item{model}{The model to use. Options are "2.0-flash", "2.0-flash-lite", "1.5-flash", "1.5-flash-8b", "1.5-pro". Default is '2.0-flash'
 see https://ai.google.dev/gemini-api/docs/models/gemini}
 
-\item{temperature}{The temperature to use. Default is 0.5 value should be between 0 and 2
+\item{temperature}{The temperature to use. Default is 1 value should be between 0 and 2
 see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
 
 \item{maxOutputTokens}{The maximum number of tokens to generate.
-Default is 1024 and 100 tokens correspond to roughly 60-80 words.}
+Default is 8192 and 100 tokens correspond to roughly 60-80 words.}
+
+\item{topK}{The top-k value to use. Default is 40 value should be between 0 and 100
+see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
+
+\item{topP}{The top-p value to use. Default is 0.95 value should be between 0 and 1
+see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
+
+\item{seed}{The seed to use. Default is 1234 value should be integer
+see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
 }
 \value{
 Generated text
