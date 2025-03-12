@@ -1,24 +1,34 @@
 # gemini.R
 
-# gemini.R 0.8.1
+# gemini.R 0.9.0
+
+## 0.9.0
+
+- Updated parameters across all functions (`temperature`, `maxOutputTokens`, `topK`, `topP`, `seed`)
+- Adjusted default values: temperature to **1** and maxOutputTokens to **8192**, model as **2.0-flash**
 
 ## 0.8.1
+
 - requires `region` from user in Vertex AI API
 
 ## 0.8.0
+
 - Add Vertex AI with new functions: `token.vertex()`, `gemini.vertex()`, `gemini_image.vertex()`, `gemini_audio.vertex()`
 - These functions are in experimental stage and may change in future versions.
 
 ## 0.7.0
+
 - Generate unit test using `gen_test()` added.
 - `gemini_audio` supports more than `mp3`.
 - gemini.R supports `2.0-flash-exp` as model.
 
 ## 0.6.1
+
 - Generate roxygen with `gen_docs()` added.
 - Some terms are improved.
 
 ## 0.5.0
+
 - gemini.R supports `1.5=flash` model.
 - gemini functions require `temperature`, `maxTokenOutput`
 
@@ -40,4 +50,4 @@
 
 - Added Multi-turn conversation or **Chat** 💬. See `gemini_chat`
 - Slight change with function documentation.
-- Now generates message to inform to `setAPI` when API key is not exist yet. 
+- Now generates message to inform to `setAPI` when API key is not exist yet.
