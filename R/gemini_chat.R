@@ -2,12 +2,18 @@
 #' @description Generate text from text with Gemini
 #' @param prompt The prompt to generate text from
 #' @param history history object to keep track of the conversation
-#' @param model The model to use. Options are '1.5-flash', '1.5-pro', '1.0-pro' and '2.0-flash-exp'. Default is '1.5-flash'
+#' @param model The model to use. Options are "2.0-flash", "2.0-flash-lite", "1.5-flash", "1.5-flash-8b", "1.5-pro". Default is '2.0-flash'
 #'              see https://ai.google.dev/gemini-api/docs/models/gemini
-#' @param temperature The temperature to use. Default is 0.5 value should be between 0 and 2
+#' @param temperature The temperature to use. Default is 1 value should be between 0 and 2
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #' @param maxOutputTokens The maximum number of tokens to generate.
-#'              Default is 1024 and 100 tokens correspond to roughly 60-80 words.
+#'              Default is 8192 and 100 tokens correspond to roughly 60-80 words.
+#' @param topK The top-k value to use. Default is 40 value should be between 0 and 100
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param topP The top-p value to use. Default is 0.95 value should be between 0 and 1
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param seed The seed to use. Default is 1234 value should be integer
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #'
 #' @return Generated text
 #' @export
@@ -30,7 +36,8 @@
 #' @seealso https://ai.google.dev/docs/gemini_api_overview#chat
 #'
 
-gemini_chat <- function(prompt, history = list(), model = "1.5-flash", temperature = 0.5, maxOutputTokens = 1024) {
+gemini_chat <- function(prompt, history = list(), model = "2.0-flash", temperature = 1,
+                        maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234) {
   if (is.null(prompt)) {
     cli_alert_danger("{.arg prompt} must not NULL")
     return(NULL)
@@ -46,8 +53,8 @@ gemini_chat <- function(prompt, history = list(), model = "1.5-flash", temperatu
     return(NULL)
   }
 
-  if (!(model %in% c("1.5-flash", "1.5-pro", "1.0-pro"))) {
-    cli_alert_danger("Error: Parameter 'a' must be one of '1.5-flash', '1.5-pro', '1.0-pro', '2.0-flash-exp'")
+  if (!(model %in% c("2.0-flash", "2.0-flash-lite", "1.5-flash", "1.5-flash-8b", "1.5-pro"))) {
+    cli_alert_danger("Error: Parameter 'model' must be one of '2.0-flash', '2.0-flash-lite', '1.5-flash', '1.5-flash-8b', '1.5-pro'")
     return(NULL)
   }
 
@@ -56,12 +63,22 @@ gemini_chat <- function(prompt, history = list(), model = "1.5-flash", temperatu
     return(NULL)
   }
 
-  if (model == "2.0-flash-exp") {
-    # exp is included, so remove -latest tag
-    model_query <- paste0("gemini-", model, ":generateContent")
-  } else {
-    model_query <- paste0("gemini-", model, "-latest:generateContent")
+  if (topP < 0 | topP > 1) {
+    cli_alert_danger("Error: Parameter 'topP' must be between 0 and 1")
+    return(NULL)
   }
+
+  if (topK < 0 | topK > 100) {
+    cli_alert_danger("Error: Parameter 'topK' must be between 0 and 100")
+    return(NULL)
+  }
+
+  if (!is.numeric(seed) || seed %% 1 != 0) {
+    cli_alert_danger("Error: Parameter 'seed' must be an integer")
+    return(NULL)
+  }
+
+  model_query <- paste0("gemini-", model, ":generateContent")
 
   history <- history |>
     addHistory(role = "user", item = prompt)
@@ -77,7 +94,10 @@ gemini_chat <- function(prompt, history = list(), model = "1.5-flash", temperatu
       contents = history,
       generationConfig = list(
         temperature = temperature,
-        maxOutputTokens = maxOutputTokens
+        maxOutputTokens = maxOutputTokens,
+        topP = topP,
+        topK = topK,
+        seed = seed
       )
     ))
 

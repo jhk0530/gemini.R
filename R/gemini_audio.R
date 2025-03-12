@@ -1,11 +1,20 @@
 #' @title Analyze audio using Gemini
 #' @description This function sends audio to the Gemini API and returns a text description.
 #'
-#' @param audio Path to the audio file (default: uses a sample file).  Must be an MP3.
+#' @param audio Path to the audio file (default: uses a sample file). Must be an MP3.
 #' @param prompt A string describing what to do with the audio.
-#' @param model The Gemini model to use ("1.5-flash" or "1.5-pro", "2.0-flash-exp"). Defaults to "1.5-flash".
-#' @param temperature Controls the randomness of the generated text (0-2).  Defaults to 0.5.
-#' @param maxOutputTokens The maximum number of tokens in the generated text. Defaults to 1024.
+#' @param model The model to use. Options are "2.0-flash", "2.0-flash-lite", "1.5-flash", "1.5-flash-8b", "1.5-pro". Default is '2.0-flash'
+#'              see https://ai.google.dev/gemini-api/docs/models/gemini
+#' @param temperature The temperature to use. Default is 1 value should be between 0 and 2
+#'            see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param maxOutputTokens The maximum number of tokens to generate.
+#'              Default is 8192 and 100 tokens correspond to roughly 60-80 words.
+#' @param topK The top-k value to use. Default is 40 value should be between 0 and 100
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param topP The top-p value to use. Default is 0.95 value should be between 0 and 1
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param seed The seed to use. Default is 1234 value should be integer
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #'
 #' @return A character vector containing the Gemini API's response.
 #'
@@ -15,7 +24,7 @@
 #' \dontrun{
 #' library(gemini.R)
 #' setAPI("YOUR_API_KEY")
-#' gemini_image(audio = system.file("docs/reference/helloworld.mp3", package = "gemini.R"))
+#' gemini_audio(audio = system.file("docs/reference/helloworld.mp3", package = "gemini.R"))
 #' }
 #'
 #' @importFrom tools file_ext
@@ -23,7 +32,9 @@
 #' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json req_method req_body_file resp_header
 #'
 #'
-gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "1.5-flash", temperature = 0.5, maxOutputTokens = 1024) {
+gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "2.0-flash",
+                         temperature = 1, maxOutputTokens = 8192,
+                         topK = 40, topP = 0.95, seed = 1234) {
   if (is.null(prompt)) {
     cli_alert_danger("{.arg prompt} must not NULL")
     return(NULL)
@@ -44,13 +55,28 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
     return(NULL)
   }
 
-  if (!(model %in% c("1.5-flash", "1.5-pro", "2.0-flash-exp"))) {
-    cli_alert_danger("Error: Parameter 'model' must be one of '1.5-flash', '1.5-pro', '2.0-flash-exp'")
+  if (!(model %in% c("2.0-flash", "2.0-flash-lite", "1.5-flash", "1.5-flash-8b", "1.5-pro"))) {
+    cli_alert_danger("Error: Parameter 'model' must be one of '2.0-flash', '2.0-flash-lite', '1.5-flash', '1.5-flash-8b', '1.5-pro'")
     return(NULL)
   }
 
   if (temperature < 0 | temperature > 2) {
     cli_alert_danger("Error: Parameter 'temperature' must be between 0 and 2")
+    return(NULL)
+  }
+
+  if (topP < 0 | topP > 1) {
+    cli_alert_danger("Error: Parameter 'topP' must be between 0 and 1")
+    return(NULL)
+  }
+
+  if (topK < 0 | topK > 100) {
+    cli_alert_danger("Error: Parameter 'topK' must be between 0 and 100")
+    return(NULL)
+  }
+
+  if (!is.numeric(seed) || seed %% 1 != 0) {
+    cli_alert_danger("Error: Parameter 'seed' must be an integer")
     return(NULL)
   }
 
@@ -121,7 +147,7 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
   cli_status_clear(id = sb)
   # prompt
 
-  model_query <- paste0("gemini-", model, "-latest:generateContent")
+  model_query <- paste0("gemini-", model, ":generateContent")
 
   url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query)
 
@@ -140,7 +166,10 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
       ),
       generationConfig = list(
         temperature = temperature,
-        maxOutputTokens = maxOutputTokens
+        maxOutputTokens = maxOutputTokens,
+        topP = topP,
+        topK = topK,
+        seed = seed
       )
     ))
 
@@ -164,13 +193,66 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
 #' @param audio Path to the audio file (character string). only supports "mp3".
 #' @param prompt A prompt to guide the Gemini API's analysis (character string, defaults to "Describe this audio").
 #' @param tokens A list containing the API URL and key from token.vertex() function.
+#' @param temperature The temperature to use. Default is 1 value should be between 0 and 2
+#'            see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param maxOutputTokens The maximum number of tokens to generate.
+#'              Default is 8192 and 100 tokens correspond to roughly 60-80 words.
+#' @param topK The top-k value to use. Default is 40 value should be between 0 and 100
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param topP The top-p value to use. Default is 0.95 value should be between 0 and 1
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param seed The seed to use. Default is 1234 value should be integer
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #'
 #' @return A character vector containing the Gemini API's description of the audio.
 #'
 #' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json
+#' @importFrom cli cli_alert_danger cli_status cli_status_clear
 #'
 #' @export
-gemini_audio.vertex <- function(audio = NULL, prompt = "Describe this audio", tokens = NULL){
+gemini_audio.vertex <- function(audio = NULL, prompt = "Describe this audio", tokens = NULL,
+                                temperature = 1, maxOutputTokens = 8192,
+                                topK = 40, topP = 0.95, seed = 1234) {
+  if (is.null(prompt)) {
+    cli_alert_danger("{.arg prompt} must not NULL")
+    return(NULL)
+  }
+
+  if (!is.character(prompt)) {
+    cli_alert_danger("{.arg prompt} must be given as a STRING")
+    return(NULL)
+  }
+
+  if (is.null(tokens)) {
+    cli_alert_danger("{.arg tokens} must not be NULL. Use token.vertex() function to generate tokens.")
+    return(NULL)
+  }
+
+  if (is.null(audio)) {
+    cli_alert_danger("{.arg audio} must not be NULL")
+    return(NULL)
+  }
+
+  # Parameters validation
+  if (temperature < 0 | temperature > 2) {
+    cli_alert_danger("Error: Parameter 'temperature' must be between 0 and 2")
+    return(NULL)
+  }
+
+  if (topP < 0 | topP > 1) {
+    cli_alert_danger("Error: Parameter 'topP' must be between 0 and 1")
+    return(NULL)
+  }
+
+  if (topK < 0 | topK > 100) {
+    cli_alert_danger("Error: Parameter 'topK' must be between 0 and 100")
+    return(NULL)
+  }
+
+  if (!is.numeric(seed) || seed %% 1 != 0) {
+    cli_alert_danger("Error: Parameter 'seed' must be an integer")
+    return(NULL)
+  }
 
   sb <- cli_status("Gemini is answering...")
 
@@ -186,15 +268,22 @@ gemini_audio.vertex <- function(audio = NULL, prompt = "Describe this audio", to
           parts = list(
             list(
               file_data = list(
-                mime_type = 'audio/mp3',
+                mime_type = "audio/mp3",
                 file_uri = audio
               )
             ),
             list(
-              text = "Describe this audio"
+              text = prompt
             )
           )
         )
+      ),
+      generationConfig = list(
+        temperature = temperature,
+        maxOutputTokens = maxOutputTokens,
+        topP = topP,
+        topK = topK,
+        seed = seed
       )
     )) |>
     req_perform()

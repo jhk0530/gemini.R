@@ -2,12 +2,18 @@
 #' @description Generate text from text and image with Gemini
 #' @param image The image to generate text
 #' @param prompt The prompt to generate text, Default is "Explain this image"
-#' @param model The model to use. Options are '1.5-flash', '1.5-pro' and '2.0-flash-exp'. Default is '1.5-flash'
+#' @param model The model to use. Options are "2.0-flash", "2.0-flash-lite", "1.5-flash", "1.5-flash-8b", "1.5-pro". Default is '2.0-flash'
 #'             see https://ai.google.dev/gemini-api/docs/models/gemini
-#' @param temperature The temperature to use. Default is 0.5 value should be between 0 and 2
+#' @param temperature The temperature to use. Default is 1 value should be between 0 and 2
 #'            see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #' @param maxOutputTokens The maximum number of tokens to generate.
-#'              Default is 1024 and 100 tokens correspond to roughly 60-80 words.
+#'              Default is 8192 and 100 tokens correspond to roughly 60-80 words.
+#' @param topK The top-k value to use. Default is 40 value should be between 0 and 100
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param topP The top-p value to use. Default is 0.95 value should be between 0 and 1
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param seed The seed to use. Default is 1234 value should be integer
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #' @param type The type of image. Options are 'png', 'jpeg', 'webp', 'heic', 'heif'. Default is 'png'
 #'
 #' @return Generated text
@@ -26,7 +32,9 @@
 #' @seealso https://ai.google.dev/docs/gemini_api_overview#text_image_input
 #'
 
-gemini_image <- function(image = NULL, prompt = "Explain this image", model = "1.5-flash", temperature = 0.5, maxOutputTokens = 1024, type = "png") {
+gemini_image <- function(image = NULL, prompt = "Explain this image", model = "2.0-flash",
+                         temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95,
+                         seed = 1234, type = "png") {
   if (is.null(prompt)) {
     cli_alert_danger("{.arg prompt} must not NULL")
     return(NULL)
@@ -51,8 +59,8 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "1
     return(NULL)
   }
 
-  if (!(model %in% c("1.5-flash", "1.5-pro"))) {
-    cli_alert_danger("Error: Parameter 'model' must be one of '1.5-flash', '1.5-pro'")
+  if (!(model %in% c("2.0-flash", "2.0-flash-lite", "1.5-flash", "1.5-flash-8b", "1.5-pro"))) {
+    cli_alert_danger("Error: Parameter 'model' must be one of '2.0-flash', '2.0-flash-lite', '1.5-flash', '1.5-flash-8b', '1.5-pro'")
     return(NULL)
   }
 
@@ -61,12 +69,22 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "1
     return(NULL)
   }
 
-  if (model == "2.0-flash-exp") {
-    # exp is included, so remove -latest tag
-    model_query <- paste0("gemini-", model, ":generateContent")
-  } else {
-    model_query <- paste0("gemini-", model, "-latest:generateContent")
+  if (topP < 0 | topP > 1) {
+    cli_alert_danger("Error: Parameter 'topP' must be between 0 and 1")
+    return(NULL)
   }
+
+  if (topK < 0 | topK > 100) {
+    cli_alert_danger("Error: Parameter 'topK' must be between 0 and 100")
+    return(NULL)
+  }
+
+  if (!is.numeric(seed) || seed %% 1 != 0) {
+    cli_alert_danger("Error: Parameter 'seed' must be an integer")
+    return(NULL)
+  }
+
+  model_query <- paste0("gemini-", model, ":generateContent")
 
   url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query)
 
@@ -94,7 +112,10 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "1
       ),
       generationConfig = list(
         temperature = temperature,
-        maxOutputTokens = maxOutputTokens
+        maxOutputTokens = maxOutputTokens,
+        topP = topP,
+        topK = topK,
+        seed = seed
       )
     ))
 
@@ -112,9 +133,19 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "1
 #' @description Generate text from text and image with Gemini Vertex API
 #'
 #' @param image The image to generate text
-#' @param prompt A character string specifying the prompt to use with the image. Defaults to "Explain this image".  Currently ignored.
+#' @param prompt A character string specifying the prompt to use with the image. Defaults to "Explain this image".
 #' @param type A character string specifying the image type ("png", "jpeg", "webp", "heic", "heif"). Defaults to "png".
 #' @param tokens A list containing the API URL and key from token.vertex() function.
+#' @param temperature The temperature to use. Default is 1 value should be between 0 and 2
+#'            see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param maxOutputTokens The maximum number of tokens to generate.
+#'              Default is 8192 and 100 tokens correspond to roughly 60-80 words.
+#' @param topK The top-k value to use. Default is 40 value should be between 0 and 100
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param topP The top-p value to use. Default is 0.95 value should be between 0 and 1
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param seed The seed to use. Default is 1234 value should be integer
+#'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #'
 #' @return A character string containing Gemini's description of the image.
 #'
@@ -123,10 +154,46 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "1
 #' @importFrom base64enc base64encode
 #'
 #' @export
-gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", type = "png", tokens = NULL){
+gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", type = "png", tokens = NULL,
+                                temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234) {
+  if (is.null(image)) {
+    cli_alert_danger("{.arg image} must not be NULL")
+    return(NULL)
+  }
+
+  if (!is.character(prompt)) {
+    cli_alert_danger("{.arg prompt} must be given as a STRING")
+    return(NULL)
+  }
+
+  if (is.null(tokens)) {
+    cli_alert_danger("{.arg tokens} must not be NULL. Use token.vertex() function to generate tokens.")
+    return(NULL)
+  }
 
   if (!(type %in% c("png", "jpeg", "webp", "heic", "heif"))) {
     cli_alert_danger("Error: Parameter 'type' must be one of 'png', 'jpeg', 'webp', 'heic', 'heif'")
+    return(NULL)
+  }
+
+  # Parameters validation
+  if (temperature < 0 | temperature > 2) {
+    cli_alert_danger("Error: Parameter 'temperature' must be between 0 and 2")
+    return(NULL)
+  }
+
+  if (topP < 0 | topP > 1) {
+    cli_alert_danger("Error: Parameter 'topP' must be between 0 and 1")
+    return(NULL)
+  }
+
+  if (topK < 0 | topK > 100) {
+    cli_alert_danger("Error: Parameter 'topK' must be between 0 and 100")
+    return(NULL)
+  }
+
+  if (!is.numeric(seed) || seed %% 1 != 0) {
+    cli_alert_danger("Error: Parameter 'seed' must be an integer")
     return(NULL)
   }
 
@@ -148,6 +215,13 @@ gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", typ
           )
         )
       )
+    ),
+    generationConfig = list(
+      temperature = temperature,
+      maxOutputTokens = maxOutputTokens,
+      topP = topP,
+      topK = topK,
+      seed = seed
     )
   )
 
