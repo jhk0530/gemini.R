@@ -2,6 +2,12 @@
 
 # gemini.R 0.9.0
 
+## 0.9.2
+- modified `.Rbuildignore` to ignore README.md
+
+## 0.9.1
+- add roxygen documents for `region`
+
 ## 0.9.0
 
 - Updated parameters across all functions (`temperature`, `maxOutputTokens`, `topK`, `topP`, `seed`)

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gemini.R</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,37 +33,48 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.8.1" id="geminir-081">gemini.R 0.8.1<a class="anchor" aria-label="anchor" href="#geminir-081"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.9.0" id="geminir-090">gemini.R 0.9.0<a class="anchor" aria-label="anchor" href="#geminir-090"></a></h2>
 <div class="section level3">
-<h3 id="id_081-0-8-1">0.8.1<a class="anchor" aria-label="anchor" href="#id_081-0-8-1"></a></h3>
+<h3 id="id_091-0-9-0">0.9.1<a class="anchor" aria-label="anchor" href="#id_091-0-9-0"></a></h3>
+<ul><li>add roxygen documents for <code>region</code>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_090-0-9-0">0.9.0<a class="anchor" aria-label="anchor" href="#id_090-0-9-0"></a></h3>
+<ul><li>Updated parameters across all functions (<code>temperature</code>, <code>maxOutputTokens</code>, <code>topK</code>, <code>topP</code>, <code>seed</code>)</li>
+<li>Adjusted default values: temperature to <strong>1</strong> and maxOutputTokens to <strong>8192</strong>, model as <strong>2.0-flash</strong>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_081-0-9-0">0.8.1<a class="anchor" aria-label="anchor" href="#id_081-0-9-0"></a></h3>
 <ul><li>requires <code>region</code> from user in Vertex AI API</li>
 </ul></div>
 <div class="section level3">
-<h3 id="id_080-0-8-1">0.8.0<a class="anchor" aria-label="anchor" href="#id_080-0-8-1"></a></h3>
+<h3 id="id_080-0-9-0">0.8.0<a class="anchor" aria-label="anchor" href="#id_080-0-9-0"></a></h3>
 <ul><li>Add Vertex AI with new functions: <code><a href="../reference/token.vertex.html">token.vertex()</a></code>, <code><a href="../reference/gemini.vertex.html">gemini.vertex()</a></code>, <code><a href="../reference/gemini_image.vertex.html">gemini_image.vertex()</a></code>, <code><a href="../reference/gemini_audio.vertex.html">gemini_audio.vertex()</a></code>
 </li>
 <li>These functions are in experimental stage and may change in future versions.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="id_070-0-8-1">0.7.0<a class="anchor" aria-label="anchor" href="#id_070-0-8-1"></a></h3>
+<h3 id="id_070-0-9-0">0.7.0<a class="anchor" aria-label="anchor" href="#id_070-0-9-0"></a></h3>
 <ul><li>Generate unit test using <code>gen_test()</code> added.</li>
 <li>
 <code>gemini_audio</code> supports more than <code>mp3</code>.</li>
 <li>gemini.R supports <code>2.0-flash-exp</code> as model.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="id_061-0-8-1">0.6.1<a class="anchor" aria-label="anchor" href="#id_061-0-8-1"></a></h3>
+<h3 id="id_061-0-9-0">0.6.1<a class="anchor" aria-label="anchor" href="#id_061-0-9-0"></a></h3>
 <ul><li>Generate roxygen with <code><a href="../reference/gen_docs.html">gen_docs()</a></code> added.</li>
 <li>Some terms are improved.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="id_050-0-8-1">0.5.0<a class="anchor" aria-label="anchor" href="#id_050-0-8-1"></a></h3>
+<h3 id="id_050-0-9-0">0.5.0<a class="anchor" aria-label="anchor" href="#id_050-0-9-0"></a></h3>
 <ul><li>gemini.R supports <code>1.5=flash</code> model.</li>
 <li>gemini functions require <code>temperature</code>, <code>maxTokenOutput</code>
 </li>
 </ul></div>
 <div class="section level3">
-<h3 id="id_040-0-8-1">0.4.0<a class="anchor" aria-label="anchor" href="#id_040-0-8-1"></a></h3>
+<h3 id="id_040-0-9-0">0.4.0<a class="anchor" aria-label="anchor" href="#id_040-0-9-0"></a></h3>
 <ul><li>Updated to use <a href="https://httr2.r-lib.org/" class="external-link">httr2</a>
 </li>
 <li>
@@ -75,14 +86,14 @@
 </li>
 </ul></div>
 <div class="section level3">
-<h3 id="id_030-0-8-1">0.3.0<a class="anchor" aria-label="anchor" href="#id_030-0-8-1"></a></h3>
+<h3 id="id_030-0-9-0">0.3.0<a class="anchor" aria-label="anchor" href="#id_030-0-9-0"></a></h3>
 <ul><li>R CMD CHECK no longer shows any NOTEs or WARNINGs.</li>
 <li>use R-hub to check multiple platforms with github action</li>
 </ul></div>
 <div class="section level3">
-<h3 id="id_020-0-8-1">0.2.0<a class="anchor" aria-label="anchor" href="#id_020-0-8-1"></a></h3>
+<h3 id="id_020-0-9-0">0.2.0<a class="anchor" aria-label="anchor" href="#id_020-0-9-0"></a></h3>
 <div class="section level4">
-<h4 id="whats-changed-0-8-1">What’s changed<a class="anchor" aria-label="anchor" href="#whats-changed-0-8-1"></a></h4>
+<h4 id="whats-changed-0-9-0">What’s changed<a class="anchor" aria-label="anchor" href="#whats-changed-0-9-0"></a></h4>
 <ul><li>Added Multi-turn conversation or <strong>Chat</strong> 💬. See <code>gemini_chat</code>
 </li>
 <li>Slight change with function documentation.</li>
