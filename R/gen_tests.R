@@ -6,11 +6,13 @@
 #' #' A character string containing the generated unit test code.
 #'
 #' @export
-gen_tests <- function(prompt = NULL){
-  if(is.null(prompt)){
+gen_tests <- function(prompt = NULL) {
+  if (is.null(prompt)) {
     prompt <-
-      paste0("Generate unit test code for an R function.",
-             "\n answer must contain only R codes not ```r and ```")
+      paste0(
+        "Generate unit test code for an R function.",
+        "\n answer must contain only R codes not ```r and ```"
+      )
   }
 
   context <- getActiveDocumentContext()
@@ -19,7 +21,6 @@ gen_tests <- function(prompt = NULL){
   description <- gemini(
     prompt = paste0(
       prompt,
-
       "\n---",
       selectedCode
     )

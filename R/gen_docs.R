@@ -9,13 +9,14 @@
 #' @importFrom rstudioapi getActiveDocumentContext executeCommand insertText
 #' @export
 gen_docs <- function(prompt = NULL) {
-
-  if(is.null(prompt)){
+  if (is.null(prompt)) {
     prompt <-
-      paste0("Generate Roxygen documentation for an R function.",
-             "\nReturn value should start with #' only",
-             "\nAlso not include original input code in return value.",
-             "\nDo not include ```r and ```")
+      paste0(
+        "Generate Roxygen documentation for an R function.",
+        "\nReturn value should start with #' only",
+        "\nAlso not include original input code in return value.",
+        "\nDo not include ```r and ```"
+      )
   }
 
   context <- getActiveDocumentContext()
@@ -24,7 +25,6 @@ gen_docs <- function(prompt = NULL) {
   description <- gemini(
     prompt = paste0(
       prompt,
-
       "\n---",
       selectedCode
     )
