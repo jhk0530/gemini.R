@@ -1,3 +1,8 @@
+## 0.9.2
+
+There's issue with README.md's content
+- modified `.Rbuildignore` to ignore README.md
+   
 ## 0.5.2
 
 - Modified Title in DESCRIPTION file.
