@@ -1,9 +1,12 @@
 # gemini.R <img alt='hexlogo' src = 'https://github.com/user-attachments/assets/331ba265-9852-4ca5-9c9a-ff19b9e494b3' width = 120 align = 'right'></img>
 
 <!-- badges: start -->
+
 [![CRAN status badge](https://www.r-pkg.org/badges/version/gemini.R)](https://CRAN.R-project.org/package=gemini.R)
+[![CRAN downloads badge](https://cranlogs.r-pkg.org/badges/gemini.R)](https://cran.r-project.org/package=gemini.R)
 ![r-hub](https://github.com/jhk0530/gemini.R/actions/workflows/rhub.yaml/badge.svg)
 [![gemini.R status badge](https://jhk0530.r-universe.dev/badges/gemini.R)](https://jhk0530.r-universe.dev/gemini.R)
+
 <!-- badges: end -->
 
 R package to use Google's gemini via API on R
@@ -11,6 +14,7 @@ R package to use Google's gemini via API on R
 ## Installation
 
 #### From CRAN
+
 ```r
 install.packages("gemini.R")
 ```
@@ -25,7 +29,7 @@ install.packages("gemini.R",
 
 #### From Github (development version)
 
-``` r
+```r
 # install.packages("pak")
 pak::pak("jhk0530/gemini.R")
 ```
@@ -36,53 +40,53 @@ pak::pak("jhk0530/gemini.R")
 
 #### Text
 
-``` r
+```r
 library(gemini.R)
 
 setAPI("your API key") # check https://makersuite.google.com/app/apikey
 gemini("Explain about the gemini in astrology in one line")
 
-# text 
-# "Gemini, the third astrological sign, is associated with 
-# communication, adaptability, and a thirst for knowledge." 
+# text
+# "Gemini, the third astrological sign, is associated with
+# communication, adaptability, and a thirst for knowledge."
 
 ```
 
 #### Image
 
-``` r
+```r
 # uses default prompt as "Explain this image"
 # uses included image of gemini.R package
 gemini_image(image = system.file("docs/reference/figures/image.png", package = "gemini.R"))
 
-# text 
-# " The image shows a table with a white tablecloth. On the table are two cups of coffee, 
-# a bowl of blueberries, and five scones. The scones are covered in blueberries and have 
-# a crumbly texture. There are also some pink flowers on the table. The background is a 
-# dark blue color. The image is taken from a top-down perspective." 
+# text
+# " The image shows a table with a white tablecloth. On the table are two cups of coffee,
+# a bowl of blueberries, and five scones. The scones are covered in blueberries and have
+# a crumbly texture. There are also some pink flowers on the table. The background is a
+# dark blue color. The image is taken from a top-down perspective."
 
 ```
 
 #### Audio
 
-``` r
+```r
 # use default prompt as "Describe this audio"
 # uses included audio of gemini.R package
 gemini_audio(audio = system.file("docs/reference/helloworld.mp3", package = "gemini.R"))
 
 # text
-# "The audio contains a clear, crisp recording of a person saying \"Hello world\".  
-# Following the phrase is a distinct, repeated percussive sound, possibly a rhythmic 
+# "The audio contains a clear, crisp recording of a person saying \"Hello world\".
+# Following the phrase is a distinct, repeated percussive sound, possibly a rhythmic
 # tapping or clicking noise. The sound is consistent and mechanical in nature.\n"
 
 ```
 
 #### Image via Shiny
 
-To use `gemini_image` function, image file required. 
+To use `gemini_image` function, image file required.
 and I recommend to use shiny app with `fileInput` function.
 
-``` r
+```r
 library(shiny)
 library(gemini.R)
 
@@ -97,8 +101,8 @@ ui <- fluidPage(
       ),
       imageOutput(outputId = "image1"),
       textInput(
-        inputId = "prompt", 
-        label = "Prompt", 
+        inputId = "prompt",
+        label = "Prompt",
         placeholder = "Enter Prompts Here"
       ),
       actionButton("goButton", "Ask to gemini"),
@@ -108,7 +112,7 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
-  
+
   observeEvent(input$file, {
     path <- input$file$datapath
     output$image1 <- renderImage({
@@ -117,7 +121,7 @@ server <- function(input, output) {
       )
     }, deleteFile = FALSE)
   })
-  
+
   observeEvent(input$goButton, {
     output$text1 <- renderText({
       gemini_image(input$prompt, input$file$datapath)
@@ -128,6 +132,7 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 
 ```
+
 <p style = 'text-align:center;'>
   <img alt='shiny app example' src='./man/figures/shiny.png' width = '70%'>
 </p>
@@ -205,7 +210,7 @@ Before use the API, I recommend that you to check at least the following.
 There may be more terms and conditions that you need to check.
 Any app which uses the API should be compliant with the Google Terms of Service.
 
-> [!note] 
+> [!note]
 >
 > image is from [Google AI for Developers](https://ai.google.dev/tutorials/rest_quickstart)
 >
