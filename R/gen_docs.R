@@ -29,8 +29,6 @@ gen_docs <- function(prompt = NULL) {
       selectedCode
     )
   )
-  # start.cursor.row <- as.numeric(context$selection[[1]]$range$start[1])
-  # last.cursor.row <- as.numeric(context$selection[[1]]$range$end[1])
 
   executeCommand("activateConsole")
   insertText(text = description)

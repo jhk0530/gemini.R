@@ -11,7 +11,7 @@
 #' \dontrun{
 #' library(gemini.R)
 #' tokens <- token.vertex(jsonkey = "YOURAPIKEY.json", model_id = "1.5-flash")
-#' 
+#'
 #' # Specify a different region
 #' tokens <- token.vertex(jsonkey = "YOURAPIKEY.json", model_id = "1.5-flash", region = "europe-west4")
 #' }
