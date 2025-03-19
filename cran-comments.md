@@ -1,8 +1,13 @@
+## 0.10.1
+
+- Fixed lines exceeding 100 characters in examples (`countTokens()`)
+
 ## 0.9.2
 
 There's issue with README.md's content
+
 - modified `.Rbuildignore` to ignore README.md
-   
+
 ## 0.5.2
 
 - Modified Title in DESCRIPTION file.
@@ -15,4 +20,4 @@ There's issue with README.md's content
 
 0 errors | 0 warnings | 1 note
 
-* This is a new release.
+- This is a new release.
