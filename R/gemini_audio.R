@@ -3,7 +3,7 @@
 #'
 #' @param audio Path to the audio file (default: uses a sample file). Must be an MP3.
 #' @param prompt A string describing what to do with the audio.
-#' @param model The model to use. Options are "2.0-flash", "2.0-flash-lite", "1.5-flash", "1.5-flash-8b", "1.5-pro". Default is '2.0-flash'
+#' @param model The model to use. Options are "2.0-flash", "2.0-flash-lite", "2.0-pro-exp-02-05". Default is '2.0-flash'
 #'              see https://ai.google.dev/gemini-api/docs/models/gemini
 #' @param temperature The temperature to use. Default is 1 value should be between 0 and 2
 #'            see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
@@ -28,7 +28,7 @@
 #' }
 #'
 #' @importFrom tools file_ext
-#' @importFrom cli cli_alert_danger
+#' @importFrom cli cli_alert_danger cli_status cli_status_clear cli_alert_warning
 #' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json req_method req_body_file resp_header
 #'
 #'
@@ -55,10 +55,15 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
     return(NULL)
   }
 
-  if (!(model %in% c("2.0-flash", "2.0-flash-lite", "1.5-flash", "1.5-flash-8b", "1.5-pro"))) {
-    cli_alert_danger("Error: Parameter 'model' must be one of '2.0-flash', '2.0-flash-lite', '1.5-flash', '1.5-flash-8b', '1.5-pro'")
+  # Model
+  supported_models <- c("2.0-flash", "2.0-flash-lite", "2.0-pro-exp-02-05")
+
+  if (!(model %in% supported_models)) {
+    cli_alert_danger("Error: Parameter 'model' must be one of '2.0-flash', '2.0-flash-lite', '2.0-pro-exp-02-05'")
     return(NULL)
   }
+
+  model_query <- paste0("gemini-", model, ":generateContent")
 
   if (temperature < 0 | temperature > 2) {
     cli_alert_danger("Error: Parameter 'temperature' must be between 0 and 2")
@@ -82,7 +87,7 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
 
   ## TEMPORARY FILE UPLOAD VIA FILE API
   api_key <- Sys.getenv("GEMINI_API_KEY")
-  file_url <- "https://generativelanguage.googleapis.com/upload/v1beta/files" # Google API 기본 URL
+  file_url <- "https://generativelanguage.googleapis.com/upload/v1beta/files"
 
   ext <- tolower(tools::file_ext(audio))
   if (ext == "mp3") {
@@ -133,7 +138,7 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
       `X-Goog-Upload-Offset` = "0",
       `X-Goog-Upload-Command` = "upload, finalize"
     ) |>
-    req_body_file(audio) |> # 바이너리 데이터 업로드
+    req_body_file(audio) |>
     req_perform()
 
   if (resp$status_code != 200) {
@@ -146,8 +151,6 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
 
   cli_status_clear(id = sb)
   # prompt
-
-  model_query <- paste0("gemini-", model, ":generateContent")
 
   url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query)
 

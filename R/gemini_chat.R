@@ -2,7 +2,7 @@
 #' @description Generate text from text with Gemini
 #' @param prompt The prompt to generate text from
 #' @param history history object to keep track of the conversation
-#' @param model The model to use. Options are "2.0-flash", "2.0-flash-lite", "1.5-flash", "1.5-flash-8b", "1.5-pro". Default is '2.0-flash'
+#' @param model The model to use. Options are "2.0-flash", "2.0-flash-lite", "2.0-pro-exp-02-05". Default is '2.0-flash'
 #'              see https://ai.google.dev/gemini-api/docs/models/gemini
 #' @param temperature The temperature to use. Default is 1 value should be between 0 and 2
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
@@ -53,10 +53,18 @@ gemini_chat <- function(prompt, history = list(), model = "2.0-flash", temperatu
     return(NULL)
   }
 
-  if (!(model %in% c("2.0-flash", "2.0-flash-lite", "1.5-flash", "1.5-flash-8b", "1.5-pro"))) {
-    cli_alert_danger("Error: Parameter 'model' must be one of '2.0-flash', '2.0-flash-lite', '1.5-flash', '1.5-flash-8b', '1.5-pro'")
+  # Model
+
+  supported_models <- c("2.0-flash", "2.0-flash-lite", "2.0-pro-exp-02-05")
+
+  if (!(model %in% supported_models)) {
+    cli_alert_danger("Error: Parameter 'model' must be one of '2.0-flash', '2.0-flash-lite', '2.0-pro-exp-02-05'")
     return(NULL)
   }
+
+
+  model_query <- paste0("gemini-", model, ":generateContent")
+
 
   if (temperature < 0 | temperature > 2) {
     cli_alert_danger("Error: Parameter 'temperature' must be between 0 and 2")
@@ -77,8 +85,6 @@ gemini_chat <- function(prompt, history = list(), model = "2.0-flash", temperatu
     cli_alert_danger("Error: Parameter 'seed' must be an integer")
     return(NULL)
   }
-
-  model_query <- paste0("gemini-", model, ":generateContent")
 
   history <- history |>
     addHistory(role = "user", item = prompt)
