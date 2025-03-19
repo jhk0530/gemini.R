@@ -1,12 +1,21 @@
 # gemini.R
 
-# gemini.R 0.9.0
+# gemini.R 0.10.0
+
+## 0.10.0
+
+- `countTokens` function for countTokens API
+- `setEnv` function added.
+- Deprecated Gemini 1.5 models (`1.5-pro`, `1.5-flash`)
+- Add CRANlogs badge in readme
 
 ## 0.9.2
-- modified `.Rbuildignore` to ignore README.md
+
+- Modified `.Rbuildignore` to ignore README.md
 
 ## 0.9.1
-- add roxygen documents for `region`
+
+- Add roxygen documents for `region`
 
 ## 0.9.0
 
