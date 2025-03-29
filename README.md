@@ -184,6 +184,16 @@ gemini_audio.vertex(audio = "YOUR_AUDIO.mp3", tokens)
   <img alt='vertex AI audio example' src='./man/figures/vertex_audio.png' width = '100%'>
 </p>
 
+#### Image generation
+
+```r
+gen_image('Draw an image of a cat swimming in the Milky Way')
+```
+
+<p style = 'text-align:center;'>
+  <img alt='image generation' src='./man/figures/image_gen.png' width = '100%'>
+</p>
+
 ### Rstudio Addins
 
 #### Function documentation (Roxygen)

@@ -2,6 +2,11 @@
 
 # gemini.R 0.10.0
 
+## 0.11.0
+- Added Gemini 2.5-pro-exp model (`2.5-pro-exp-03-25`)
+- Deprecated Gemini 2.0-pro-exp model (`2.0-pro-exp-02-05`)
+- Now image generation possible with `gen_image()` using `2.0-flash-exp-image-generation` model.
+
 ## 0.10.0
 
 - `countTokens` function for countTokens API

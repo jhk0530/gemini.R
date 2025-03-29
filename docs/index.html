@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">gemini.R</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,6 +51,7 @@
 </h1></div>
 <!-- badges: start -->
 
+<!-- badges: end -->
 <p>R package to use Google’s gemini via API on R</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -92,9 +93,9 @@
 <span><span class="fu"><a href="reference/setAPI.html">setAPI</a></span><span class="op">(</span><span class="st">"your API key"</span><span class="op">)</span> <span class="co"># check https://makersuite.google.com/app/apikey</span></span>
 <span><span class="fu"><a href="reference/gemini.html">gemini</a></span><span class="op">(</span><span class="st">"Explain about the gemini in astrology in one line"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># text </span></span>
-<span><span class="co"># "Gemini, the third astrological sign, is associated with </span></span>
-<span><span class="co"># communication, adaptability, and a thirst for knowledge." </span></span></code></pre></div>
+<span><span class="co"># text</span></span>
+<span><span class="co"># "Gemini, the third astrological sign, is associated with</span></span>
+<span><span class="co"># communication, adaptability, and a thirst for knowledge."</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="image">Image<a class="anchor" aria-label="anchor" href="#image"></a>
@@ -104,11 +105,11 @@
 <span><span class="co"># uses included image of gemini.R package</span></span>
 <span><span class="fu"><a href="reference/gemini_image.html">gemini_image</a></span><span class="op">(</span>image <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"docs/reference/figures/image.png"</span>, package <span class="op">=</span> <span class="st">"gemini.R"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># text </span></span>
-<span><span class="co"># " The image shows a table with a white tablecloth. On the table are two cups of coffee, </span></span>
-<span><span class="co"># a bowl of blueberries, and five scones. The scones are covered in blueberries and have </span></span>
-<span><span class="co"># a crumbly texture. There are also some pink flowers on the table. The background is a </span></span>
-<span><span class="co"># dark blue color. The image is taken from a top-down perspective." </span></span></code></pre></div>
+<span><span class="co"># text</span></span>
+<span><span class="co"># " The image shows a table with a white tablecloth. On the table are two cups of coffee,</span></span>
+<span><span class="co"># a bowl of blueberries, and five scones. The scones are covered in blueberries and have</span></span>
+<span><span class="co"># a crumbly texture. There are also some pink flowers on the table. The background is a</span></span>
+<span><span class="co"># dark blue color. The image is taken from a top-down perspective."</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="audio">Audio<a class="anchor" aria-label="anchor" href="#audio"></a>
@@ -119,8 +120,8 @@
 <span><span class="fu"><a href="reference/gemini_audio.html">gemini_audio</a></span><span class="op">(</span>audio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"docs/reference/helloworld.mp3"</span>, package <span class="op">=</span> <span class="st">"gemini.R"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># text</span></span>
-<span><span class="co"># "The audio contains a clear, crisp recording of a person saying \"Hello world\".  </span></span>
-<span><span class="co"># Following the phrase is a distinct, repeated percussive sound, possibly a rhythmic </span></span>
+<span><span class="co"># "The audio contains a clear, crisp recording of a person saying \"Hello world\".</span></span>
+<span><span class="co"># Following the phrase is a distinct, repeated percussive sound, possibly a rhythmic</span></span>
 <span><span class="co"># tapping or clicking noise. The sound is consistent and mechanical in nature.\n"</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -142,8 +143,8 @@
 <span>      <span class="op">)</span>,</span>
 <span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/plotOutput.html" class="external-link">imageOutput</a></span><span class="op">(</span>outputId <span class="op">=</span> <span class="st">"image1"</span><span class="op">)</span>,</span>
 <span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textInput.html" class="external-link">textInput</a></span><span class="op">(</span></span>
-<span>        inputId <span class="op">=</span> <span class="st">"prompt"</span>, </span>
-<span>        label <span class="op">=</span> <span class="st">"Prompt"</span>, </span>
+<span>        inputId <span class="op">=</span> <span class="st">"prompt"</span>,</span>
+<span>        label <span class="op">=</span> <span class="st">"Prompt"</span>,</span>
 <span>        placeholder <span class="op">=</span> <span class="st">"Enter Prompts Here"</span></span>
 <span>      <span class="op">)</span>,</span>
 <span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"goButton"</span>, <span class="st">"Ask to gemini"</span><span class="op">)</span>,</span>
@@ -153,7 +154,7 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">file</span>, <span class="op">{</span></span>
 <span>    <span class="va">path</span> <span class="op">&lt;-</span> <span class="va">input</span><span class="op">$</span><span class="va">file</span><span class="op">$</span><span class="va">datapath</span></span>
 <span>    <span class="va">output</span><span class="op">$</span><span class="va">image1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderImage.html" class="external-link">renderImage</a></span><span class="op">(</span><span class="op">{</span></span>
@@ -162,7 +163,7 @@
 <span>      <span class="op">)</span></span>
 <span>    <span class="op">}</span>, deleteFile <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">goButton</span>, <span class="op">{</span></span>
 <span>    <span class="va">output</span><span class="op">$</span><span class="va">text1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderText</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>      <span class="fu"><a href="reference/gemini_image.html">gemini_image</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">prompt</span>, <span class="va">input</span><span class="op">$</span><span class="va">file</span><span class="op">$</span><span class="va">datapath</span><span class="op">)</span></span>
@@ -216,6 +217,14 @@
 </ul>
 <p style="text-align:center;">
 <img alt="vertex AI audio example" src="./reference/figures/vertex_audio.png" width="100%"></p>
+</div>
+<div class="section level4">
+<h4 id="image-generation">Image generation<a class="anchor" aria-label="anchor" href="#image-generation"></a>
+</h4>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/gen_image.html">gen_image</a></span><span class="op">(</span><span class="st">'Draw an image of a cat swimming in the Milky Way'</span><span class="op">)</span></span></code></pre></div>
+<p style="text-align:center;">
+<img alt="image generation" src="./reference/figures/image_gen.png" width="100%"></p>
 </div>
 </div>
 <div class="section level3">
@@ -289,6 +298,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://CRAN.R-project.org/package=gemini.R" class="external-link"><img src="https://www.r-pkg.org/badges/version/gemini.R" alt="CRAN status badge"></a></li>
+<li><a href="https://cran.r-project.org/package=gemini.R" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/gemini.R" alt="CRAN downloads badge"></a></li>
 <li><a href="https://jhk0530.r-universe.dev/gemini.R" class="external-link"><img src="https://jhk0530.r-universe.dev/badges/gemini.R" alt="gemini.R status badge"></a></li>
 </ul>
 </div>
