@@ -2,7 +2,7 @@
 #' @description Generate text from text and image with Gemini
 #' @param image The image to generate text
 #' @param prompt The prompt to generate text, Default is "Explain this image"
-#' @param model The model to use. Options are "2.0-flash", "2.0-flash-lite", "2.0-pro-exp-02-05". Default is '2.0-flash'
+#' @param model The model to use. Options are "2.0-flash", "2.0-flash-lite", "2.5-pro-exp-03-25". Default is '2.0-flash'
 #'             see https://ai.google.dev/gemini-api/docs/models/gemini
 #' @param temperature The temperature to use. Default is 1 value should be between 0 and 2
 #'            see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
@@ -61,10 +61,10 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "2
 
   # Model
 
-  supported_models <- c("2.0-flash", "2.0-flash-lite", "2.0-pro-exp-02-05")
+  supported_models <- c("2.0-flash", "2.0-flash-lite", "2.5-pro-exp-03-25")
 
   if (!(model %in% supported_models)) {
-    cli_alert_danger("Error: Parameter 'model' must be one of '2.0-flash', '2.0-flash-lite', '2.0-pro-exp-02-05'")
+    cli_alert_danger("Error: Parameter 'model' must be one of '2.0-flash', '2.0-flash-lite', '2.5-pro-exp-03-25'")
     return(NULL)
   }
 

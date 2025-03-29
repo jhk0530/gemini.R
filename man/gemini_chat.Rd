@@ -20,7 +20,7 @@ gemini_chat(
 
 \item{history}{history object to keep track of the conversation}
 
-\item{model}{The model to use. Options are "2.0-flash", "2.0-flash-lite", "2.0-pro-exp-02-05". Default is '2.0-flash'
+\item{model}{The model to use. Options are "2.0-flash", "2.0-flash-lite", "2.5-pro-exp-03-25". Default is '2.0-flash'
 see https://ai.google.dev/gemini-api/docs/models/gemini}
 
 \item{temperature}{The temperature to use. Default is 1 value should be between 0 and 2
