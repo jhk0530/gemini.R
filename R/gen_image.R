@@ -20,7 +20,6 @@
 gen_image <- function(prompt, filename = "gemini_image.png", overwrite = TRUE,
                       model = "2.0-flash-exp-image-generation",
                       temperature = 1, seed = 1234) {
-
   if (is.null(prompt)) {
     cli_alert_danger("{.arg prompt} must not be NULL")
     return(NULL)
@@ -48,14 +47,17 @@ gen_image <- function(prompt, filename = "gemini_image.png", overwrite = TRUE,
   response <- gemini(prompt, model = model, temperature = temperature, seed = seed)
   cli_status_clear(id = sb)
 
-  tryCatch({
-    base64_data <- response[2]
-    image_data <- base64enc::base64decode(base64_data)
-    writeBin(image_data, filename)
-    cli_alert_success(paste("Image saved to", filename))
-    return(filename)
-  }, error = function(e) {
-    cli_alert_danger(paste("Error saving image:", e$message))
-    return(NULL)
-  })
+  tryCatch(
+    {
+      base64_data <- response[2]
+      image_data <- base64enc::base64decode(base64_data)
+      writeBin(image_data, filename)
+      cli_alert_success(paste("Image saved to", filename))
+      return(filename)
+    },
+    error = function(e) {
+      cli_alert_danger(paste("Error saving image:", e$message))
+      return(NULL)
+    }
+  )
 }

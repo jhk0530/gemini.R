@@ -80,7 +80,7 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
   api_key <- Sys.getenv("GEMINI_API_KEY")
 
   sb <- cli_status("Gemini is answering...")
-  
+
   # Create generation config
   generation_config <- list(
     temperature = temperature,
@@ -89,12 +89,12 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
     topK = topK,
     seed = seed
   )
-  
+
   # Add responseModalities only for image generation model
   if (model == "2.0-flash-exp-image-generation") {
     generation_config$responseModalities <- list("Text", "Image")
   }
-  
+
   req <- request(url) |>
     req_url_query(key = api_key) |>
     req_headers("Content-Type" = "application/json") |>

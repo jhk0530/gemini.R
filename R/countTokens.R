@@ -18,8 +18,8 @@
 #' key_file <- "YOURAPIKEY.json"
 #' model <- "2.0-flash"
 #' token_count_text <- countTokens(
-#'   jsonkey = key_file, 
-#'   model_id = model, 
+#'   jsonkey = key_file,
+#'   model_id = model,
 #'   content = "Hello, world!"
 #' )
 #' print(token_count_text)
