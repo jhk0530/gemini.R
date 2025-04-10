@@ -1,6 +1,10 @@
 # gemini.R
 
-# gemini.R 0.10.0
+# gemini.R 0.12.0
+
+## 0.12.0
+- Added Gemini searching `gemini_search` for ground using **gemini-2.0 models**
+- Added Gemini searching `gemini_searchR` for retrive using **gemini-1.5 models**
 
 ## 0.11.0
 - Added Gemini 2.5-pro-exp model (`2.5-pro-exp-03-25`)
