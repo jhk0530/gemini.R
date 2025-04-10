@@ -194,6 +194,18 @@ gen_image('Draw an image of a cat swimming in the Milky Way')
   <img alt='image generation' src='./man/figures/image_gen.png' width = '100%'>
 </p>
 
+#### Answer using Google Search 
+
+```r
+gemini_search('What is the current Apple stock price?')
+gemini_searchR("Who won the latest F1 grand prix?")
+```
+
+<p style = 'text-align:center;'>
+  <img alt='search' src='./man/figures/search.png' width = '100%'>
+  <img alt='searchR' src='./man/figures/searchR.png' width = '100%'>
+</p>
+
 ### Rstudio Addins
 
 #### Function documentation (Roxygen)
