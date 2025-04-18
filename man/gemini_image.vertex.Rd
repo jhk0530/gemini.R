@@ -41,7 +41,7 @@ see https://ai.google.dev/gemini-api/docs/models/generative-models#model-paramet
 see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
 }
 \value{
-A character string containing Gemini's description of the image.
+A character vector containing Gemini's description of the image.
 }
 \description{
 Generate text from text and image with Gemini Vertex API

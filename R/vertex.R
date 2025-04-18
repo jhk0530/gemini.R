@@ -22,10 +22,53 @@
 #'
 #' @importFrom jsonlite fromJSON
 #' @importFrom httr2 jwt_claim jwt_encode_sig request req_body_form req_perform resp_body_json
+#' @importFrom cli cli_alert_danger cli_alert_info cli_status cli_status_clear
 #'
 #' @export
 token.vertex <- function(jsonkey = NULL, model_id = NULL, expTime = 3600, region = "us-central1") {
-  account <- fromJSON(jsonkey)
+  # 1. 파라미터 유효성 검증 추가
+  if (is.null(jsonkey)) {
+    cli_alert_danger("JSON key file path must be provided.")
+    return(NULL)
+  }
+  
+  if (!file.exists(jsonkey)) {
+    cli_alert_danger(paste0("JSON key file not found: ", jsonkey))
+    return(NULL)
+  }
+  
+  if (is.null(model_id)) {
+    cli_alert_danger("Model ID must be provided.")
+    return(NULL)
+  }
+  
+  # 2. 상태 표시 메시지 추가
+  sb <- cli_status("Authenticating with Vertex AI...")
+  
+  # 3. 오류 처리 강화
+  account <- tryCatch({
+    fromJSON(jsonkey)
+  }, error = function(e) {
+    cli_status_clear(id = sb)
+    cli_alert_danger(paste0("Error reading JSON key file: ", e$message))
+    return(NULL)
+  })
+  
+  if (is.null(account)) {
+    return(NULL)
+  }
+  
+  # 필수 필드 확인
+  required_fields <- c("client_email", "private_key", "project_id")
+  missing_fields <- required_fields[!required_fields %in% names(account)]
+  
+  if (length(missing_fields) > 0) {
+    cli_status_clear(id = sb)
+    cli_alert_danger(paste0("JSON key file missing required fields: ", 
+                            paste(missing_fields, collapse = ", ")))
+    return(NULL)
+  }
+  
   project_id <- account$project_id
 
   model_id <- paste0("gemini-", model_id, ":generateContent")
@@ -51,17 +94,61 @@ token.vertex <- function(jsonkey = NULL, model_id = NULL, expTime = 3600, region
     exp = iat + expTime
   )
 
-  jwt_token <- jwt_encode_sig(jwt_claims, account$private_key)
+  # 4. 토큰 발급 오류 처리 추가
+  jwt_token <- tryCatch({
+    jwt_encode_sig(jwt_claims, account$private_key)
+  }, error = function(e) {
+    cli_status_clear(id = sb)
+    cli_alert_danger(paste0("Error creating JWT token: ", e$message))
+    return(NULL)
+  })
+  
+  if (is.null(jwt_token)) {
+    return(NULL)
+  }
 
-  resp <- request(token_url) |>
-    req_body_form(
-      grant_type = "urn:ietf:params:oauth:grant-type:jwt-bearer",
-      assertion = jwt_token
-    ) |>
-    req_perform() |>
-    resp_body_json()
+  # 5. API 호출 오류 처리 추가
+  resp <- tryCatch({
+    request(token_url) |>
+      req_body_form(
+        grant_type = "urn:ietf:params:oauth:grant-type:jwt-bearer",
+        assertion = jwt_token
+      ) |>
+      req_perform()
+  }, error = function(e) {
+    cli_status_clear(id = sb)
+    cli_alert_danger(paste0("Error requesting access token: ", e$message))
+    return(NULL)
+  })
+  
+  if (is.null(resp)) {
+    return(NULL)
+  }
+  
+  # 6. 응답 상태 코드 확인 추가
+  if (resp$status_code != 200) {
+    cli_status_clear(id = sb)
+    cli_alert_danger(paste0("Error response from token server: Status code ", resp$status_code))
+    return(NULL)
+  }
+  
+  # 7. JSON 응답 처리 오류 처리 추가
+  token_data <- tryCatch({
+    resp_body_json(resp)
+  }, error = function(e) {
+    cli_status_clear(id = sb)
+    cli_alert_danger(paste0("Error processing JSON response: ", e$message))
+    return(NULL)
+  })
+  
+  if (is.null(token_data)) {
+    return(NULL)
+  }
+  
+  access_token <- token_data$access_token
 
-  access_token <- resp$access_token
+  cli_status_clear(id = sb)
+  cli_alert_info("Authentication successful.")
 
   return(list(
     key = access_token,

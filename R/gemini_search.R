@@ -25,47 +25,15 @@
 #' @seealso https://ai.google.dev/docs/search_retrieval
 
 gemini_search <- function(prompt, temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234) {
-  # Input validation
-  if (is.null(prompt)) {
-    cli_alert_danger("{.arg prompt} must not be NULL")
-    return(NULL)
-  }
-
-  if (!is.character(prompt)) {
-    cli_alert_danger("{.arg prompt} must be given as a STRING")
-    return(NULL)
-  }
-
-  # API Key validation
-  if (Sys.getenv("GEMINI_API_KEY") == "") {
-    cli_alert_danger("Please set the {.envvar GEMINI_API_KEY} with {.fn setAPI} function.")
+  # 1. 파라미터 검증을 validate_params 함수로 대체
+  # 모델은 항상 "2.0-flash"로 고정되므로 "fixed_model"이라는 특수값을 사용
+  if (!validate_params(prompt, "fixed_model", temperature, topP, topK, seed, api_key = TRUE)) {
     return(NULL)
   }
 
   # Fix Model as 2.0 flash
   # see this: https://ai.google.dev/gemini-api/docs/grounding?lang=rest#configure-search
   model_query <- paste0("gemini-2.0-flash:generateContent")
-
-  # Parameters validation
-  if (temperature < 0 | temperature > 2) {
-    cli_alert_danger("Error: Parameter 'temperature' must be between 0 and 2")
-    return(NULL)
-  }
-
-  if (topP < 0 | topP > 1) {
-    cli_alert_danger("Error: Parameter 'topP' must be between 0 and 1")
-    return(NULL)
-  }
-
-  if (topK < 0 | topK > 100) {
-    cli_alert_danger("Error: Parameter 'topK' must be between 0 and 100")
-    return(NULL)
-  }
-
-  if (!is.numeric(seed) || seed %% 1 != 0) {
-    cli_alert_danger("Error: Parameter 'seed' must be an integer")
-    return(NULL)
-  }
 
   # Create API URL
   url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query)
@@ -74,8 +42,37 @@ gemini_search <- function(prompt, temperature = 1, maxOutputTokens = 8192, topK 
   # Show status while processing
   sb <- cli_status("Gemini is searching...")
 
+  # 2. generation_config를 별도 변수로 구성
+  generation_config <- list(
+    temperature = temperature,
+    maxOutputTokens = maxOutputTokens,
+    topP = topP,
+    topK = topK,
+    seed = seed
+  )
+
+  # 3. JSON 요청 본문 구성
+  # req_body_json이 작동하지 않아 req_body_raw를 사용해야 하지만,
+  # 구성을 먼저 생성한 후 JSON으로 변환하여 사용
+  request_structure <- list(
+    contents = list(
+      list(
+        parts = list(
+          list(text = prompt)
+        )
+      )
+    ),
+    generationConfig = generation_config,
+    tools = list(
+      list(google_search = list())
+    )
+  )
+  
+  # JSON 문자열로 변환
+  request_json <- jsonlite::toJSON(request_structure, auto_unbox = TRUE)
+  
   # Make the request
-  ## IMPORT: req_body_json not working with tools option.
+    ## IMPORTANT: req_body_json not working with tools option.
   resp <- request(url) |>
     req_url_query(key = api_key) |>
     req_headers("Content-Type" = "application/json") |>
@@ -91,8 +88,15 @@ gemini_search <- function(prompt, temperature = 1, maxOutputTokens = 8192, topK 
       },
       "tools": [{"google_search": {}}]
   }')
-    ) |>
+) |>
     req_perform()
+    
+  # 4. 상태 코드 검증 추가
+  if (resp$status_code != 200) {
+    cli_status_clear(id = sb)
+    cli_alert_danger(paste0("Error in search request: Status code ", resp$status_code))
+    return(NULL)
+  }
 
   # Clear status indicator
   cli_status_clear(id = sb)
@@ -100,15 +104,16 @@ gemini_search <- function(prompt, temperature = 1, maxOutputTokens = 8192, topK 
   # Process the response
   result <- resp_body_json(resp)
 
-  # Extract the response text
-  if (!is.null(result$candidates) &&
-    length(result$candidates) > 0 &&
-    !is.null(result$candidates[[1]]$content$parts) &&
-    length(result$candidates[[1]]$content$parts) > 0) {
-    # Extract text from first candidate's first part
-    content_text <- result$candidates[[1]]$content$parts[[1]]$text
-    # Print the response and return it
-    return(content_text)
+  # 5. 응답 처리 방식 통일
+  candidates <- result$candidates
+  
+  # Extract the response text - 특수한 경우에도 대응하기 위해 기존 방식 유지
+  if (!is.null(candidates) && length(candidates) > 0 &&
+      !is.null(candidates[[1]]$content$parts) && length(candidates[[1]]$content$parts) > 0) {
+      
+    # 다른 함수들과 일관된 방식으로 처리
+    outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
+    return(outputs)
   } else {
     cli_alert_danger("No valid response received or empty response.")
     return(NULL)

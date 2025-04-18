@@ -21,69 +21,44 @@
 #' setAPI("YOUR_API_KEY")
 #' gemini_searchR("Who won the latest F1 grand prix?")
 #' }
-#' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_string
+#' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json
+#' @importFrom jsonlite fromJSON
 #' @importFrom cli cli_alert_danger cli_status_clear cli_status
 #'
 #' @seealso https://ai.google.dev/docs/gemini_api_overview#text_input
 
 gemini_searchR <- function(prompt, model = "1.5-flash", temperature = 1, maxOutputTokens = 8192,
                            topK = 40, topP = 0.95, seed = 1234) {
-  # Input validation
-  if (is.null(prompt)) {
-    cli_alert_danger("{.arg prompt} must not be NULL")
+  # 1. validate_params 함수 사용으로 대체
+  if (!validate_params(prompt, model, temperature, topP, topK, seed, api_key = TRUE)) {
     return(NULL)
   }
-
-  if (!is.character(prompt)) {
-    cli_alert_danger("{.arg prompt} must be given as a STRING")
-    return(NULL)
-  }
-
-  # API Key validation
-  if (Sys.getenv("GEMINI_API_KEY") == "") {
-    cli_alert_danger("Please set the {.envvar GEMINI_API_KEY} with {.fn setAPI} function.")
-    return(NULL)
-  }
-
-  # Model validation
+  
+  # 모델 시리즈 검증은 여전히 필요 (validate_params에서는 수행하지 않음)
   supported_models <- c("1.5-flash", "1.5-pro")
   if (!(model %in% supported_models)) {
     cli_alert_danger("Error: Parameter 'model' must be one of '1.5-flash', '1.5-pro'")
     return(NULL)
   }
 
-  # Parameters validation
-  if (temperature < 0 | temperature > 2) {
-    cli_alert_danger("Error: Parameter 'temperature' must be between 0 and 2")
-    return(NULL)
-  }
-
-  if (topP < 0 | topP > 1) {
-    cli_alert_danger("Error: Parameter 'topP' must be between 0 and 1")
-    return(NULL)
-  }
-
-  if (topK < 0 | topK > 100) {
-    cli_alert_danger("Error: Parameter 'topK' must be between 0 and 100")
-    return(NULL)
-  }
-
-  if (!is.numeric(seed) || seed %% 1 != 0) {
-    cli_alert_danger("Error: Parameter 'seed' must be an integer")
-    return(NULL)
-  }
-
   # Create API URL and model ID
   model_query <- paste0("gemini-", model, ":generateContent")
-
-  url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/",model_query)
-
+  url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query)
   api_key <- Sys.getenv("GEMINI_API_KEY")
 
   # Show status while processing
-  sb <- cli_status("Gemini is thinking...")
+  sb <- cli_status("Gemini is retrieving information...")
 
-  # Create request body
+  # 2. generation_config를 별도 변수로 구성
+  generation_config <- list(
+    temperature = temperature,
+    maxOutputTokens = maxOutputTokens,
+    topK = topK,
+    topP = topP,
+    seed = seed
+  )
+  
+  # 3. 일관된 요청 본문 구성
   request_body <- list(
     contents = list(
       list(
@@ -102,42 +77,39 @@ gemini_searchR <- function(prompt, model = "1.5-flash", temperature = 1, maxOutp
         )
       )
     ),
-    generationConfig = list(
-      temperature = temperature,
-      maxOutputTokens = maxOutputTokens,
-      topK = topK,
-      topP = topP,
-      seed = seed
-    )
+    generationConfig = generation_config
   )
 
   # Make the request
-  resp <- request(url) |>
+  req <- request(url) |>
     req_headers("Content-Type" = "application/json") |>
     req_url_query(key = api_key) |>
-    req_body_json(request_body, auto_unbox = TRUE) |>
-    req_perform()
+    req_body_json(request_body, auto_unbox = TRUE)
+    
+  resp <- req_perform(req)
+  
+  # 4. 상태 코드 검증 추가
+  if (resp$status_code != 200) {
+    cli_status_clear(id = sb)
+    cli_alert_danger(paste0("Error in retrieval request: Status code ", resp$status_code))
+    return(NULL)
+  }
 
   # Clear status indicator
   cli_status_clear(id = sb)
 
-  # Process the response as raw string
-  result <- resp_body_string(resp)
-
-  # Parse and extract text content from JSON response
-  parsed_result <- try(jsonlite::fromJSON(result, simplifyVector = FALSE), silent = TRUE)
-
-  if (!inherits(parsed_result, "try-error")) {
-    # If JSON parsing successful, try to extract the text
-    if (!is.null(parsed_result$candidates) &&
-      length(parsed_result$candidates) > 0 &&
-      !is.null(parsed_result$candidates[[1]]$content$parts) &&
-      length(parsed_result$candidates[[1]]$content$parts)) {
-      content_text <- parsed_result$candidates[[1]]$content$parts[[1]]$text
-      return(content_text)
-    }
+  # 5. 응답 처리 방식 통일
+  result <- resp_body_json(resp)
+  
+  # 이전 접근 방식과 호환성을 위해 유지
+  candidates <- result$candidates
+  
+  # 6. 응답 처리 구조 개선
+  if (!is.null(candidates) && length(candidates) > 0) {
+    outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
+    return(outputs)
+  } else {
+    cli_alert_danger("No valid response received or empty response.")
+    return(NULL)
   }
-
-  # If we can't parse or extract from JSON, just return the raw response
-  return(result)
 }

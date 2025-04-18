@@ -10,6 +10,9 @@ gen_image(
   overwrite = TRUE,
   model = "2.0-flash-exp-image-generation",
   temperature = 1,
+  maxOutputTokens = 8192,
+  topK = 40,
+  topP = 0.95,
   seed = 1234
 )
 }
@@ -22,12 +25,23 @@ gen_image(
 
 \item{model}{The model to use. Default is "2.0-flash-exp-image-generation"}
 
-\item{temperature}{The temperature to use. Default is 1}
+\item{temperature}{The temperature to use. Default is 1 value should be between 0 and 2
+see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
 
-\item{seed}{The seed to use. Default is 1234}
+\item{maxOutputTokens}{The maximum number of tokens to generate.
+Default is 8192 and 100 tokens correspond to roughly 60-80 words.}
+
+\item{topK}{The top-k value to use. Default is 40 value should be between 0 and 100
+see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
+
+\item{topP}{The top-p value to use. Default is 0.95 value should be between 0 and 1
+see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
+
+\item{seed}{The seed to use. Default is 1234 value should be integer
+see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
 }
 \value{
-The path to the saved file
+The path to the saved file or NULL if an error occurred
 }
 \description{
 Generate an image using Gemini's image generation capabilities and save it to a file

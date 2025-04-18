@@ -28,15 +28,15 @@
 #' }
 #'
 #' @importFrom tools file_ext
-#' @importFrom cli cli_alert_danger cli_status cli_status_clear cli_alert_warning
+#' @importFrom cli cli_alert_danger cli_status cli_status_clear cli_alert_warning cli_alert_info
 #' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json req_method req_body_file resp_header
 #'
 #'
 gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "2.0-flash",
                          temperature = 1, maxOutputTokens = 8192,
                          topK = 40, topP = 0.95, seed = 1234) {
-  if (is.null(prompt)) {
-    cli_alert_danger("{.arg prompt} must not NULL")
+  # 1. validate_params 함수를 사용하여 기본 파라미터 검증
+  if (!validate_params(prompt, model, temperature, topP, topK, seed, api_key = TRUE)) {
     return(NULL)
   }
 
@@ -44,46 +44,6 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
     audio <- system.file("docs/reference/helloworld.mp3", package = "gemini.R")
   }
   # "Hello World" made from https://ttsmaker.com/
-
-  if (!is.character(prompt)) {
-    cli_alert_danger("{.arg prompt} must be given as a STRING")
-    return(NULL)
-  }
-
-  if (Sys.getenv("GEMINI_API_KEY") == "") {
-    cli_alert_danger("Please set the {.envvar GEMINI_API_KEY} with {.fn setAPI} function.")
-    return(NULL)
-  }
-
-  # Model
-  supported_models <- c("2.0-flash", "2.0-flash-lite", "2.5-pro-exp-03-25")
-
-  if (!(model %in% supported_models)) {
-    cli_alert_danger("Error: Parameter 'model' must be one of '2.0-flash', '2.0-flash-lite', '2.5-pro-exp-03-25'")
-    return(NULL)
-  }
-
-  model_query <- paste0("gemini-", model, ":generateContent")
-
-  if (temperature < 0 | temperature > 2) {
-    cli_alert_danger("Error: Parameter 'temperature' must be between 0 and 2")
-    return(NULL)
-  }
-
-  if (topP < 0 | topP > 1) {
-    cli_alert_danger("Error: Parameter 'topP' must be between 0 and 1")
-    return(NULL)
-  }
-
-  if (topK < 0 | topK > 100) {
-    cli_alert_danger("Error: Parameter 'topK' must be between 0 and 100")
-    return(NULL)
-  }
-
-  if (!is.numeric(seed) || seed %% 1 != 0) {
-    cli_alert_danger("Error: Parameter 'seed' must be an integer")
-    return(NULL)
-  }
 
   ## TEMPORARY FILE UPLOAD VIA FILE API
   api_key <- Sys.getenv("GEMINI_API_KEY")
@@ -96,23 +56,27 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
     return(NULL)
   }
 
-  if (ext == "mp3") {
-    mime_type <- "audio/mp3"
-  } else if (ext == "wav") {
-    mime_type <- "audio/wav"
-  } else if (ext == "aiff") {
-    mime_type <- "audio/aiff"
-  } else if (ext == "aac") {
-    mime_type <- "audio/aac"
-  } else if (ext == "ogg") {
-    mime_type <- "audio/ogg"
-  } else if (ext == "flac") {
-    mime_type <- "audio/flac"
+  # 2. 지원되지 않는 파일 확장자에 대한 에러 처리
+  supported_extensions <- c("mp3", "wav", "aiff", "aac", "ogg", "flac")
+  if (!(ext %in% supported_extensions)) {
+    cli_alert_danger(paste0("Unsupported file extension: '", ext, "'. Currently supported extensions are: ", 
+                          paste(supported_extensions, collapse=", ")))
+    cli_alert_info("Please submit an issue at https://github.com/jhk0530/gemini.R/issues for additional file format support.")
+    return(NULL)
   }
 
+  # 파일 타입 매핑
+  mime_type <- paste0("audio/", ext)
+
+  # 특수 케이스만 오버라이드: 아직 정의 되지 않음
+  # special_cases <- list(mp3 = "audio/mpeg")
+  #if (!is.null(special_cases[[ext]])) {
+  #  mime_type <- special_cases[[ext]]
+  #}
+  
   num_bytes <- file.info(audio)$size
 
-  # status bar
+  # 파일 업로드 준비
   resumable_request <-
     request(file_url) |>
     req_url_query(key = api_key) |>
@@ -131,11 +95,14 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
   resp <- resumable_request |>
     req_perform()
 
+  # 4. 상태 코드 검증 추가
   if (resp$status_code != 200) {
-    stop("Error in file resumable request")
+    cli_alert_danger(paste0("Error in file resumable request: Status code ", resp$status_code))
+    return(NULL)
   }
 
-  sb <- cli_status("Uploading audio file")
+  # 3. 상태 표시 메시지 수정
+  sb <- cli_status("Uploading audio file to Gemini...")
   upload_url <- resp_header(resp, "X-Goog-Upload-URL")
   upload_resp <- request(upload_url) |>
     req_method("POST") |>
@@ -147,8 +114,10 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
     req_body_file(audio) |>
     req_perform()
 
-  if (resp$status_code != 200) {
-    stop("Error in upload request")
+  if (upload_resp$status_code != 200) {
+    cli_status_clear(id = sb)
+    cli_alert_danger(paste0("Error in upload request: Status code ", upload_resp$status_code))
+    return(NULL)
   }
 
   file_info <- upload_resp |>
@@ -160,32 +129,40 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
 
   url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query)
 
-  sb <- cli_status("Gemini is answering...")
+  sb <- cli_status("Gemini is analyzing audio...")
+
+  # 5. generation_config를 별도 리스트로 구성
+  generation_config <- list(
+    temperature = temperature,
+    maxOutputTokens = maxOutputTokens,
+    topP = topP,
+    topK = topK,
+    seed = seed
+  )
+  
+  # 요청 본문도 별도 리스트로 구성
+  request_body <- list(
+    contents = list(
+      parts = list(
+        list(text = prompt),
+        list(file_data = list(mime_type = mime_type, file_uri = file_uri))
+      )
+    ),
+    generationConfig = generation_config
+  )
 
   generate_req <- request(url) |>
     req_url_query(key = api_key) |>
     req_method("POST") |>
     req_headers("Content-Type" = "application/json") |>
-    req_body_json(list(
-      contents = list(
-        parts = list(
-          list(text = prompt),
-          list(file_data = list(mime_type = mime_type, file_uri = file_uri))
-        )
-      ),
-      generationConfig = list(
-        temperature = temperature,
-        maxOutputTokens = maxOutputTokens,
-        topP = topP,
-        topK = topK,
-        seed = seed
-      )
-    ))
+    req_body_json(request_body)
 
   generate_resp <- req_perform(generate_req)
 
   if (generate_resp$status_code != 200) {
-    stop("Error in generate request")
+    cli_status_clear(id = sb)
+    cli_alert_danger(paste0("Error in generate request: Status code ", generate_resp$status_code))
+    return(NULL)
   }
 
   cli_status_clear(id = sb)
@@ -222,80 +199,64 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
 gemini_audio.vertex <- function(audio = NULL, prompt = "Describe this audio", tokens = NULL,
                                 temperature = 1, maxOutputTokens = 8192,
                                 topK = 40, topP = 0.95, seed = 1234) {
-  if (is.null(prompt)) {
-    cli_alert_danger("{.arg prompt} must not NULL")
+  # 1. validate_params 함수 사용하여 파라미터 검증
+  if (!validate_params(prompt, NULL, temperature, topP, topK, seed, api_key = FALSE, tokens = tokens)) {
     return(NULL)
   }
 
-  if (!is.character(prompt)) {
-    cli_alert_danger("{.arg prompt} must be given as a STRING")
-    return(NULL)
-  }
-
-  if (is.null(tokens)) {
-    cli_alert_danger("{.arg tokens} must not be NULL. Use token.vertex() function to generate tokens.")
-    return(NULL)
-  }
-
+  # 오디오 파일 검증
   if (is.null(audio)) {
     cli_alert_danger("{.arg audio} must not be NULL")
     return(NULL)
   }
 
-  # Parameters validation
-  if (temperature < 0 | temperature > 2) {
-    cli_alert_danger("Error: Parameter 'temperature' must be between 0 and 2")
-    return(NULL)
-  }
+  # 3. 상태 표시 메시지 수정
+  sb <- cli_status("Gemini Vertex is analyzing audio...")
 
-  if (topP < 0 | topP > 1) {
-    cli_alert_danger("Error: Parameter 'topP' must be between 0 and 1")
-    return(NULL)
-  }
-
-  if (topK < 0 | topK > 100) {
-    cli_alert_danger("Error: Parameter 'topK' must be between 0 and 100")
-    return(NULL)
-  }
-
-  if (!is.numeric(seed) || seed %% 1 != 0) {
-    cli_alert_danger("Error: Parameter 'seed' must be an integer")
-    return(NULL)
-  }
-
-  sb <- cli_status("Gemini is answering...")
+  # 5. generation_config를 별도 리스트로 구성
+  generation_config <- list(
+    temperature = temperature,
+    maxOutputTokens = maxOutputTokens,
+    topP = topP,
+    topK = topK,
+    seed = seed
+  )
+  
+  # 요청 본문도 별도 리스트로 구성
+  request_body <- list(
+    contents = list(
+      list(
+        role = "user",
+        parts = list(
+          list(
+            file_data = list(
+              mime_type = "audio/mp3",
+              file_uri = audio
+            )
+          ),
+          list(
+            text = prompt
+          )
+        )
+      )
+    ),
+    generationConfig = generation_config
+  )
 
   generate_req <- request(tokens$url) |>
     req_headers(
       "Authorization" = paste0("Bearer ", tokens$key),
       "Content-Type" = "application/json"
     ) |>
-    req_body_json(list(
-      contents = list(
-        list(
-          role = "user",
-          parts = list(
-            list(
-              file_data = list(
-                mime_type = "audio/mp3",
-                file_uri = audio
-              )
-            ),
-            list(
-              text = prompt
-            )
-          )
-        )
-      ),
-      generationConfig = list(
-        temperature = temperature,
-        maxOutputTokens = maxOutputTokens,
-        topP = topP,
-        topK = topK,
-        seed = seed
-      )
-    )) |>
+    req_body_json(request_body) |>
     req_perform()
+
+  # 4. 상태 코드 검증 추가
+  if (generate_req$status_code != 200) {
+    cli_status_clear(id = sb)
+    cli_alert_danger(paste0("Error in generate request: Status code ", generate_req$status_code))
+    return(NULL)
+  }
 
   cli_status_clear(id = sb)
 

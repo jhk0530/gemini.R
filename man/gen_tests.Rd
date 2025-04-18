@@ -2,16 +2,27 @@
 % Please edit documentation in R/gen_tests.R
 \name{gen_tests}
 \alias{gen_tests}
-\title{Generates unit test code for an R function.}
+\title{Generate Unit Tests for R Functions}
 \usage{
 gen_tests(prompt = NULL)
 }
 \arguments{
-\item{prompt}{A character string specifying the prompt for the Gemini model.  If NULL, a default prompt is used.}
+\item{prompt}{A character string specifying additional instructions for the Gemini model.
+If NULL, a default prompt requesting unit tests is used.}
 }
 \value{
-#' A character string containing the generated unit test code.
+Invisibly returns the generated test code, but primarily inserts it into the RStudio console.
 }
 \description{
-Generates unit test code for an R function.
+Generates unit test code for an R function using the Gemini AI model.
+}
+\examples{
+\dontrun{
+# Select your function code in the editor, then run:
+gen_tests()
+
+# For custom instructions:
+gen_tests("Generate comprehensive testthat tests with edge cases")
+}
+
 }

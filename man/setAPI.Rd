@@ -2,18 +2,18 @@
 % Please edit documentation in R/setAPI.R
 \name{setAPI}
 \alias{setAPI}
-\title{Set API key}
+\title{Set Gemini API Key}
 \usage{
 setAPI(api_key)
 }
 \arguments{
-\item{api_key}{The API key to set}
+\item{api_key}{A character string containing your Gemini API key.}
 }
 \value{
 No return value, called for side effects.
 }
 \description{
-Set API key as an environment variable
+Sets the Gemini API key as an environment variable for use in API calls.
 }
 \note{
 Please be aware you have to agree to the terms of service of the API provider.
@@ -22,10 +22,9 @@ Also, please be aware that the API key is a sensitive information.
 }
 \examples{
 \dontrun{
-setAPI("my_api_key")
+setAPI("YOUR_API_KEY")
 }
 }
 \seealso{
 https://makersuite.google.com/app/apikey
 }
-\keyword{internal}

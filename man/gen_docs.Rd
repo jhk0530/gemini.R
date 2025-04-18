@@ -10,8 +10,18 @@ gen_docs(prompt = NULL)
 \item{prompt}{A character string specifying additional instructions for the LLM.  Defaults to a prompt requesting Roxygen2 documentation without the original code.}
 }
 \value{
-A character string containing the generated Roxygen2 documentation.
+Invisibly returns the generated documentation string, but primarily inserts the text into the RStudio console.
 }
 \description{
 Generates Roxygen2 documentation for an R function based on the currently selected code.
+}
+\examples{
+\dontrun{
+# Select your function code in the editor, then run:
+gen_docs()
+
+# For custom instructions:
+gen_docs("Generate minimal Roxygen docs for this function")
+}
+
 }

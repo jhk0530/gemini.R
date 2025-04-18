@@ -35,101 +35,93 @@
 gemini_image <- function(image = NULL, prompt = "Explain this image", model = "2.0-flash",
                          temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95,
                          seed = 1234, type = "png") {
-  if (is.null(prompt)) {
-    cli_alert_danger("{.arg prompt} must not NULL")
+  # 1. validate_params 함수 사용
+  if (!validate_params(prompt, model, temperature, topP, topK, seed, api_key = TRUE)) {
     return(NULL)
   }
-
+  
+  # 이미지 파일 검증
   if (missing(image)) {
     image <- system.file("docs/reference/figures/image.png", package = "gemini.R")
   }
-
-  if (!is.character(prompt)) {
-    cli_alert_danger("{.arg prompt} must be given as a STRING")
+  
+  # 6. 이미지 파일 존재 여부 확인
+  if (!file.exists(image)) {
+    cli_alert_danger("Image file does not exist: ", image)
     return(NULL)
   }
-
-  if (Sys.getenv("GEMINI_API_KEY") == "") {
-    cli_alert_danger("Please set the {.envvar GEMINI_API_KEY} with {.fn setAPI} function.")
-    return(NULL)
-  }
-
+  
+  # 7. type 파라미터 검증 위치 이동
   if (!(type %in% c("png", "jpeg", "webp", "heic", "heif"))) {
     cli_alert_danger("Error: Parameter 'type' must be one of 'png', 'jpeg', 'webp', 'heic', 'heif'")
     return(NULL)
   }
 
-  # Model
-
-  supported_models <- c("2.0-flash", "2.0-flash-lite", "2.5-pro-exp-03-25")
-
-  if (!(model %in% supported_models)) {
-    cli_alert_danger("Error: Parameter 'model' must be one of '2.0-flash', '2.0-flash-lite', '2.5-pro-exp-03-25'")
-    return(NULL)
-  }
-
-
   model_query <- paste0("gemini-", model, ":generateContent")
-
-
-  if (temperature < 0 | temperature > 2) {
-    cli_alert_danger("Error: Parameter 'temperature' must be between 0 and 2")
-    return(NULL)
-  }
-
-  if (topP < 0 | topP > 1) {
-    cli_alert_danger("Error: Parameter 'topP' must be between 0 and 1")
-    return(NULL)
-  }
-
-  if (topK < 0 | topK > 100) {
-    cli_alert_danger("Error: Parameter 'topK' must be between 0 and 100")
-    return(NULL)
-  }
-
-  if (!is.numeric(seed) || seed %% 1 != 0) {
-    cli_alert_danger("Error: Parameter 'seed' must be an integer")
-    return(NULL)
-  }
-
   url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query)
-
   api_key <- Sys.getenv("GEMINI_API_KEY")
-
   mime_type <- paste0("image/", type)
 
-  sb <- cli_status("Gemini is answering...")
+  sb <- cli_status("Gemini is analyzing image...")
+  
+  # 8. 이미지 인코딩 오류 처리
+  image_data <- NULL
+  tryCatch({
+    image_data <- base64encode(image)
+  }, error = function(e) {
+    cli_status_clear(id = sb)
+    cli_alert_danger(paste0("Error encoding image: ", e$message))
+    return(NULL)
+  })
+  
+  if (is.null(image_data)) {
+    return(NULL)
+  }
+  
+  # 2. generation_config 별도 리스트 사용
+  generation_config <- list(
+    temperature = temperature,
+    maxOutputTokens = maxOutputTokens,
+    topP = topP,
+    topK = topK,
+    seed = seed
+  )
+  
+  # 요청 본문도 별도 리스트로 구성
+  request_body <- list(
+    contents = list(
+      parts = list(
+        list(
+          text = prompt
+        ),
+        list(
+          inline_data = list(
+            mime_type = mime_type,
+            data = image_data
+          )
+        )
+      )
+    ),
+    generationConfig = generation_config
+  )
+
   req <- request(url) |>
     req_url_query(key = api_key) |>
     req_headers("Content-Type" = "application/json") |>
-    req_body_json(list(
-      contents = list(
-        parts = list(
-          list(
-            text = prompt
-          ),
-          list(
-            inline_data = list(
-              mime_type = mime_type,
-              data = base64encode(image)
-            )
-          )
-        )
-      ),
-      generationConfig = list(
-        temperature = temperature,
-        maxOutputTokens = maxOutputTokens,
-        topP = topP,
-        topK = topK,
-        seed = seed
-      )
-    ))
+    req_body_json(request_body)
 
   resp <- req_perform(req)
+  
+  # 3. 상태 코드 검증 추가
+  if (resp$status_code != 200) {
+    cli_status_clear(id = sb)
+    cli_alert_danger(paste0("Error in generate request: Status code ", resp$status_code))
+    return(NULL)
+  }
+  
   cli_status_clear(id = sb)
 
   candidates <- resp_body_json(resp)$candidates
-
   outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
   return(outputs)
 }
@@ -153,7 +145,7 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "2
 #' @param seed The seed to use. Default is 1234 value should be integer
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #'
-#' @return A character string containing Gemini's description of the image.
+#' @return A character vector containing Gemini's description of the image.
 #'
 #' @importFrom cli cli_alert_danger cli_status cli_status_clear
 #' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json
@@ -162,48 +154,52 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "2
 #' @export
 gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", type = "png", tokens = NULL,
                                 temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234) {
+  # 1. validate_params 함수 사용
+  if (!validate_params(prompt, NULL, temperature, topP, topK, seed, api_key = FALSE, tokens = tokens)) {
+    return(NULL)
+  }
+  
+  # 이미지 파일 검증
   if (is.null(image)) {
     cli_alert_danger("{.arg image} must not be NULL")
     return(NULL)
   }
-
-  if (!is.character(prompt)) {
-    cli_alert_danger("{.arg prompt} must be given as a STRING")
+  
+  # 6. 이미지 파일 존재 여부 확인
+  if (!file.exists(image)) {
+    cli_alert_danger("Image file does not exist: ", image)
     return(NULL)
   }
-
-  if (is.null(tokens)) {
-    cli_alert_danger("{.arg tokens} must not be NULL. Use token.vertex() function to generate tokens.")
-    return(NULL)
-  }
-
+  
+  # 7. type 파라미터 검증 위치 이동
   if (!(type %in% c("png", "jpeg", "webp", "heic", "heif"))) {
     cli_alert_danger("Error: Parameter 'type' must be one of 'png', 'jpeg', 'webp', 'heic', 'heif'")
     return(NULL)
   }
 
-  # Parameters validation
-  if (temperature < 0 | temperature > 2) {
-    cli_alert_danger("Error: Parameter 'temperature' must be between 0 and 2")
-    return(NULL)
-  }
-
-  if (topP < 0 | topP > 1) {
-    cli_alert_danger("Error: Parameter 'topP' must be between 0 and 1")
-    return(NULL)
-  }
-
-  if (topK < 0 | topK > 100) {
-    cli_alert_danger("Error: Parameter 'topK' must be between 0 and 100")
-    return(NULL)
-  }
-
-  if (!is.numeric(seed) || seed %% 1 != 0) {
-    cli_alert_danger("Error: Parameter 'seed' must be an integer")
-    return(NULL)
-  }
-
   mime_type <- paste0("image/", type)
+  
+  # 8. 이미지 인코딩 오류 처리
+  image_data <- NULL
+  tryCatch({
+    image_data <- base64encode(image)
+  }, error = function(e) {
+    cli_alert_danger(paste0("Error encoding image: ", e$message))
+    return(NULL)
+  })
+  
+  if (is.null(image_data)) {
+    return(NULL)
+  }
+  
+  # 2. generation_config 별도 리스트 사용
+  generation_config <- list(
+    temperature = temperature,
+    maxOutputTokens = maxOutputTokens,
+    topP = topP,
+    topK = topK,
+    seed = seed
+  )
 
   request_body <- list(
     contents = list(
@@ -213,7 +209,7 @@ gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", typ
           list(
             inline_data = list(
               mime_type = mime_type,
-              data = base64encode(image)
+              data = image_data
             )
           ),
           list(
@@ -222,27 +218,35 @@ gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", typ
         )
       )
     ),
-    generationConfig = list(
-      temperature = temperature,
-      maxOutputTokens = maxOutputTokens,
-      topP = topP,
-      topK = topK,
-      seed = seed
-    )
+    generationConfig = generation_config
   )
 
-  sb <- cli_status("Gemini is answering...")
+  # 4. 상태 메시지 개선
+  sb <- cli_status("Gemini Vertex is analyzing image...")
 
-  response <- request(tokens$url) |>
+  # API 요청 부분을 분리하여 상태 코드 검증을 위해 구조 변경
+  req <- request(tokens$url) |>
     req_headers(
       "Authorization" = paste0("Bearer ", tokens$key),
       "Content-Type" = "application/json"
     ) |>
-    req_body_json(request_body) |>
-    req_perform() |>
-    resp_body_json()
+    req_body_json(request_body)
+    
+  resp <- req_perform(req)
+  
+  # 3. 상태 코드 검증 추가
+  if (resp$status_code != 200) {
+    cli_status_clear(id = sb)
+    cli_alert_danger(paste0("Error in generate request: Status code ", resp$status_code))
+    return(NULL)
+  }
 
   cli_status_clear(id = sb)
 
-  return(response$candidates[[1]]$content$parts[[1]]$text)
+  # 5. 응답 처리 방식 일치 - gemini_image 함수와 동일하게 처리
+  response <- resp_body_json(resp)
+  candidates <- response$candidates
+  outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
+  
+  return(outputs)
 }

@@ -16,28 +16,54 @@
 #'
 #' @seealso \code{\link{setAPI}} which sets the API key for the current session only
 #'
-#' @importFrom cli cli_alert_success cli_alert_info cli_alert_warning cli_div cli_end cli_alert
+#' @importFrom cli cli_alert_success cli_alert_info cli_alert_warning cli_div cli_end cli_alert cli_alert_danger
 #'
 setEnv <- function(api_key, overwrite = TRUE, install_message = TRUE) {
-  if (is.null(api_key) || api_key == "") {
-    cli_alert_danger("API key cannot be empty")
+  # 1. 개선된 API 키 유효성 검사
+  if (is.null(api_key) || !is.character(api_key) || nchar(api_key) == 0) {
+    cli_alert_danger("API key must be a non-empty string.")
     return(invisible(NULL))
   }
+  
+  # 일반적인 API 키 길이 확인 (Google API 키는 보통 39자)
+  if (nchar(api_key) < 10) {
+    cli_alert_warning("API key seems too short. Please verify your key.")
+  }
 
-  # Path to .Renviron file
-  home <- Sys.getenv("HOME")
+  # 3. 플랫폼 호환성 개선
+  home <- normalizePath("~", winslash = "/", mustWork = FALSE)
   renviron_path <- file.path(home, ".Renviron")
 
-  # Check if .Renviron exists
+  # 4. 오류 처리 개선
+  # .Renviron 파일 생성 시 tryCatch 추가
   if (!file.exists(renviron_path)) {
-    file.create(renviron_path)
+    result <- tryCatch({
+      file.create(renviron_path)
+    }, error = function(e) {
+      cli_alert_danger(paste("Failed to create .Renviron file:", e$message))
+      return(FALSE)
+    })
+    
+    if (result == FALSE) {
+      return(invisible(NULL))
+    }
+    
     cli_alert_info("Created .Renviron file at {.path {renviron_path}}")
   }
 
-  # Read existing .Renviron content
-  existing_content <- readLines(renviron_path, warn = FALSE)
+  # .Renviron 파일 읽기 시 tryCatch 추가
+  existing_content <- tryCatch({
+    readLines(renviron_path, warn = FALSE)
+  }, error = function(e) {
+    cli_alert_danger(paste("Failed to read .Renviron file:", e$message))
+    return(NULL)
+  })
+  
+  if (is.null(existing_content)) {
+    return(invisible(NULL))
+  }
 
-  # Check if GEMINI_API_KEY is already set
+  # 기존 코드 그대로 유지
   gemini_line_index <- grep("^GEMINI_API_KEY=", existing_content)
 
   if (length(gemini_line_index) > 0) {
@@ -54,11 +80,27 @@ setEnv <- function(api_key, overwrite = TRUE, install_message = TRUE) {
     existing_content <- c(existing_content, paste0("GEMINI_API_KEY=", api_key))
   }
 
-  # Write back to .Renviron
-  writeLines(existing_content, renviron_path)
+  # 파일 쓰기 시 tryCatch 추가
+  result <- tryCatch({
+    writeLines(existing_content, renviron_path)
+    TRUE
+  }, error = function(e) {
+    cli_alert_danger(paste("Failed to write to .Renviron file:", e$message))
+    return(FALSE)
+  })
+  
+  if (result == FALSE) {
+    return(invisible(NULL))
+  }
 
-  # Show last 4 characters of API key for confirmation
-  last <- substr(api_key, nchar(api_key) - 3, nchar(api_key))
+  # 2. API 키 마스킹 개선
+  last_chars <- 4
+  if (nchar(api_key) > last_chars) {
+    last <- substr(api_key, nchar(api_key) - (last_chars - 1), nchar(api_key))
+  } else {
+    # API 키가 너무 짧은 경우, 마지막 문자만
+    last <- substr(api_key, nchar(api_key), nchar(api_key))
+  }
 
   cli_div(theme = list(span.str = list("background-color" = "blue")))
   cli_alert_success("API key {.str ...{last}} has been saved to {.path {renviron_path}}")
