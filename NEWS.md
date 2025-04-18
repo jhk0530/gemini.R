@@ -1,12 +1,21 @@
 # gemini.R
 
-# gemini.R 0.12.0
+# gemini.R 0.13.0
+
+## 0.13.0
+
+- Relaxed the `model` parameter validation to support newly released models like `gemini-2.5-flash-preview-04-17`
+- Enhanced error handling across all functions for improved stability
+- Standardized response processing across all API functions
+- Updated documentation to reflect expanded model compatibility
 
 ## 0.12.0
+
 - Added Gemini searching `gemini_search` for ground using **gemini-2.0 models**
 - Added Gemini searching `gemini_searchR` for retrive using **gemini-1.5 models**
 
 ## 0.11.0
+
 - Added Gemini 2.5-pro-exp model (`2.5-pro-exp-03-25`)
 - Deprecated Gemini 2.0-pro-exp model (`2.0-pro-exp-02-05`)
 - Now image generation possible with `gen_image()` using `2.0-flash-exp-image-generation` model.
