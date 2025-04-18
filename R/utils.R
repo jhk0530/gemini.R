@@ -69,3 +69,12 @@ validate_params <- function(prompt, model, temperature = 1, topP = 0.95,
   return(TRUE)
 }
 
+#' @title Trim whitespace from string
+#' @description Removes leading and trailing whitespace from a string
+#' @param x Character string to trim
+#' @return Character string with leading and trailing whitespace removed
+#' @keywords internal
+trim <- function(x) {
+  gsub("^\\s+|\\s+$", "", x)
+}
+

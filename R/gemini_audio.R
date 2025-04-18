@@ -127,6 +127,9 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
   cli_status_clear(id = sb)
   # prompt
 
+  # Add this line to define model_query
+  model_query <- paste0("gemini-", model, ":generateContent")
+  
   url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query)
 
   sb <- cli_status("Gemini is analyzing audio...")
