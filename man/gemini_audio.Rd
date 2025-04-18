@@ -48,7 +48,7 @@ This function sends audio to the Gemini API and returns a text description.
 \dontrun{
 library(gemini.R)
 setAPI("YOUR_API_KEY")
-gemini_audio(audio = system.file("docs/reference/helloworld.mp3", package = "gemini.R"))
+gemini_audio(audio = "YOUR_AUDIO_FILE")
 }
 
 }

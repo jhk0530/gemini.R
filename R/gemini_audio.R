@@ -24,7 +24,7 @@
 #' \dontrun{
 #' library(gemini.R)
 #' setAPI("YOUR_API_KEY")
-#' gemini_audio(audio = system.file("docs/reference/helloworld.mp3", package = "gemini.R"))
+#' gemini_audio(audio = "YOUR_AUDIO_FILE")
 #' }
 #'
 #' @importFrom tools file_ext
@@ -90,6 +90,12 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
   file_url <- "https://generativelanguage.googleapis.com/upload/v1beta/files"
 
   ext <- tolower(tools::file_ext(audio))
+
+  if(ext == ""){
+    cli_alert_warning("File extension not found. Please check the file path.")
+    return(NULL)
+  }
+
   if (ext == "mp3") {
     mime_type <- "audio/mp3"
   } else if (ext == "wav") {
