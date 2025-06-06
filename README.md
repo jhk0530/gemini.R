@@ -137,6 +137,19 @@ shinyApp(ui = ui, server = server)
   <img alt='shiny app example' src='./man/figures/shiny.png' width = '70%'>
 </p>
 
+#### Documents
+
+```r
+gemini_docs_each(
+  c("doc1.pdf", "doc2.pdf"),
+  prompt = "Summarize each document separately."
+)
+```
+
+<p style = 'text-align:center;'>
+  <img alt='document example' src='./man/figures/docs.png' width = '70%'>
+</p>
+
 ### Gemini with Vertex AI API
 
 #### Text
@@ -194,7 +207,7 @@ gen_image('Draw an image of a cat swimming in the Milky Way')
   <img alt='image generation' src='./man/figures/image_gen.png' width = '100%'>
 </p>
 
-#### Answer using Google Search 
+#### Answer using Google Search
 
 ```r
 gemini_search('What is the current Apple stock price?')

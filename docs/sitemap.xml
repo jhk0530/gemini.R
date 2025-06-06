@@ -12,8 +12,11 @@
 <url><loc>https://github.com/jhk0530/gemini.R/reference/gemini_audio.html</loc></url>
 <url><loc>https://github.com/jhk0530/gemini.R/reference/gemini_audio.vertex.html</loc></url>
 <url><loc>https://github.com/jhk0530/gemini.R/reference/gemini_chat.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/reference/gemini_docs.html</loc></url>
 <url><loc>https://github.com/jhk0530/gemini.R/reference/gemini_image.html</loc></url>
 <url><loc>https://github.com/jhk0530/gemini.R/reference/gemini_image.vertex.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/reference/gemini_search.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/reference/gemini_searchR.html</loc></url>
 <url><loc>https://github.com/jhk0530/gemini.R/reference/gen_docs.html</loc></url>
 <url><loc>https://github.com/jhk0530/gemini.R/reference/gen_image.html</loc></url>
 <url><loc>https://github.com/jhk0530/gemini.R/reference/gen_tests.html</loc></url>
@@ -21,5 +24,7 @@
 <url><loc>https://github.com/jhk0530/gemini.R/reference/setAPI.html</loc></url>
 <url><loc>https://github.com/jhk0530/gemini.R/reference/setEnv.html</loc></url>
 <url><loc>https://github.com/jhk0530/gemini.R/reference/token.vertex.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/reference/trim.html</loc></url>
+<url><loc>https://github.com/jhk0530/gemini.R/reference/validate_params.html</loc></url>
 </urlset>
 
