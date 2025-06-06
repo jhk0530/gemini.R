@@ -1,3 +1,7 @@
+## 0.13.1
+
+- Fixed `Keywords` field in DESCRIPTION
+
 ## 0.10.1
 
 - Fixed lines exceeding 100 characters in examples (`countTokens()`)

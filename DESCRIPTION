@@ -1,6 +1,6 @@
 Package: gemini.R
 Title: Interface for 'Google Gemini' API
-Version: 0.13.0
+Version: 0.13.1
 Authors@R: c(
   person("Jinhwan", "Kim", , "hwanistic@gmail.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0009-0009-3217-2417")),
   person("Maciej", "Nasinski", role = "ctb"))
@@ -28,4 +28,3 @@ Suggests:
   testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Config/Needs/website: rmarkdown
-Keywords: machine-learning, AI, LLM, Google, Gemini, natural-language-processing
