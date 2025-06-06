@@ -140,7 +140,7 @@ shinyApp(ui = ui, server = server)
 #### Documents
 
 ```r
-gemini_docs_each(
+gemini_docs(
   c("doc1.pdf", "doc2.pdf"),
   prompt = "Summarize each document separately."
 )
