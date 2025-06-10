@@ -14,31 +14,31 @@
 #' @importFrom cli cli_alert_info cli_div cli_end cli_alert cli_alert_danger
 
 setAPI <- function(api_key) {
-  # API 키 유효성 검사
+  # Validate API key
   if (is.null(api_key) || !is.character(api_key) || nchar(api_key) == 0) {
     cli_alert_danger("API key must be a non-empty string.")
     return(invisible())
   }
   
-  # 일반적인 API 키 길이 확인 (Google API 키는 보통 39자)
+  # Check typical API key length (Google API keys are usually 39 characters)
   if (nchar(api_key) < 10) {
     cli_alert_danger("API key seems too short. Please verify your key.")
     return(invisible())
   }
   
-  # 안전하게 API 키 마지막 부분만 표시
+  # Safely display only the last part of the API key
   last_chars <- 4
   if (nchar(api_key) > last_chars) {
     last <- substr(api_key, nchar(api_key) - (last_chars - 1), nchar(api_key))
   } else {
-    # API 키가 너무 짧은 경우, 마지막 문자만
+    # If the API key is too short, show only the last character
     last <- substr(api_key, nchar(api_key), nchar(api_key))
   }
   
-  # 환경 변수 설정
+  # Set environment variable
   Sys.setenv(GEMINI_API_KEY = api_key)
 
-  # 사용자 피드백 제공
+  # Provide user feedback
   cli_div(theme = list(span.str = list("background-color" = "blue")))
   cli_alert_info("API key {.str ...{last}} is set.")
   cli_end()

@@ -26,7 +26,7 @@
 #'
 #' @export
 token.vertex <- function(jsonkey = NULL, model_id = NULL, expTime = 3600, region = "us-central1") {
-  # 1. 파라미터 유효성 검증 추가
+  # 1. Add parameter validation
   if (is.null(jsonkey)) {
     cli_alert_danger("JSON key file path must be provided.")
     return(NULL)
@@ -42,10 +42,10 @@ token.vertex <- function(jsonkey = NULL, model_id = NULL, expTime = 3600, region
     return(NULL)
   }
   
-  # 2. 상태 표시 메시지 추가
+  # 2. Add status message
   sb <- cli_status("Authenticating with Vertex AI...")
   
-  # 3. 오류 처리 강화
+  # 3. Strengthen error handling
   account <- tryCatch({
     fromJSON(jsonkey)
   }, error = function(e) {
@@ -58,7 +58,7 @@ token.vertex <- function(jsonkey = NULL, model_id = NULL, expTime = 3600, region
     return(NULL)
   }
   
-  # 필수 필드 확인
+  # Check required fields
   required_fields <- c("client_email", "private_key", "project_id")
   missing_fields <- required_fields[!required_fields %in% names(account)]
   
@@ -87,14 +87,14 @@ token.vertex <- function(jsonkey = NULL, model_id = NULL, expTime = 3600, region
   iat <- as.numeric(Sys.time())
 
   jwt_claims <- jwt_claim(
-    iss = account$client_email, # 서비스 계정 이메일
-    scope = "https://www.googleapis.com/auth/cloud-platform", # 권한 범위
+    iss = account$client_email, # Service account email
+    scope = "https://www.googleapis.com/auth/cloud-platform", # Scope
     aud = token_url,
     iat = iat,
     exp = iat + expTime
   )
 
-  # 4. 토큰 발급 오류 처리 추가
+  # 4. Add error handling for JWT token creation
   jwt_token <- tryCatch({
     jwt_encode_sig(jwt_claims, account$private_key)
   }, error = function(e) {
@@ -107,7 +107,7 @@ token.vertex <- function(jsonkey = NULL, model_id = NULL, expTime = 3600, region
     return(NULL)
   }
 
-  # 5. API 호출 오류 처리 추가
+  # 5. Add error handling for API call
   resp <- tryCatch({
     request(token_url) |>
       req_body_form(
@@ -125,14 +125,14 @@ token.vertex <- function(jsonkey = NULL, model_id = NULL, expTime = 3600, region
     return(NULL)
   }
   
-  # 6. 응답 상태 코드 확인 추가
+  # 6. Check response status code
   if (resp$status_code != 200) {
     cli_status_clear(id = sb)
     cli_alert_danger(paste0("Error response from token server: Status code ", resp$status_code))
     return(NULL)
   }
   
-  # 7. JSON 응답 처리 오류 처리 추가
+  # 7. Add error handling for JSON response processing
   token_data <- tryCatch({
     resp_body_json(resp)
   }, error = function(e) {

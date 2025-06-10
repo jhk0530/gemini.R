@@ -29,12 +29,12 @@ gen_image <- function(prompt, filename = "gemini_image.png", overwrite = TRUE,
                       model = "2.0-flash-exp-image-generation",
                       temperature = 1, maxOutputTokens = 8192,
                       topK = 40, topP = 0.95, seed = 1234) {
-  # 1. validate_params 함수를 사용하여 파라미터 검증
+  # 1. Validate parameters using validate_params function
   if (!validate_params(prompt, model, temperature, topP, topK, seed, api_key = TRUE)) {
     return(NULL)
   }
   
-  # 모델 검증 - 이미지 생성 모델인지 확인
+  # Check if the model is for image generation
   if (model != "2.0-flash-exp-image-generation") {
     cli_alert_danger("Error: For image generation, model must be '2.0-flash-exp-image-generation'")
     return(NULL)
@@ -49,7 +49,7 @@ gen_image <- function(prompt, filename = "gemini_image.png", overwrite = TRUE,
   # Generate the image
   sb <- cli_status("Generating image with Gemini...")
   
-  # 2. response 오류 처리 추가
+  # 2. Add error handling for response
   response <- tryCatch({
     gemini(
       prompt = prompt, 
@@ -66,7 +66,7 @@ gen_image <- function(prompt, filename = "gemini_image.png", overwrite = TRUE,
     return(NULL)
   })
   
-  # 3. 응답이 NULL인 경우 처리
+  # 3. Handle case when response is NULL
   if (is.null(response)) {
     cli_status_clear(id = sb)
     cli_alert_danger("Failed to generate image - no response received")
@@ -75,27 +75,27 @@ gen_image <- function(prompt, filename = "gemini_image.png", overwrite = TRUE,
   
   cli_status_clear(id = sb)
 
-  # 4. 응답 구조 검증 추가
+  # 4. Add validation for response structure
   if (length(response) < 2) {
     cli_alert_danger("Invalid response format - missing image data")
     return(NULL)
   }
   
-  # 5. 파일 저장 오류 처리 개선
+  # 5. Improve error handling for file saving
   tryCatch({
-    # 이미지 데이터 부분 추출 (두번째 요소)
+    # Extract image data part (second element)
     base64_data <- response[2]
     
-    # 빈 데이터 체크 추가
+    # Add check for empty data
     if (is.null(base64_data) || nchar(base64_data) == 0) {
       cli_alert_danger("Empty image data received")
       return(NULL)
     }
     
-    # base64 디코딩
+    # Base64 decode
     image_data <- base64enc::base64decode(base64_data)
     
-    # 파일 쓰기
+    # Write file
     writeBin(image_data, filename)
     cli_alert_success(paste("Image saved to", filename))
     return(filename)

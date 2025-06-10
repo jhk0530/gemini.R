@@ -29,12 +29,12 @@
 
 gemini_searchR <- function(prompt, model = "1.5-flash", temperature = 1, maxOutputTokens = 8192,
                            topK = 40, topP = 0.95, seed = 1234) {
-  # 1. validate_params 함수 사용으로 대체
+  # 1. Use validate_params function for parameter validation
   if (!validate_params(prompt, model, temperature, topP, topK, seed, api_key = TRUE)) {
     return(NULL)
   }
   
-  # 모델 시리즈 검증은 여전히 필요 (validate_params에서는 수행하지 않음)
+  # Model series validation is still required (not performed in validate_params)
   supported_models <- c("1.5-flash", "1.5-pro")
   if (!(model %in% supported_models)) {
     cli_alert_danger("Error: Parameter 'model' must be one of '1.5-flash', '1.5-pro'")
@@ -49,7 +49,7 @@ gemini_searchR <- function(prompt, model = "1.5-flash", temperature = 1, maxOutp
   # Show status while processing
   sb <- cli_status("Gemini is retrieving information...")
 
-  # 2. generation_config를 별도 변수로 구성
+  # 2. Build generation_config as a separate variable
   generation_config <- list(
     temperature = temperature,
     maxOutputTokens = maxOutputTokens,
@@ -58,7 +58,7 @@ gemini_searchR <- function(prompt, model = "1.5-flash", temperature = 1, maxOutp
     seed = seed
   )
   
-  # 3. 일관된 요청 본문 구성
+  # 3. Build a consistent request body
   request_body <- list(
     contents = list(
       list(
@@ -88,7 +88,7 @@ gemini_searchR <- function(prompt, model = "1.5-flash", temperature = 1, maxOutp
     
   resp <- req_perform(req)
   
-  # 4. 상태 코드 검증 추가
+  # 4. Add status code validation
   if (resp$status_code != 200) {
     cli_status_clear(id = sb)
     cli_alert_danger(paste0("Error in retrieval request: Status code ", resp$status_code))
@@ -98,13 +98,13 @@ gemini_searchR <- function(prompt, model = "1.5-flash", temperature = 1, maxOutp
   # Clear status indicator
   cli_status_clear(id = sb)
 
-  # 5. 응답 처리 방식 통일
+  # 5. Unified response handling
   result <- resp_body_json(resp)
   
-  # 이전 접근 방식과 호환성을 위해 유지
+  # Kept for compatibility with previous approach
   candidates <- result$candidates
   
-  # 6. 응답 처리 구조 개선
+  # 6. Improved response structure handling
   if (!is.null(candidates) && length(candidates) > 0) {
     outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
     return(outputs)

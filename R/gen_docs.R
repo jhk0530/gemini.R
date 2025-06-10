@@ -31,16 +31,16 @@ gen_docs <- function(prompt = NULL) {
   context <- getActiveDocumentContext()
   selectedCode <- context$selection[[1]]$text
   
-  # 코드 선택 여부 확인
+  # Check if code is selected
   if (nchar(trim(selectedCode)) == 0) {
     cli_alert_danger("No code selected. Please select an R function to document.")
     return(invisible(NULL))
   }
 
-  # 상태 메시지 표시
+  # Show status message
   sb <- cli_status("Generating Roxygen documentation...")
   
-  # API 호출 및 오류 처리
+  # API call and error handling
   description <- tryCatch({
     result <- gemini(
       prompt = paste0(
@@ -64,17 +64,17 @@ gen_docs <- function(prompt = NULL) {
     return(invisible(NULL))
   })
   
-  # 오류 발생 시 조기 종료
+  # Early exit if error occurred
   if (is.null(description)) {
     return(invisible(NULL))
   }
   
   cli_status_clear(id = sb)
   
-  # 결과가 있으면 콘솔에 삽입
+  # Insert result into console if available
   executeCommand("activateConsole")
   insertText(text = description)
   
-  # 생성된 문서를 보이지 않게 반환
+  # Return generated documentation invisibly
   return(invisible(description))
 }
