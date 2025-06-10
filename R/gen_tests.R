@@ -31,7 +31,7 @@ gen_tests <- function(prompt = NULL) {
       )
   }
 
-  # 코드 선택 가져오기
+  # Get selected code from the editor
   context <- tryCatch({
     getActiveDocumentContext()
   }, error = function(e) {
@@ -45,16 +45,16 @@ gen_tests <- function(prompt = NULL) {
   
   selectedCode <- context$selection[[1]]$text
   
-  # 코드 선택 여부 확인
+  # Check if code is selected
   if (is.null(selectedCode) || nchar(trim(selectedCode)) == 0) {
     cli_alert_danger("No code selected. Please select an R function to generate tests for.")
     return(invisible(NULL))
   }
 
-  # 상태 메시지 표시
+  # Show status message
   sb <- cli_status("Generating unit tests...")
   
-  # API 호출 및 오류 처리
+  # API call and error handling
   test_code <- tryCatch({
     result <- gemini(
       prompt = paste0(
@@ -78,14 +78,14 @@ gen_tests <- function(prompt = NULL) {
     return(invisible(NULL))
   })
   
-  # 오류 발생 시 조기 종료
+  # Early exit if error occurred
   if (is.null(test_code)) {
     return(invisible(NULL))
   }
   
   cli_status_clear(id = sb)
   
-  # 콘솔에 테스트 코드 삽입
+  # Insert test code into the console
   tryCatch({
     executeCommand("activateConsole")
     insertText(text = test_code)
@@ -93,6 +93,6 @@ gen_tests <- function(prompt = NULL) {
     cli_alert_danger(paste0("Failed to insert text into console: ", e$message))
   })
   
-  # 생성된 테스트 코드를 보이지 않게 반환
+  # Return generated test code invisibly
   return(invisible(test_code))
 }

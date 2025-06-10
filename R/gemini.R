@@ -69,7 +69,7 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
     req_body_json(request_body)
   resp <- req_perform(req)
   
-  # 상태 코드 검증 로직 추가
+  # Add logic to check status code
   if (resp$status_code != 200) {
     cli_status_clear(id = sb)
     cli_alert_danger(paste0("Error in generate request: Status code ", resp$status_code))
@@ -114,6 +114,7 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
 
 gemini.vertex <- function(prompt = NULL, tokens = NULL, temperature = 1, maxOutputTokens = 8192,
                           topK = 40, topP = 0.95, seed = 1234) {
+  # Validate all parameters at once
   if (!validate_params(prompt, NULL, temperature, topP, topK, seed, api_key = FALSE, tokens = tokens)) {
     return(NULL)
   }
@@ -142,7 +143,7 @@ gemini.vertex <- function(prompt = NULL, tokens = NULL, temperature = 1, maxOutp
     generationConfig = generation_config
   )
 
-  # API 요청 부분을 분리하여 상태 코드 검증
+  # Separate API request and check status code
   req <- request(tokens$url) |>
     req_headers(
       "Authorization" = paste0("Bearer ", tokens$key),
@@ -152,7 +153,7 @@ gemini.vertex <- function(prompt = NULL, tokens = NULL, temperature = 1, maxOutp
   
   resp <- req_perform(req)
   
-  # 상태 코드 검증 로직 추가
+  # Add logic to check status code
   if (resp$status_code != 200) {
     cli_status_clear(id = sb)
     cli_alert_danger(paste0("Error in generate request: Status code ", resp$status_code))

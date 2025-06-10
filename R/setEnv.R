@@ -19,23 +19,23 @@
 #' @importFrom cli cli_alert_success cli_alert_info cli_alert_warning cli_div cli_end cli_alert cli_alert_danger
 #'
 setEnv <- function(api_key, overwrite = TRUE, install_message = TRUE) {
-  # 1. 개선된 API 키 유효성 검사
+  # 1. Improved API key validation
   if (is.null(api_key) || !is.character(api_key) || nchar(api_key) == 0) {
     cli_alert_danger("API key must be a non-empty string.")
     return(invisible(NULL))
   }
   
-  # 일반적인 API 키 길이 확인 (Google API 키는 보통 39자)
+  # Check typical API key length (Google API keys are usually 39 characters)
   if (nchar(api_key) < 10) {
     cli_alert_warning("API key seems too short. Please verify your key.")
   }
 
-  # 3. 플랫폼 호환성 개선
+  # 3. Improved platform compatibility
   home <- normalizePath("~", winslash = "/", mustWork = FALSE)
   renviron_path <- file.path(home, ".Renviron")
 
-  # 4. 오류 처리 개선
-  # .Renviron 파일 생성 시 tryCatch 추가
+  # 4. Improved error handling
+  # Add tryCatch when creating .Renviron file
   if (!file.exists(renviron_path)) {
     result <- tryCatch({
       file.create(renviron_path)
@@ -51,7 +51,7 @@ setEnv <- function(api_key, overwrite = TRUE, install_message = TRUE) {
     cli_alert_info("Created .Renviron file at {.path {renviron_path}}")
   }
 
-  # .Renviron 파일 읽기 시 tryCatch 추가
+  # Add tryCatch when reading .Renviron file
   existing_content <- tryCatch({
     readLines(renviron_path, warn = FALSE)
   }, error = function(e) {
@@ -63,7 +63,7 @@ setEnv <- function(api_key, overwrite = TRUE, install_message = TRUE) {
     return(invisible(NULL))
   }
 
-  # 기존 코드 그대로 유지
+  # Keep the existing code
   gemini_line_index <- grep("^GEMINI_API_KEY=", existing_content)
 
   if (length(gemini_line_index) > 0) {
@@ -80,7 +80,7 @@ setEnv <- function(api_key, overwrite = TRUE, install_message = TRUE) {
     existing_content <- c(existing_content, paste0("GEMINI_API_KEY=", api_key))
   }
 
-  # 파일 쓰기 시 tryCatch 추가
+  # Add tryCatch when writing to file
   result <- tryCatch({
     writeLines(existing_content, renviron_path)
     TRUE
@@ -93,12 +93,12 @@ setEnv <- function(api_key, overwrite = TRUE, install_message = TRUE) {
     return(invisible(NULL))
   }
 
-  # 2. API 키 마스킹 개선
+  # 2. Improved API key masking
   last_chars <- 4
   if (nchar(api_key) > last_chars) {
     last <- substr(api_key, nchar(api_key) - (last_chars - 1), nchar(api_key))
   } else {
-    # API 키가 너무 짧은 경우, 마지막 문자만
+    # If the API key is too short, show only the last character
     last <- substr(api_key, nchar(api_key), nchar(api_key))
   }
 

@@ -154,24 +154,24 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "2
 #' @export
 gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", type = "png", tokens = NULL,
                                 temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234) {
-  # 1. validate_params 함수 사용
+  # 1. Use validate_params function
   if (!validate_params(prompt, NULL, temperature, topP, topK, seed, api_key = FALSE, tokens = tokens)) {
     return(NULL)
   }
   
-  # 이미지 파일 검증
+  # Validate image file
   if (is.null(image)) {
     cli_alert_danger("{.arg image} must not be NULL")
     return(NULL)
   }
   
-  # 6. 이미지 파일 존재 여부 확인
+  # 6. Check if image file exists
   if (!file.exists(image)) {
     cli_alert_danger("Image file does not exist: ", image)
     return(NULL)
   }
   
-  # 7. type 파라미터 검증 위치 이동
+  # 7. Move type parameter validation
   if (!(type %in% c("png", "jpeg", "webp", "heic", "heif"))) {
     cli_alert_danger("Error: Parameter 'type' must be one of 'png', 'jpeg', 'webp', 'heic', 'heif'")
     return(NULL)
@@ -179,7 +179,7 @@ gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", typ
 
   mime_type <- paste0("image/", type)
   
-  # 8. 이미지 인코딩 오류 처리
+  # 8. Handle image encoding error
   image_data <- NULL
   tryCatch({
     image_data <- base64encode(image)
@@ -192,7 +192,7 @@ gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", typ
     return(NULL)
   }
   
-  # 2. generation_config 별도 리스트 사용
+  # 2. Use separate list for generation_config
   generation_config <- list(
     temperature = temperature,
     maxOutputTokens = maxOutputTokens,
@@ -221,10 +221,10 @@ gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", typ
     generationConfig = generation_config
   )
 
-  # 4. 상태 메시지 개선
+  # 4. Improve status message
   sb <- cli_status("Gemini Vertex is analyzing image...")
 
-  # API 요청 부분을 분리하여 상태 코드 검증을 위해 구조 변경
+  # Separate API request for status code validation
   req <- request(tokens$url) |>
     req_headers(
       "Authorization" = paste0("Bearer ", tokens$key),
@@ -234,7 +234,7 @@ gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", typ
     
   resp <- req_perform(req)
   
-  # 3. 상태 코드 검증 추가
+  # 3. Add status code validation
   if (resp$status_code != 200) {
     cli_status_clear(id = sb)
     cli_alert_danger(paste0("Error in generate request: Status code ", resp$status_code))
@@ -243,7 +243,7 @@ gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", typ
 
   cli_status_clear(id = sb)
 
-  # 5. 응답 처리 방식 일치 - gemini_image 함수와 동일하게 처리
+  # 5. Handle response same as gemini_image function
   response <- resp_body_json(resp)
   candidates <- response$candidates
   outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))

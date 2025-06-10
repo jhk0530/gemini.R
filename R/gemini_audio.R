@@ -35,7 +35,7 @@
 gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "2.0-flash",
                          temperature = 1, maxOutputTokens = 8192,
                          topK = 40, topP = 0.95, seed = 1234) {
-  # 1. validate_params 함수를 사용하여 기본 파라미터 검증
+  # 1. Validate parameters using validate_params function
   if (!validate_params(prompt, model, temperature, topP, topK, seed, api_key = TRUE)) {
     return(NULL)
   }
@@ -56,7 +56,7 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
     return(NULL)
   }
 
-  # 2. 지원되지 않는 파일 확장자에 대한 에러 처리
+  # 2. Error handling for unsupported file extensions
   supported_extensions <- c("mp3", "wav", "aiff", "aac", "ogg", "flac")
   if (!(ext %in% supported_extensions)) {
     cli_alert_danger(paste0("Unsupported file extension: '", ext, "'. Currently supported extensions are: ", 
@@ -65,10 +65,10 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
     return(NULL)
   }
 
-  # 파일 타입 매핑
+  # File type mapping
   mime_type <- paste0("audio/", ext)
 
-  # 특수 케이스만 오버라이드: 아직 정의 되지 않음
+  # Special case override: not defined yet
   # special_cases <- list(mp3 = "audio/mpeg")
   #if (!is.null(special_cases[[ext]])) {
   #  mime_type <- special_cases[[ext]]
@@ -76,7 +76,7 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
   
   num_bytes <- file.info(audio)$size
 
-  # 파일 업로드 준비
+  # Prepare file upload
   resumable_request <-
     request(file_url) |>
     req_url_query(key = api_key) |>
@@ -95,13 +95,13 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
   resp <- resumable_request |>
     req_perform()
 
-  # 4. 상태 코드 검증 추가
+  # 4. Add status code check
   if (resp$status_code != 200) {
     cli_alert_danger(paste0("Error in file resumable request: Status code ", resp$status_code))
     return(NULL)
   }
 
-  # 3. 상태 표시 메시지 수정
+  # 3. Update status message
   sb <- cli_status("Uploading audio file to Gemini...")
   upload_url <- resp_header(resp, "X-Goog-Upload-URL")
   upload_resp <- request(upload_url) |>
@@ -134,7 +134,7 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
 
   sb <- cli_status("Gemini is analyzing audio...")
 
-  # 5. generation_config를 별도 리스트로 구성
+  # 5. Compose generation_config as a separate list
   generation_config <- list(
     temperature = temperature,
     maxOutputTokens = maxOutputTokens,
@@ -143,7 +143,7 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
     seed = seed
   )
   
-  # 요청 본문도 별도 리스트로 구성
+  # Compose request body as a separate list
   request_body <- list(
     contents = list(
       parts = list(
@@ -202,21 +202,21 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
 gemini_audio.vertex <- function(audio = NULL, prompt = "Describe this audio", tokens = NULL,
                                 temperature = 1, maxOutputTokens = 8192,
                                 topK = 40, topP = 0.95, seed = 1234) {
-  # 1. validate_params 함수 사용하여 파라미터 검증
+  # 1. Validate parameters using validate_params function
   if (!validate_params(prompt, NULL, temperature, topP, topK, seed, api_key = FALSE, tokens = tokens)) {
     return(NULL)
   }
 
-  # 오디오 파일 검증
+  # Validate audio file
   if (is.null(audio)) {
     cli_alert_danger("{.arg audio} must not be NULL")
     return(NULL)
   }
 
-  # 3. 상태 표시 메시지 수정
+  # 3. Update status message
   sb <- cli_status("Gemini Vertex is analyzing audio...")
 
-  # 5. generation_config를 별도 리스트로 구성
+  # 5. Compose generation_config as a separate list
   generation_config <- list(
     temperature = temperature,
     maxOutputTokens = maxOutputTokens,
@@ -225,7 +225,7 @@ gemini_audio.vertex <- function(audio = NULL, prompt = "Describe this audio", to
     seed = seed
   )
   
-  # 요청 본문도 별도 리스트로 구성
+  # Compose request body as a separate list
   request_body <- list(
     contents = list(
       list(
@@ -254,7 +254,7 @@ gemini_audio.vertex <- function(audio = NULL, prompt = "Describe this audio", to
     req_body_json(request_body) |>
     req_perform()
 
-  # 4. 상태 코드 검증 추가
+  # 4. Add status code check
   if (generate_req$status_code != 200) {
     cli_status_clear(id = sb)
     cli_alert_danger(paste0("Error in generate request: Status code ", generate_req$status_code))

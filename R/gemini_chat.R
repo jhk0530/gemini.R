@@ -38,7 +38,7 @@
 
 gemini_chat <- function(prompt, history = list(), model = "2.0-flash", temperature = 1,
                         maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234) {
-  # 1. validate_params 함수 사용하여 파라미터 검증
+  # 1. Use validate_params function to validate parameters
   if (!validate_params(prompt, model, temperature, topP, topK, seed, api_key = TRUE)) {
     return(NULL)
   }
@@ -52,7 +52,7 @@ gemini_chat <- function(prompt, history = list(), model = "2.0-flash", temperatu
 
   sb <- cli_status("Gemini is answering...")
   
-  # 2. generation_config를 별도 리스트로 구성
+  # 2. Create generation_config as a separate list
   generation_config <- list(
     temperature = temperature,
     maxOutputTokens = maxOutputTokens,
@@ -61,7 +61,7 @@ gemini_chat <- function(prompt, history = list(), model = "2.0-flash", temperatu
     seed = seed
   )
   
-  # 요청 본문을 별도의 변수로 생성
+  # Create request body as a separate variable
   request_body <- list(
     contents = history,
     generationConfig = generation_config
@@ -74,7 +74,7 @@ gemini_chat <- function(prompt, history = list(), model = "2.0-flash", temperatu
 
   resp <- req_perform(req)
   
-  # 3. 상태 코드 검증 추가
+  # 3. Add status code validation
   if (resp$status_code != 200) {
     cli_status_clear(id = sb)
     cli_alert_danger(paste0("Error in generate request: Status code ", resp$status_code))
@@ -86,9 +86,9 @@ gemini_chat <- function(prompt, history = list(), model = "2.0-flash", temperatu
   candidates <- resp_body_json(resp)$candidates
   outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
   
-  # 4. 응답 처리 개선 - 여러 응답을 처리할 수 있도록 수정
+  # 4. Improve response handling - handle multiple responses
   if (length(outputs) > 0) {
-    # 첫 번째 응답을 기록
+    # Record the first response
     history <- history |>
       addHistory(role = "model", item = outputs[[1]])
   }
@@ -107,7 +107,7 @@ gemini_chat <- function(prompt, history = list(), model = "2.0-flash", temperatu
 #'
 
 addHistory <- function(history, role = NULL, item = NULL) {
-  # 5. addHistory 함수 개선 - 오류 메시지 개선
+  # 5. Improve addHistory function - improve error messages
   if (is.null(role)) {
     cli_alert_danger("{.arg role} must not be NULL")
     return(NULL)
@@ -117,7 +117,7 @@ addHistory <- function(history, role = NULL, item = NULL) {
     return(NULL)
   }
   
-  # 역할 검증 추가
+  # Add role validation
   valid_roles <- c("user", "model")
   if (!(role %in% valid_roles)) {
     cli_alert_danger(paste0("Invalid role: '", role, "'. Must be one of: ", paste(valid_roles, collapse=", ")))

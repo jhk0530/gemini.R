@@ -100,3 +100,96 @@ gemini_docs <- function(pdf_path, prompt, type = "PDF", api_key = Sys.getenv("GE
   )
   return(out)
 }
+
+#' @title Summarize or analyze documents using Vertex AI Gemini
+#' @description
+#' Summarize, compare, or analyze the content of one or more documents (PDF, TXT, HTML, etc.) using Vertex AI Gemini.
+#'
+#' @param file_uri The URI(s) or URL(s) of the file(s) to include in the prompt. Accepts Cloud Storage URI (gs://...), HTTP(S) URL, or YouTube video URL.
+#' @param prompt The text instructions to include in the prompt.
+#' @param mime_type The media type of the file (e.g., "application/pdf", "text/plain").
+#' @param tokens A list containing the API URL and key from token.vertex() function.
+#' @param temperature The temperature to use. Default is 1.
+#' @param maxOutputTokens The maximum number of tokens to generate. Default is 8192.
+#' @param topK The top-k value to use. Default is 40.
+#' @param topP The top-p value to use. Default is 0.95.
+#' @param seed The seed to use. Default is 1234.
+#'
+#' @return The summary or response text from Gemini Vertex.
+#' @export
+#' @examples
+#' \dontrun{
+#' tokens <- token.vertex()
+#' gemini_docs.vertex(
+#'   file_uri = "gs://cloud-samples-data/generative-ai/pdf/2403.05530.pdf",
+#'   prompt = "Summarize this document.",
+#'   mime_type = "application/pdf",
+#'   tokens = tokens
+#' )
+#' }
+#' @seealso https://cloud.google.com/vertex-ai/docs/generative-ai/multimodal/send-request-document
+
+gemini_docs.vertex <- function(file_uri, prompt, mime_type = "application/pdf", tokens = NULL,
+                              temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234) {
+  # Validate input parameters
+  if (missing(file_uri) || length(file_uri) < 1) {
+    stop("At least one file_uri must be provided.")
+  }
+  if (missing(prompt) || !nzchar(prompt)) {
+    stop("A non-empty prompt must be provided.")
+  }
+  if (is.null(tokens) || is.null(tokens$url) || is.null(tokens$key)) {
+    stop("tokens must be provided with 'url' and 'key'.")
+  }
+
+  # Build parts for each file_uri
+  file_parts <- lapply(file_uri, function(uri) {
+    list(
+      fileData = list(
+        fileUri = uri,
+        mimeType = mime_type
+      )
+    )
+  })
+
+  # Add the prompt as the last part
+  parts <- c(file_parts, list(list(text = prompt)))
+
+  # Build request body
+  request_body <- list(
+    contents = list(
+      list(
+        role = "user",
+        parts = parts
+      )
+    ),
+    generationConfig = list(
+      temperature = temperature,
+      maxOutputTokens = maxOutputTokens,
+      topP = topP,
+      topK = topK,
+      seed = seed
+    )
+  )
+
+  # Send request to Vertex AI Gemini
+  req <- httr2::request(tokens$url) |>
+    httr2::req_headers(
+      "Authorization" = paste0("Bearer ", tokens$key),
+      "Content-Type" = "application/json"
+    ) |>
+    httr2::req_body_json(request_body)
+
+  resp <- httr2::req_perform(req)
+
+  # Check response status
+  if (resp$status_code != 200) {
+    stop(paste0("Error in Vertex Gemini API request: Status code ", resp$status_code))
+  }
+
+  # Parse and return the response
+  result <- httr2::resp_body_json(resp)
+  candidates <- result$candidates
+  outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
+  return(outputs)
+}
