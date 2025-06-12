@@ -11,7 +11,8 @@ gemini.vertex(
   maxOutputTokens = 8192,
   topK = 40,
   topP = 0.95,
-  seed = 1234
+  seed = 1234,
+  timeout = 60
 )
 }
 \arguments{
@@ -33,6 +34,8 @@ see https://ai.google.dev/gemini-api/docs/models/generative-models#model-paramet
 
 \item{seed}{The seed to use. Default is 1234 value should be integer
 see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
+
+\item{timeout}{Request timeout in seconds. Default is 60.}
 }
 \value{
 A character string containing the generated text.

@@ -13,6 +13,7 @@
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #' @param maxOutputTokens The maximum number of tokens to generate.
 #'              Default is 8192 and 100 tokens correspond to roughly 60-80 words.
+#' @param timeout Request timeout in seconds. Default is 60.
 #' @return Generated text or image
 #' @export
 #' @examples
@@ -27,7 +28,7 @@
 #' @seealso https://ai.google.dev/docs/gemini_api_overview#text_input
 #'
 
-gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234) {
+gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234, timeout = 60) {
   # Validate all parameters at once
   if (!validate_params(prompt, model, temperature, topP, topK, seed, api_key = TRUE)) {
     return(NULL)
@@ -63,10 +64,12 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
     generationConfig = generation_config
   )
 
+  # Set timeout using req_timeout
   req <- request(url) |>
     req_url_query(key = api_key) |>
     req_headers("Content-Type" = "application/json") |>
-    req_body_json(request_body)
+    req_body_json(request_body) |>
+    req_timeout(timeout)
   resp <- req_perform(req)
   
   # Add logic to check status code
@@ -98,6 +101,7 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #' @param seed The seed to use. Default is 1234 value should be integer
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param timeout Request timeout in seconds. Default is 60.
 #'
 #' @examples
 #' \dontrun{
@@ -113,7 +117,7 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
 #' @export
 
 gemini.vertex <- function(prompt = NULL, tokens = NULL, temperature = 1, maxOutputTokens = 8192,
-                          topK = 40, topP = 0.95, seed = 1234) {
+                          topK = 40, topP = 0.95, seed = 1234, timeout = 60) {
   # Validate all parameters at once
   if (!validate_params(prompt, NULL, temperature, topP, topK, seed, api_key = FALSE, tokens = tokens)) {
     return(NULL)
@@ -143,13 +147,14 @@ gemini.vertex <- function(prompt = NULL, tokens = NULL, temperature = 1, maxOutp
     generationConfig = generation_config
   )
 
-  # Separate API request and check status code
+  # Add req_timeout to set timeout
   req <- request(tokens$url) |>
     req_headers(
       "Authorization" = paste0("Bearer ", tokens$key),
       "Content-Type" = "application/json"
     ) |>
-    req_body_json(request_body)
+    req_body_json(request_body) |>
+    req_timeout(timeout)
   
   resp <- req_perform(req)
   
