@@ -69,7 +69,7 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
     req_url_query(key = api_key) |>
     req_headers("Content-Type" = "application/json") |>
     req_body_json(request_body) |>
-    req_timeout(timeout)
+    req_timeout(as.integer(timeout))
   resp <- req_perform(req)
   
   # Add logic to check status code
@@ -154,7 +154,7 @@ gemini.vertex <- function(prompt = NULL, tokens = NULL, temperature = 1, maxOutp
       "Content-Type" = "application/json"
     ) |>
     req_body_json(request_body) |>
-    req_timeout(timeout)
+    req_timeout(as.integer(timeout))
   
   resp <- req_perform(req)
   
