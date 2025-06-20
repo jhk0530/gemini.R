@@ -24,7 +24,10 @@
 #' @seealso gemini
 #'
 gemini_narrative <- function(input, type = "table", ...) {
-  if (type == "table") {
+if (type == "table") {
+    if (!is.data.frame(input)) {
+        stop("Input must be a data.frame when type is 'table'.")
+    }
     # Convert data.frame to markdown table string
     markdown_table_string <- knitr::kable(
       input,
