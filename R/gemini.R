@@ -22,7 +22,7 @@
 #' setAPI("YOUR_API_KEY")
 #' gemini("Explain dplyr's mutate function")
 #' }
-#' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json
+#' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json req_timeout
 #' @importFrom cli cli_status_clear cli_status
 #'
 #' @seealso https://ai.google.dev/docs/gemini_api_overview#text_input
@@ -112,7 +112,7 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
 #'
 #' @seealso https://ai.google.dev/docs/gemini_api_overview#text_input
 #' @return A character string containing the generated text.
-#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json
+#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json req_timeout
 #'
 #' @export
 
