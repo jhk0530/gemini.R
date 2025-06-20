@@ -27,7 +27,10 @@
 #'     propertyOrdering = c("recipeName", "ingredients")
 #'   )
 #' )
-#' gemini_structured("List a few popular cookie recipes, and include the amounts of ingredients.", schema)
+#' gemini_structured(
+#'   "List a few popular cookie recipes, and include the amounts of ingredients.",
+#'   schema
+#' )
 #' }
 #' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json req_timeout
 #' @importFrom cli cli_status_clear cli_status

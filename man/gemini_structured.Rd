@@ -57,6 +57,9 @@ schema <- list(
     propertyOrdering = c("recipeName", "ingredients")
   )
 )
-gemini_structured("List a few popular cookie recipes, and include the amounts of ingredients.", schema)
+gemini_structured(
+  "List a few popular cookie recipes, and include the amounts of ingredients.",
+  schema
+)
 }
 }
