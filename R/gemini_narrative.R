@@ -35,30 +35,32 @@ gemini_narrative <- function(input, type = "table", prompt = NULL, ...) {
     if (!is.data.frame(input)) {
       stop("Input must be a data.frame when type is 'table'.")
     }
-    # Convert data.frame to markdown table string
-    markdown_table_string <- knitr::kable(
+    # Generate markdown table string
+    markdown_table_string <- paste0(knitr::kable(
       input,
       format = "pipe",
       col.names = colnames(input)
-    )
+    ), collapse = '\n')
     # Use user prompt if provided, otherwise use default
     if (is.null(prompt)) {
-      # Default prompt for table
+      # Default prompt for table with a newline before the table
       prompt <- paste0(
-        "Describe this table as if writing the Results section of a medical paper. Be concise, objective, data-focused, and structured by variable or group as needed.",
-        paste0(markdown_table_string, collapse = '\n')
+        "Describe this table as if writing the Results section of a medical paper. Be concise, objective, data-focused, and structured by variable or group as needed.\n",
+        markdown_table_string
       )
     } else {
-      # If user provides prompt, append table markdown
-      prompt <- paste0(prompt, "\n", paste0(markdown_table_string, collapse = '\n'))
+      # If user provides prompt, append table markdown with a newline
+      prompt <- paste0(prompt, "\n", markdown_table_string)
     }
     # Call gemini function
     result <- gemini(prompt, ...)
     return(result)
   } else if (type == "figure") {
-    # Check if input is a valid image file path
-    if (!is.character(input) || !file.exists(input) || !(tools::file_ext(input) %in% c("png", "jpeg", "jpg", "webp", "heic", "heif"))) {
-      stop("Input must be a valid image file path (png, jpeg, jpg, webp, heic, heif) when type is 'figure'.")
+    # Check if input is a valid image file path and a scalar string
+    if (!is.character(input) || length(input) != 1 ||
+        !file.exists(input) ||
+        !(tools::file_ext(input) %in% c("png", "jpeg", "jpg", "webp", "heic", "heif"))) {
+      stop("Input must be a single valid image file path (png, jpeg, jpg, webp, heic, heif) when type is 'figure'.")
     }
     # Determine image type
     ext <- tolower(tools::file_ext(input))
