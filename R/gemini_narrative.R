@@ -30,26 +30,55 @@
 #'
 #' @seealso gemini
 #'
-gemini_narrative <- function(input, type = "table", ...) {
-if (type == "table") {
+gemini_narrative <- function(input, type = "table", prompt = NULL, ...) {
+  if (type == "table") {
     if (!is.data.frame(input)) {
-        stop("Input must be a data.frame when type is 'table'.")
+      stop("Input must be a data.frame when type is 'table'.")
     }
-    # Convert data.frame to markdown table string
-    markdown_table_string <- knitr::kable(
+    # Generate markdown table string
+    markdown_table_string <- paste0(knitr::kable(
       input,
       format = "pipe",
       col.names = colnames(input)
-    )
-    # Create prompt for Gemini
-    prompt <- paste0(
-      "make narrative description for this ", type, ": \n",
-      paste0(markdown_table_string, collapse = '\n')
-    )
+    ), collapse = '\n')
+    # Use user prompt if provided, otherwise use default
+    if (is.null(prompt)) {
+      # Default prompt for table with a newline before the table
+      prompt <- paste0(
+        "Describe this table as if writing the Results section of a medical paper. Be concise, objective, data-focused, and structured by variable or group as needed.\n",
+        markdown_table_string
+      )
+    } else {
+      # If user provides prompt, append table markdown with a newline
+      prompt <- paste0(prompt, "\n", markdown_table_string)
+    }
     # Call gemini function
     result <- gemini(prompt, ...)
     return(result)
+  } else if (type == "figure") {
+    # Check if input is a valid image file path and a scalar string
+    if (!is.character(input) || length(input) != 1 ||
+        !file.exists(input) ||
+        !(tools::file_ext(input) %in% c("png", "jpeg", "jpg", "webp", "heic", "heif"))) {
+      stop("Input must be a single valid image file path (png, jpeg, jpg, webp, heic, heif) when type is 'figure'.")
+    }
+    # Determine image type
+    ext <- tolower(tools::file_ext(input))
+    if (ext == "jpg") ext <- "jpeg"
+    # Use user prompt if provided, otherwise use default
+    if (is.null(prompt)) {
+      # Default prompt for figure
+      prompt <- "Describe the figure in concise, objective Results-section style, focusing only on observable data like group differences, key stats, trends, and confidence intervals—no interpretation."
+    }
+    # Call gemini_image function (from gemini_image.R)
+    result <- gemini_image(
+      image = input,
+      prompt = prompt,
+      type = ext,
+      ...
+    )
+    return(result)
   } else {
-    stop("Currently only type = 'table' is supported.")
+    stop("Currently only type = 'table' or 'figure' is supported.")
   }
 }
