@@ -1,6 +1,6 @@
 Package: gemini.R
 Title: Interface for 'Google Gemini' API
-Version: 0.15.0
+Version: 0.15.1
 Authors@R: c(
   person("Jinhwan", "Kim", , "hwanistic@gmail.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0009-0009-3217-2417")),
   person("Maciej", "Nasinski", role = "ctb"))
