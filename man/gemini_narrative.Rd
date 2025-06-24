@@ -4,7 +4,7 @@
 \alias{gemini_narrative}
 \title{Generate narrative description for an input using Gemini}
 \usage{
-gemini_narrative(input, type = "table", ...)
+gemini_narrative(input, type = "table", prompt = NULL, ...)
 }
 \arguments{
 \item{input}{Input object. For type = "table", a data.frame should be provided.}
