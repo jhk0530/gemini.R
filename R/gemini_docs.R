@@ -26,7 +26,21 @@
 #'
 #' @export
 #' @seealso https://ai.google.dev/gemini-api/docs/document-processing?lang=rest
-gemini_docs <- function(pdf_path, prompt, type = "PDF", api_key = Sys.getenv("GEMINI_API_KEY")) {
+gemini_docs <- function(pdf_path, prompt, type = "PDF", api_key = Sys.getenv("GEMINI_API_KEY"), large = FALSE, local = FALSE) {
+  # If local = FALSE and input is a URL, download to a temp file
+  temp_files <- character(0)
+  if (!local) {    
+    # Download the file to a temp file
+    temp_file <- tempfile(fileext = paste0(".", tools::file_ext(pdf_path)))
+    download.file(pdf_path, temp_file, mode = "wb", quiet = TRUE)
+    temp_files <- c(temp_files, temp_file)
+    pdf_path <- temp_file
+      
+    # Remove temp files on exit
+    if (length(temp_files) > 0) on.exit(unlink(temp_files), add = TRUE)
+  }
+
+  # Check file existence
   if (length(pdf_path) < 1) stop("At least one file path must be provided.")
   if (any(!file.exists(pdf_path))) stop("Some files do not exist: ", paste(pdf_path[!file.exists(pdf_path)], collapse = ", "))
 
@@ -52,53 +66,92 @@ gemini_docs <- function(pdf_path, prompt, type = "PDF", api_key = Sys.getenv("GE
   # Use the first mime type if multiple are available
   mime_type <- if (is.character(mime_types[[type]])) mime_types[[type]][1] else as.character(mime_types[[type]][1])
 
-  # Base64 encode all files
-  file_parts <- lapply(pdf_path, function(path) {
-    list(
-      inline_data = list(
-        mime_type = mime_type,
-        data = base64enc::base64encode(path)
+  if (!large && !local) {
+    # Base64 encode all files and send directly (for small files)
+    file_parts <- lapply(pdf_path, function(path) {
+      list(
+        inline_data = list(
+          mime_type = mime_type,
+          data = base64enc::base64encode(path)
+        )
+      )
+    })
+
+    parts <- c(file_parts, list(list(text = prompt)))
+
+    body <- list(
+      contents = list(
+        list(parts = parts)
       )
     )
-  })
 
-  # Add the prompt as the last part
-  parts <- c(file_parts, list(list(text = prompt)))
+    url <- "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
 
-  # Prepare request body
-  body <- list(
-    contents = list(
-      list(parts = parts)
-    )
-  )
+    req <- httr2::request(url) |>
+      httr2::req_url_query(key = api_key) |>
+      httr2::req_headers("Content-Type" = "application/json") |>
+      httr2::req_body_json(body, auto_unbox = TRUE)
 
-  url <- "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+    resp <- httr2::req_perform(req)
 
-  req <- httr2::request(url) |>
-    httr2::req_url_query(key = api_key) |>
-    httr2::req_headers("Content-Type" = "application/json") |>
-    httr2::req_body_json(body, auto_unbox = TRUE)
-
-  resp <- httr2::req_perform(req)
-
-  if (resp$status_code != 200) {
-    stop(paste0("Error in Gemini API request: Status code ", resp$status_code))
-  }
-
-  result <- httr2::resp_body_json(resp)
-
-  # Extract summary text (robust extraction of all $text fields)
-  out <- tryCatch(
-    {
-      texts <- lapply(result$candidates[[1]]$content$parts, function(part) part$text)
-      texts <- texts[!sapply(texts, is.null)]
-      paste(texts, collapse = "\n")
-    },
-    error = function(e) {
-      paste(unlist(result$candidates[[1]]$content$parts), collapse = "\n")
+    if (resp$status_code != 200) {
+      stop(paste0("Error in Gemini API request: Status code ", resp$status_code))
     }
-  )
-  return(out)
+
+    result <- httr2::resp_body_json(resp)
+
+    # Extract summary text (robust extraction of all $text fields)
+    out <- tryCatch(
+      {
+        texts <- lapply(result$candidates[[1]]$content$parts, function(part) part$text)
+        texts <- texts[!sapply(texts, is.null)]
+        paste(texts, collapse = "\n")
+      },
+      error = function(e) {
+        paste(unlist(result$candidates[[1]]$content$parts), collapse = "\n")
+      }
+    )
+    return(out)
+  } else {
+    # Use file upload API for large or local files (only one file supported)
+    if (length(pdf_path) > 1) stop("Large/Local mode supports only one file at a time.")
+    file_uri <- upload_api(pdf_path[1], api_key, mime_type)
+
+    # Build request body for Gemini API using file_uri
+    body <- list(
+      contents = list(list(
+        parts = list(
+          list(text = prompt),
+          list(file_data = list(mime_type = mime_type, file_uri = file_uri))
+        )
+      ))
+    )
+
+    url <- "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+
+    req <- httr2::request(url) |>
+      httr2::req_url_query(key = api_key) |>
+      httr2::req_headers("Content-Type" = "application/json") |>
+      httr2::req_body_json(body, auto_unbox = TRUE)
+
+    resp <- httr2::req_perform(req)
+    if (resp$status_code != 200) {
+      stop(paste0("Error in Gemini API request: Status code ", resp$status_code))
+    }
+
+    result <- httr2::resp_body_json(resp)
+    out <- tryCatch(
+      {
+        texts <- lapply(result$candidates[[1]]$content$parts, function(part) part$text)
+        texts <- texts[!sapply(texts, is.null)]
+        paste(texts, collapse = "\n")
+      },
+      error = function(e) {
+        paste(unlist(result$candidates[[1]]$content$parts), collapse = "\n")
+      }
+    )
+    return(out)
+  }
 }
 
 #' @title Summarize or analyze documents using Vertex AI Gemini
@@ -192,4 +245,46 @@ gemini_docs.vertex <- function(file_uri, prompt, mime_type = "application/pdf", 
   candidates <- result$candidates
   outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
   return(outputs)
+}
+
+# Helper function for file upload API (Gemini/Vertex)
+upload_api <- function(local_file, api_key, mime_type) {
+  # Start resumable upload session
+  file_size <- file.info(local_file)$size
+  meta_body <- list(file = list(display_name = basename(local_file)))
+  meta_req <- httr2::request("https://generativelanguage.googleapis.com/upload/v1beta/files") |>
+    httr2::req_url_query(key = api_key) |>
+    httr2::req_headers(
+      "X-Goog-Upload-Protocol" = "resumable",
+      "X-Goog-Upload-Command" = "start",
+      "X-Goog-Upload-Header-Content-Length" = as.character(file_size),
+      "X-Goog-Upload-Header-Content-Type" = mime_type,
+      "Content-Type" = "application/json"
+    ) |>
+    httr2::req_body_json(meta_body, auto_unbox = TRUE)
+
+  meta_resp <- httr2::req_perform(meta_req)
+  if (meta_resp$status_code != 200) {
+    stop(paste0("Error starting upload session: Status code ", meta_resp$status_code))
+  }
+  upload_url <- httr2::resp_headers(meta_resp)[["x-goog-upload-url"]]
+  if (is.null(upload_url)) stop("Failed to get upload URL from Gemini API.")
+
+  # Upload the file bytes
+  upload_req <- httr2::request(upload_url) |>
+    httr2::req_headers(
+      "Content-Length" = as.character(file_size),
+      "X-Goog-Upload-Offset" = "0",
+      "X-Goog-Upload-Command" = "upload, finalize"
+    ) |>
+    httr2::req_body_file(local_file)
+
+  upload_resp <- httr2::req_perform(upload_req)
+  if (upload_resp$status_code != 200) {
+    stop(paste0("Error uploading file: Status code ", upload_resp$status_code))
+  }
+  upload_result <- httr2::resp_body_json(upload_resp)
+  file_uri <- upload_result$file$uri
+  if (is.null(file_uri)) stop("Failed to get file_uri after upload.")
+  return(file_uri)
 }
