@@ -2,30 +2,30 @@ Package: gemini.R
 Title: Interface for 'Google Gemini' API
 Version: 0.15.2
 Authors@R: c(
-person("Jinhwan", "Kim", , "hwanistic@gmail.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0009-0009-3217-2417")),
-person("Maciej", "Nasinski", role = "ctb"))
+  person("Jinhwan", "Kim", , "hwanistic@gmail.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0009-0009-3217-2417")),
+  person("Maciej", "Nasinski", role = "ctb"))
 Maintainer: Jinhwan Kim <hwanistic@gmail.com>
 Description: Provides a comprehensive interface for Google Gemini API,
-enabling users to access and utilize Gemini Large Language Model (LLM) functionalities directly from R.
-This package facilitates seamless integration with Google Gemini, allowing for advanced language processing,
-text generation, and other AI-driven capabilities within the R environment.
-For more information, please visit <https://ai.google.dev/docs/gemini_api_overview>.
+  enabling users to access and utilize Gemini Large Language Model (LLM) functionalities directly from R.
+  This package facilitates seamless integration with Google Gemini, allowing for advanced language processing,
+  text generation, and other AI-driven capabilities within the R environment.
+  For more information, please visit <https://ai.google.dev/docs/gemini_api_overview>.
 License: MIT + file LICENSE
 Depends: R (>= 4.1.0)
 URL: https://github.com/jhk0530/gemini.R
 BugReports: https://github.com/jhk0530/gemini.R/issues
 Encoding: UTF-8
 Imports:
-base64enc,
-cli,
-httr2,
-jsonlite,
-knitr,
-rstudioapi,
-tools
+  base64enc,
+  cli,
+  httr2,
+  jsonlite,
+  knitr,
+  rstudioapi,
+  tools
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests:
-testthat (>= 3.0.0)
+  testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Config/Needs/website: rmarkdown
