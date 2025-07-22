@@ -37,6 +37,9 @@ Generated text with real-time information from Google Search
 \description{
 Generate text responses that include up-to-date information from Google Search
 }
+\details{
+The API key is now sent via the HTTP header \code{x-goog-api-key} instead of as a URL query parameter.
+}
 \examples{
 \dontrun{
 library(gemini.R)

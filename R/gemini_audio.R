@@ -16,6 +16,9 @@
 #' @param seed The seed to use. Default is 1234 value should be integer
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #'
+#' @details
+#' The API key is now sent via the HTTP header \code{x-goog-api-key} instead of as a URL query parameter.
+#'
 #' @return A character vector containing the Gemini API's response.
 #'
 #' @export
@@ -29,7 +32,7 @@
 #'
 #' @importFrom tools file_ext
 #' @importFrom cli cli_alert_danger cli_status cli_status_clear cli_alert_warning cli_alert_info
-#' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json req_method req_body_file resp_header
+#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json req_method req_body_file resp_header
 #'
 #'
 gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "2.0-flash",
@@ -51,7 +54,7 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
 
   ext <- tolower(tools::file_ext(audio))
 
-  if(ext == ""){
+  if (ext == "") {
     cli_alert_warning("File extension not found. Please check the file path.")
     return(NULL)
   }
@@ -59,8 +62,10 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
   # 2. Error handling for unsupported file extensions
   supported_extensions <- c("mp3", "wav", "aiff", "aac", "ogg", "flac")
   if (!(ext %in% supported_extensions)) {
-    cli_alert_danger(paste0("Unsupported file extension: '", ext, "'. Currently supported extensions are: ", 
-                          paste(supported_extensions, collapse=", ")))
+    cli_alert_danger(paste0(
+      "Unsupported file extension: '", ext, "'. Currently supported extensions are: ",
+      paste(supported_extensions, collapse = ", ")
+    ))
     cli_alert_info("Please submit an issue at https://github.com/jhk0530/gemini.R/issues for additional file format support.")
     return(NULL)
   }
@@ -70,18 +75,18 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
 
   # Special case override: not defined yet
   # special_cases <- list(mp3 = "audio/mpeg")
-  #if (!is.null(special_cases[[ext]])) {
+  # if (!is.null(special_cases[[ext]])) {
   #  mime_type <- special_cases[[ext]]
-  #}
-  
+  # }
+
   num_bytes <- file.info(audio)$size
 
   # Prepare file upload
   resumable_request <-
     request(file_url) |>
-    req_url_query(key = api_key) |>
     req_method("POST") |>
     req_headers(
+      "x-goog-api-key" = api_key,
       "X-Goog-Upload-Protocol" = "resumable",
       "X-Goog-Upload-Command" = "start",
       "X-Goog-Upload-Header-Content-Length" = as.character(num_bytes),
@@ -129,7 +134,7 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
 
   # Add this line to define model_query
   model_query <- paste0("gemini-", model, ":generateContent")
-  
+
   url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query)
 
   sb <- cli_status("Gemini is analyzing audio...")
@@ -142,7 +147,7 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
     topK = topK,
     seed = seed
   )
-  
+
   # Compose request body as a separate list
   request_body <- list(
     contents = list(
@@ -155,9 +160,11 @@ gemini_audio <- function(audio = NULL, prompt = "Describe this audio", model = "
   )
 
   generate_req <- request(url) |>
-    req_url_query(key = api_key) |>
     req_method("POST") |>
-    req_headers("Content-Type" = "application/json") |>
+    req_headers(
+      "x-goog-api-key" = api_key,
+      "Content-Type" = "application/json"
+    ) |>
     req_body_json(request_body)
 
   generate_resp <- req_perform(generate_req)
@@ -224,7 +231,7 @@ gemini_audio.vertex <- function(audio = NULL, prompt = "Describe this audio", to
     topK = topK,
     seed = seed
   )
-  
+
   # Compose request body as a separate list
   request_body <- list(
     contents = list(

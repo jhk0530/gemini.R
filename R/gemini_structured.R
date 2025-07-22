@@ -32,20 +32,19 @@
 #'   schema
 #' )
 #' }
-#' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json req_timeout
+#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json req_timeout
 #' @importFrom cli cli_status_clear cli_status
 
 gemini_structured <- function(
-  prompt,
-  schema,
-  model = "2.5-flash",
-  temperature = 1,
-  maxOutputTokens = 8192,
-  topK = 40,
-  topP = 0.95,
-  seed = 1234,
-  timeout = 60
-) {
+    prompt,
+    schema,
+    model = "2.5-flash",
+    temperature = 1,
+    maxOutputTokens = 8192,
+    topK = 40,
+    topP = 0.95,
+    seed = 1234,
+    timeout = 60) {
   # Validate API key
   api_key <- Sys.getenv("GEMINI_API_KEY")
   if (is.null(api_key) || api_key == "") {
@@ -84,8 +83,10 @@ gemini_structured <- function(
 
   # Send request
   req <- request(url) |>
-    req_url_query(key = api_key) |>
-    req_headers("Content-Type" = "application/json") |>
+    req_headers(
+      "Content-Type" = "application/json",
+      "x-goog-api-key" = api_key
+    ) |>
     req_body_json(request_body) |>
     req_timeout(as.integer(timeout))
   resp <- req_perform(req)

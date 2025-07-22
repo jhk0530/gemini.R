@@ -11,6 +11,10 @@
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #' @param seed The seed to use. Default is 1234 value should be integer
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#'
+#' @details
+#' The API key is now sent via the HTTP header \code{x-goog-api-key} instead of as a URL query parameter.
+#'
 #' @return Generated text with real-time information from Google Search
 #' @export
 #' @examples
@@ -19,7 +23,7 @@
 #' setAPI("YOUR_API_KEY")
 #' gemini_search("What is the current Google stock price?")
 #' }
-#' @importFrom httr2 request req_url_query req_headers req_body_raw req_perform resp_body_json resp_body_string
+#' @importFrom httr2 request req_headers req_body_raw req_perform resp_body_json resp_body_string
 #' @importFrom cli cli_alert_danger cli_status_clear cli_status
 #'
 #' @seealso https://ai.google.dev/docs/search_retrieval
@@ -67,15 +71,17 @@ gemini_search <- function(prompt, temperature = 1, maxOutputTokens = 8192, topK 
       list(google_search = list())
     )
   )
-  
+
   # Convert to JSON string
   request_json <- jsonlite::toJSON(request_structure, auto_unbox = TRUE)
-  
+
   # Make the request
   ## IMPORTANT: req_body_json not working with tools option.
   resp <- request(url) |>
-    req_url_query(key = api_key) |>
-    req_headers("Content-Type" = "application/json") |>
+    req_headers(
+      "Content-Type" = "application/json",
+      "x-goog-api-key" = api_key
+    ) |>
     req_body_raw(
       paste0('{
       "contents": [{"parts": [{"text": "', prompt, '"}]}],
@@ -88,9 +94,9 @@ gemini_search <- function(prompt, temperature = 1, maxOutputTokens = 8192, topK 
       },
       "tools": [{"google_search": {}}]
   }')
-) |>
+    ) |>
     req_perform()
-    
+
   # 4. Add status code validation
   if (resp$status_code != 200) {
     cli_status_clear(id = sb)
@@ -106,11 +112,10 @@ gemini_search <- function(prompt, temperature = 1, maxOutputTokens = 8192, topK 
 
   # 5. Unify response processing method
   candidates <- result$candidates
-  
+
   # Extract the response text - keep the existing method to handle special cases
   if (!is.null(candidates) && length(candidates) > 0 &&
-      !is.null(candidates[[1]]$content$parts) && length(candidates[[1]]$content$parts) > 0) {
-      
+    !is.null(candidates[[1]]$content$parts) && length(candidates[[1]]$content$parts) > 0) {
     # Process in a way consistent with other functions
     outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
     return(outputs)

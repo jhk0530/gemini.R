@@ -8,7 +8,9 @@ gemini_docs(
   pdf_path,
   prompt,
   type = "PDF",
-  api_key = Sys.getenv("GEMINI_API_KEY")
+  api_key = Sys.getenv("GEMINI_API_KEY"),
+  large = FALSE,
+  local = FALSE
 )
 }
 \arguments{
@@ -18,7 +20,7 @@ gemini_docs(
 
 \item{type}{File type. One of "PDF", "JavaScript", "Python", "TXT", "HTML", "CSS", "Markdown", "CSV", "XML", "RTF". Default is "PDF".}
 
-\item{api_key}{Gemini API key. Defaults to \code{Sys.getenv("GEMINI_API_KEY")}.}
+\item{api_key}{Gemini API key. Defaults to \code{Sys.getenv("GEMINI_API_KEY")}. The API key is sent via the HTTP header \code{x-goog-api-key}.}
 }
 \value{
 The summary or response text from Gemini.

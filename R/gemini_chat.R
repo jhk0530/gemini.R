@@ -31,7 +31,7 @@
 #' chats <- gemini_chat("How do you think about summer?", chats$history)
 #' print(chats$outputs)
 #' }
-#' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json
+#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json
 #' @importFrom cli cli_alert_danger cli_status_clear cli_status
 #' @seealso https://ai.google.dev/docs/gemini_api_overview#chat
 #'
@@ -51,7 +51,7 @@ gemini_chat <- function(prompt, history = list(), model = "2.0-flash", temperatu
   api_key <- Sys.getenv("GEMINI_API_KEY")
 
   sb <- cli_status("Gemini is answering...")
-  
+
   # 2. Create generation_config as a separate list
   generation_config <- list(
     temperature = temperature,
@@ -60,32 +60,34 @@ gemini_chat <- function(prompt, history = list(), model = "2.0-flash", temperatu
     topK = topK,
     seed = seed
   )
-  
+
   # Create request body as a separate variable
   request_body <- list(
     contents = history,
     generationConfig = generation_config
   )
-  
+
   req <- request(url) |>
-    req_url_query(key = api_key) |>
-    req_headers("Content-Type" = "application/json") |>
+    req_headers(
+      "x-goog-api-key" = api_key,
+      "Content-Type" = "application/json"
+    ) |>
     req_body_json(request_body)
 
   resp <- req_perform(req)
-  
+
   # 3. Add status code validation
   if (resp$status_code != 200) {
     cli_status_clear(id = sb)
     cli_alert_danger(paste0("Error in generate request: Status code ", resp$status_code))
     return(NULL)
   }
-  
+
   cli_status_clear(id = sb)
 
   candidates <- resp_body_json(resp)$candidates
   outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
-  
+
   # 4. Improve response handling - handle multiple responses
   if (length(outputs) > 0) {
     # Record the first response
@@ -116,14 +118,14 @@ addHistory <- function(history, role = NULL, item = NULL) {
     cli_alert_danger("{.arg item} must not be NULL")
     return(NULL)
   }
-  
+
   # Add role validation
   valid_roles <- c("user", "model")
   if (!(role %in% valid_roles)) {
-    cli_alert_danger(paste0("Invalid role: '", role, "'. Must be one of: ", paste(valid_roles, collapse=", ")))
+    cli_alert_danger(paste0("Invalid role: '", role, "'. Must be one of: ", paste(valid_roles, collapse = ", ")))
     return(NULL)
   }
-  
+
   history[[length(history) + 1]] <-
     list(
       role = role,

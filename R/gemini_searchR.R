@@ -21,7 +21,7 @@
 #' setAPI("YOUR_API_KEY")
 #' gemini_searchR("Who won the latest F1 grand prix?")
 #' }
-#' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json
+#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json
 #' @importFrom jsonlite fromJSON
 #' @importFrom cli cli_alert_danger cli_status_clear cli_status
 #'
@@ -33,7 +33,7 @@ gemini_searchR <- function(prompt, model = "1.5-flash", temperature = 1, maxOutp
   if (!validate_params(prompt, model, temperature, topP, topK, seed, api_key = TRUE)) {
     return(NULL)
   }
-  
+
   # Model series validation is still required (not performed in validate_params)
   supported_models <- c("1.5-flash", "1.5-pro")
   if (!(model %in% supported_models)) {
@@ -57,7 +57,7 @@ gemini_searchR <- function(prompt, model = "1.5-flash", temperature = 1, maxOutp
     topP = topP,
     seed = seed
   )
-  
+
   # 3. Build a consistent request body
   request_body <- list(
     contents = list(
@@ -82,12 +82,14 @@ gemini_searchR <- function(prompt, model = "1.5-flash", temperature = 1, maxOutp
 
   # Make the request
   req <- request(url) |>
-    req_headers("Content-Type" = "application/json") |>
-    req_url_query(key = api_key) |>
+    req_headers(
+      "Content-Type" = "application/json",
+      "x-goog-api-key" = api_key
+    ) |>
     req_body_json(request_body, auto_unbox = TRUE)
-    
+
   resp <- req_perform(req)
-  
+
   # 4. Add status code validation
   if (resp$status_code != 200) {
     cli_status_clear(id = sb)
@@ -100,10 +102,10 @@ gemini_searchR <- function(prompt, model = "1.5-flash", temperature = 1, maxOutp
 
   # 5. Unified response handling
   result <- resp_body_json(resp)
-  
+
   # Kept for compatibility with previous approach
   candidates <- result$candidates
-  
+
   # 6. Improved response structure handling
   if (!is.null(candidates) && length(candidates) > 0) {
     outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))

@@ -47,6 +47,9 @@ Generated text
 \description{
 Generate text from text and image with Gemini
 }
+\details{
+The API key is now sent via the \code{x-goog-api-key} HTTP header instead of as a URL query parameter.
+}
 \examples{
 \dontrun{
 library(gemini.R)

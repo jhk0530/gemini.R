@@ -25,9 +25,12 @@
 #' gemini_image(image = system.file("docs/reference/figures/image.png", package = "gemini.R"))
 #' }
 #'
-#' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json
+#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json
 #' @importFrom base64enc base64encode
 #' @importFrom cli cli_alert_danger cli_status_clear cli_status
+#'
+#' @details
+#' The API key is now sent via the \code{x-goog-api-key} HTTP header instead of as a URL query parameter.
 #'
 #' @seealso https://ai.google.dev/docs/gemini_api_overview#text_image_input
 #'
@@ -39,18 +42,18 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "2
   if (!validate_params(prompt, model, temperature, topP, topK, seed, api_key = TRUE)) {
     return(NULL)
   }
-  
+
   # 이미지 파일 검증
   if (missing(image)) {
     image <- system.file("docs/reference/figures/image.png", package = "gemini.R")
   }
-  
+
   # 6. 이미지 파일 존재 여부 확인
   if (!file.exists(image)) {
     cli_alert_danger("Image file does not exist: ", image)
     return(NULL)
   }
-  
+
   # 7. type 파라미터 검증 위치 이동
   if (!(type %in% c("png", "jpeg", "webp", "heic", "heif"))) {
     cli_alert_danger("Error: Parameter 'type' must be one of 'png', 'jpeg', 'webp', 'heic', 'heif'")
@@ -63,21 +66,24 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "2
   mime_type <- paste0("image/", type)
 
   sb <- cli_status("Gemini is analyzing image...")
-  
+
   # 8. 이미지 인코딩 오류 처리
   image_data <- NULL
-  tryCatch({
-    image_data <- base64encode(image)
-  }, error = function(e) {
-    cli_status_clear(id = sb)
-    cli_alert_danger(paste0("Error encoding image: ", e$message))
-    return(NULL)
-  })
-  
+  tryCatch(
+    {
+      image_data <- base64encode(image)
+    },
+    error = function(e) {
+      cli_status_clear(id = sb)
+      cli_alert_danger(paste0("Error encoding image: ", e$message))
+      return(NULL)
+    }
+  )
+
   if (is.null(image_data)) {
     return(NULL)
   }
-  
+
   # 2. generation_config 별도 리스트 사용
   generation_config <- list(
     temperature = temperature,
@@ -86,7 +92,7 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "2
     topK = topK,
     seed = seed
   )
-  
+
   # 요청 본문도 별도 리스트로 구성
   request_body <- list(
     contents = list(
@@ -106,19 +112,21 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "2
   )
 
   req <- request(url) |>
-    req_url_query(key = api_key) |>
-    req_headers("Content-Type" = "application/json") |>
+    req_headers(
+      "Content-Type" = "application/json",
+      "x-goog-api-key" = api_key
+    ) |>
     req_body_json(request_body)
 
   resp <- req_perform(req)
-  
+
   # 3. 상태 코드 검증 추가
   if (resp$status_code != 200) {
     cli_status_clear(id = sb)
     cli_alert_danger(paste0("Error in generate request: Status code ", resp$status_code))
     return(NULL)
   }
-  
+
   cli_status_clear(id = sb)
 
   candidates <- resp_body_json(resp)$candidates
@@ -158,19 +166,19 @@ gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", typ
   if (!validate_params(prompt, NULL, temperature, topP, topK, seed, api_key = FALSE, tokens = tokens)) {
     return(NULL)
   }
-  
+
   # Validate image file
   if (is.null(image)) {
     cli_alert_danger("{.arg image} must not be NULL")
     return(NULL)
   }
-  
+
   # 6. Check if image file exists
   if (!file.exists(image)) {
     cli_alert_danger("Image file does not exist: ", image)
     return(NULL)
   }
-  
+
   # 7. Move type parameter validation
   if (!(type %in% c("png", "jpeg", "webp", "heic", "heif"))) {
     cli_alert_danger("Error: Parameter 'type' must be one of 'png', 'jpeg', 'webp', 'heic', 'heif'")
@@ -178,20 +186,23 @@ gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", typ
   }
 
   mime_type <- paste0("image/", type)
-  
+
   # 8. Handle image encoding error
   image_data <- NULL
-  tryCatch({
-    image_data <- base64encode(image)
-  }, error = function(e) {
-    cli_alert_danger(paste0("Error encoding image: ", e$message))
-    return(NULL)
-  })
-  
+  tryCatch(
+    {
+      image_data <- base64encode(image)
+    },
+    error = function(e) {
+      cli_alert_danger(paste0("Error encoding image: ", e$message))
+      return(NULL)
+    }
+  )
+
   if (is.null(image_data)) {
     return(NULL)
   }
-  
+
   # 2. Use separate list for generation_config
   generation_config <- list(
     temperature = temperature,
@@ -231,9 +242,9 @@ gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", typ
       "Content-Type" = "application/json"
     ) |>
     req_body_json(request_body)
-    
+
   resp <- req_perform(req)
-  
+
   # 3. Add status code validation
   if (resp$status_code != 200) {
     cli_status_clear(id = sb)
@@ -247,6 +258,6 @@ gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", typ
   response <- resp_body_json(resp)
   candidates <- response$candidates
   outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
-  
+
   return(outputs)
 }

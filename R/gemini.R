@@ -22,7 +22,7 @@
 #' setAPI("YOUR_API_KEY")
 #' gemini("Explain dplyr's mutate function")
 #' }
-#' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json req_timeout
+#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json req_timeout
 #' @importFrom cli cli_status_clear cli_status
 #'
 #' @seealso https://ai.google.dev/docs/gemini_api_overview#text_input
@@ -53,7 +53,7 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
   if (model == "2.0-flash-exp-image-generation") {
     generation_config$responseModalities <- list("Text", "Image")
   }
-  
+
   # Create request body as a separate list
   request_body <- list(
     contents = list(
@@ -66,12 +66,14 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
 
   # Set timeout using req_timeout
   req <- request(url) |>
-    req_url_query(key = api_key) |>
-    req_headers("Content-Type" = "application/json") |>
+    req_headers(
+      "x-goog-api-key" = api_key,
+      "Content-Type" = "application/json"
+    ) |>
     req_body_json(request_body) |>
     req_timeout(as.integer(timeout))
   resp <- req_perform(req)
-  
+
   # Add logic to check status code
   if (resp$status_code != 200) {
     cli_status_clear(id = sb)
@@ -133,7 +135,7 @@ gemini.vertex <- function(prompt = NULL, tokens = NULL, temperature = 1, maxOutp
     topK = topK,
     seed = seed
   )
-  
+
   # Create request body as a separate list
   request_body <- list(
     contents = list(
@@ -155,22 +157,22 @@ gemini.vertex <- function(prompt = NULL, tokens = NULL, temperature = 1, maxOutp
     ) |>
     req_body_json(request_body) |>
     req_timeout(as.integer(timeout))
-  
+
   resp <- req_perform(req)
-  
+
   # Add logic to check status code
   if (resp$status_code != 200) {
     cli_status_clear(id = sb)
     cli_alert_danger(paste0("Error in generate request: Status code ", resp$status_code))
     return(NULL)
   }
-  
+
   response <- resp_body_json(resp)
 
   cli_status_clear(id = sb)
-  
+
   candidates <- response$candidates
   outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
-  
+
   return(outputs)
 }

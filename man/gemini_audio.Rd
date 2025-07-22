@@ -44,6 +44,9 @@ A character vector containing the Gemini API's response.
 \description{
 This function sends audio to the Gemini API and returns a text description.
 }
+\details{
+The API key is now sent via the HTTP header \code{x-goog-api-key} instead of as a URL query parameter.
+}
 \examples{
 \dontrun{
 library(gemini.R)

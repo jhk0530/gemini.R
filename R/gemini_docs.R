@@ -5,7 +5,7 @@
 #' @param pdf_path Path(s) to the local file(s). Can be a character vector.
 #' @param prompt The prompt to send to Gemini (e.g., "Summarize these documents").
 #' @param type File type. One of "PDF", "JavaScript", "Python", "TXT", "HTML", "CSS", "Markdown", "CSV", "XML", "RTF". Default is "PDF".
-#' @param api_key Gemini API key. Defaults to \code{Sys.getenv("GEMINI_API_KEY")}.
+#' @param api_key Gemini API key. Defaults to \code{Sys.getenv("GEMINI_API_KEY")}. The API key is sent via the HTTP header \code{x-goog-api-key}.
 #'
 #' @return The summary or response text from Gemini.
 #'
@@ -21,7 +21,7 @@
 #' )
 #' }
 #'
-#' @importFrom httr2 request req_url_query req_headers req_body_json req_perform resp_body_json
+#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json
 #' @importFrom base64enc base64encode
 #'
 #' @export
@@ -29,13 +29,13 @@
 gemini_docs <- function(pdf_path, prompt, type = "PDF", api_key = Sys.getenv("GEMINI_API_KEY"), large = FALSE, local = FALSE) {
   # If local = FALSE and input is a URL, download to a temp file
   temp_files <- character(0)
-  if (!local) {    
+  if (!local) {
     # Download the file to a temp file
     temp_file <- tempfile(fileext = paste0(".", tools::file_ext(pdf_path)))
     download.file(pdf_path, temp_file, mode = "wb", quiet = TRUE)
     temp_files <- c(temp_files, temp_file)
     pdf_path <- temp_file
-      
+
     # Remove temp files on exit
     if (length(temp_files) > 0) on.exit(unlink(temp_files), add = TRUE)
   }
@@ -88,8 +88,10 @@ gemini_docs <- function(pdf_path, prompt, type = "PDF", api_key = Sys.getenv("GE
     url <- "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
 
     req <- httr2::request(url) |>
-      httr2::req_url_query(key = api_key) |>
-      httr2::req_headers("Content-Type" = "application/json") |>
+      httr2::req_headers(
+        "x-goog-api-key" = api_key,
+        "Content-Type" = "application/json"
+      ) |>
       httr2::req_body_json(body, auto_unbox = TRUE)
 
     resp <- httr2::req_perform(req)
@@ -130,8 +132,10 @@ gemini_docs <- function(pdf_path, prompt, type = "PDF", api_key = Sys.getenv("GE
     url <- "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
 
     req <- httr2::request(url) |>
-      httr2::req_url_query(key = api_key) |>
-      httr2::req_headers("Content-Type" = "application/json") |>
+      httr2::req_headers(
+        "x-goog-api-key" = api_key,
+        "Content-Type" = "application/json"
+      ) |>
       httr2::req_body_json(body, auto_unbox = TRUE)
 
     resp <- httr2::req_perform(req)
@@ -183,7 +187,7 @@ gemini_docs <- function(pdf_path, prompt, type = "PDF", api_key = Sys.getenv("GE
 #' @seealso https://cloud.google.com/vertex-ai/docs/generative-ai/multimodal/send-request-document
 
 gemini_docs.vertex <- function(file_uri, prompt, mime_type = "application/pdf", tokens = NULL,
-                              temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234) {
+                               temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234) {
   # Validate input parameters
   if (missing(file_uri) || length(file_uri) < 1) {
     stop("At least one file_uri must be provided.")
@@ -253,8 +257,8 @@ upload_api <- function(local_file, api_key, mime_type) {
   file_size <- file.info(local_file)$size
   meta_body <- list(file = list(display_name = basename(local_file)))
   meta_req <- httr2::request("https://generativelanguage.googleapis.com/upload/v1beta/files") |>
-    httr2::req_url_query(key = api_key) |>
     httr2::req_headers(
+      "x-goog-api-key" = api_key,
       "X-Goog-Upload-Protocol" = "resumable",
       "X-Goog-Upload-Command" = "start",
       "X-Goog-Upload-Header-Content-Length" = as.character(file_size),
