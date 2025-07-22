@@ -24,7 +24,7 @@ setEnv <- function(api_key, overwrite = TRUE, install_message = TRUE) {
     cli_alert_danger("API key must be a non-empty string.")
     return(invisible(NULL))
   }
-  
+
   # Check typical API key length (Google API keys are usually 39 characters)
   if (nchar(api_key) < 10) {
     cli_alert_warning("API key seems too short. Please verify your key.")
@@ -37,28 +37,34 @@ setEnv <- function(api_key, overwrite = TRUE, install_message = TRUE) {
   # 4. Improved error handling
   # Add tryCatch when creating .Renviron file
   if (!file.exists(renviron_path)) {
-    result <- tryCatch({
-      file.create(renviron_path)
-    }, error = function(e) {
-      cli_alert_danger(paste("Failed to create .Renviron file:", e$message))
-      return(FALSE)
-    })
-    
+    result <- tryCatch(
+      {
+        file.create(renviron_path)
+      },
+      error = function(e) {
+        cli_alert_danger(paste("Failed to create .Renviron file:", e$message))
+        return(FALSE)
+      }
+    )
+
     if (result == FALSE) {
       return(invisible(NULL))
     }
-    
+
     cli_alert_info("Created .Renviron file at {.path {renviron_path}}")
   }
 
   # Add tryCatch when reading .Renviron file
-  existing_content <- tryCatch({
-    readLines(renviron_path, warn = FALSE)
-  }, error = function(e) {
-    cli_alert_danger(paste("Failed to read .Renviron file:", e$message))
-    return(NULL)
-  })
-  
+  existing_content <- tryCatch(
+    {
+      readLines(renviron_path, warn = FALSE)
+    },
+    error = function(e) {
+      cli_alert_danger(paste("Failed to read .Renviron file:", e$message))
+      return(NULL)
+    }
+  )
+
   if (is.null(existing_content)) {
     return(invisible(NULL))
   }
@@ -81,14 +87,17 @@ setEnv <- function(api_key, overwrite = TRUE, install_message = TRUE) {
   }
 
   # Add tryCatch when writing to file
-  result <- tryCatch({
-    writeLines(existing_content, renviron_path)
-    TRUE
-  }, error = function(e) {
-    cli_alert_danger(paste("Failed to write to .Renviron file:", e$message))
-    return(FALSE)
-  })
-  
+  result <- tryCatch(
+    {
+      writeLines(existing_content, renviron_path)
+      TRUE
+    },
+    error = function(e) {
+      cli_alert_danger(paste("Failed to write to .Renviron file:", e$message))
+      return(FALSE)
+    }
+  )
+
   if (result == FALSE) {
     return(invisible(NULL))
   }

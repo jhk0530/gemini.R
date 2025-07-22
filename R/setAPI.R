@@ -19,13 +19,13 @@ setAPI <- function(api_key) {
     cli_alert_danger("API key must be a non-empty string.")
     return(invisible())
   }
-  
+
   # Check typical API key length (Google API keys are usually 39 characters)
   if (nchar(api_key) < 10) {
     cli_alert_danger("API key seems too short. Please verify your key.")
     return(invisible())
   }
-  
+
   # Safely display only the last part of the API key
   last_chars <- 4
   if (nchar(api_key) > last_chars) {
@@ -34,7 +34,7 @@ setAPI <- function(api_key) {
     # If the API key is too short, show only the last character
     last <- substr(api_key, nchar(api_key), nchar(api_key))
   }
-  
+
   # Set environment variable
   Sys.setenv(GEMINI_API_KEY = api_key)
 
@@ -44,6 +44,6 @@ setAPI <- function(api_key) {
   cli_end()
 
   cli_alert("You may try {.run gemini_chat('What is CRAN?')}")
-  
+
   return(invisible())
 }

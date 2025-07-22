@@ -33,7 +33,7 @@ gen_image <- function(prompt, filename = "gemini_image.png", overwrite = TRUE,
   if (!validate_params(prompt, model, temperature, topP, topK, seed, api_key = TRUE)) {
     return(NULL)
   }
-  
+
   # Check if the model is for image generation
   if (model != "2.0-flash-exp-image-generation") {
     cli_alert_danger("Error: For image generation, model must be '2.0-flash-exp-image-generation'")
@@ -48,31 +48,34 @@ gen_image <- function(prompt, filename = "gemini_image.png", overwrite = TRUE,
 
   # Generate the image
   sb <- cli_status("Generating image with Gemini...")
-  
+
   # 2. Add error handling for response
-  response <- tryCatch({
-    gemini(
-      prompt = prompt, 
-      model = model, 
-      temperature = temperature, 
-      maxOutputTokens = maxOutputTokens,
-      topK = topK,
-      topP = topP,
-      seed = seed
-    )
-  }, error = function(e) {
-    cli_status_clear(id = sb)
-    cli_alert_danger(paste("Error generating image:", e$message))
-    return(NULL)
-  })
-  
+  response <- tryCatch(
+    {
+      gemini(
+        prompt = prompt,
+        model = model,
+        temperature = temperature,
+        maxOutputTokens = maxOutputTokens,
+        topK = topK,
+        topP = topP,
+        seed = seed
+      )
+    },
+    error = function(e) {
+      cli_status_clear(id = sb)
+      cli_alert_danger(paste("Error generating image:", e$message))
+      return(NULL)
+    }
+  )
+
   # 3. Handle case when response is NULL
   if (is.null(response)) {
     cli_status_clear(id = sb)
     cli_alert_danger("Failed to generate image - no response received")
     return(NULL)
   }
-  
+
   cli_status_clear(id = sb)
 
   # 4. Add validation for response structure
@@ -80,27 +83,30 @@ gen_image <- function(prompt, filename = "gemini_image.png", overwrite = TRUE,
     cli_alert_danger("Invalid response format - missing image data")
     return(NULL)
   }
-  
+
   # 5. Improve error handling for file saving
-  tryCatch({
-    # Extract image data part (second element)
-    base64_data <- response[2]
-    
-    # Add check for empty data
-    if (is.null(base64_data) || nchar(base64_data) == 0) {
-      cli_alert_danger("Empty image data received")
+  tryCatch(
+    {
+      # Extract image data part (second element)
+      base64_data <- response[2]
+
+      # Add check for empty data
+      if (is.null(base64_data) || nchar(base64_data) == 0) {
+        cli_alert_danger("Empty image data received")
+        return(NULL)
+      }
+
+      # Base64 decode
+      image_data <- base64enc::base64decode(base64_data)
+
+      # Write file
+      writeBin(image_data, filename)
+      cli_alert_success(paste("Image saved to", filename))
+      return(filename)
+    },
+    error = function(e) {
+      cli_alert_danger(paste("Error saving image:", e$message))
       return(NULL)
     }
-    
-    # Base64 decode
-    image_data <- base64enc::base64decode(base64_data)
-    
-    # Write file
-    writeBin(image_data, filename)
-    cli_alert_success(paste("Image saved to", filename))
-    return(filename)
-  }, error = function(e) {
-    cli_alert_danger(paste("Error saving image:", e$message))
-    return(NULL)
-  })
+  )
 }

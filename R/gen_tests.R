@@ -11,7 +11,7 @@
 #' \dontrun{
 #' # Select your function code in the editor, then run:
 #' gen_tests()
-#' 
+#'
 #' # For custom instructions:
 #' gen_tests("Generate comprehensive testthat tests with edge cases")
 #' }
@@ -32,19 +32,22 @@ gen_tests <- function(prompt = NULL) {
   }
 
   # Get selected code from the editor
-  context <- tryCatch({
-    getActiveDocumentContext()
-  }, error = function(e) {
-    cli_alert_danger("Failed to get active document context: ", e$message)
-    return(NULL)
-  })
-  
+  context <- tryCatch(
+    {
+      getActiveDocumentContext()
+    },
+    error = function(e) {
+      cli_alert_danger("Failed to get active document context: ", e$message)
+      return(NULL)
+    }
+  )
+
   if (is.null(context)) {
     return(invisible(NULL))
   }
-  
+
   selectedCode <- context$selection[[1]]$text
-  
+
   # Check if code is selected
   if (is.null(selectedCode) || nchar(trim(selectedCode)) == 0) {
     cli_alert_danger("No code selected. Please select an R function to generate tests for.")
@@ -53,46 +56,51 @@ gen_tests <- function(prompt = NULL) {
 
   # Show status message
   sb <- cli_status("Generating unit tests...")
-  
+
   # API call and error handling
-  test_code <- tryCatch({
-    result <- gemini(
-      prompt = paste0(
-        prompt,
-        "\n---\n",
-        selectedCode
+  test_code <- tryCatch(
+    {
+      result <- gemini(
+        prompt = paste0(
+          prompt,
+          "\n---\n",
+          selectedCode
+        )
       )
-    )
-    
-    if (is.null(result) || length(result) == 0 || nchar(trim(result)) == 0) {
+
+      if (is.null(result) || length(result) == 0 || nchar(trim(result)) == 0) {
+        cli_status_clear(id = sb)
+        cli_alert_danger("Failed to generate test code or received empty response.")
+        return(invisible(NULL))
+      }
+
+      result
+    },
+    error = function(e) {
       cli_status_clear(id = sb)
-      cli_alert_danger("Failed to generate test code or received empty response.")
+      cli_alert_danger(paste0("Error generating test code: ", e$message))
       return(invisible(NULL))
     }
-    
-    result
-  }, 
-  error = function(e) {
-    cli_status_clear(id = sb)
-    cli_alert_danger(paste0("Error generating test code: ", e$message))
-    return(invisible(NULL))
-  })
-  
+  )
+
   # Early exit if error occurred
   if (is.null(test_code)) {
     return(invisible(NULL))
   }
-  
+
   cli_status_clear(id = sb)
-  
+
   # Insert test code into the console
-  tryCatch({
-    executeCommand("activateConsole")
-    insertText(text = test_code)
-  }, error = function(e) {
-    cli_alert_danger(paste0("Failed to insert text into console: ", e$message))
-  })
-  
+  tryCatch(
+    {
+      executeCommand("activateConsole")
+      insertText(text = test_code)
+    },
+    error = function(e) {
+      cli_alert_danger(paste0("Failed to insert text into console: ", e$message))
+    }
+  )
+
   # Return generated test code invisibly
   return(invisible(test_code))
 }

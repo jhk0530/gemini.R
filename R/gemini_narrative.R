@@ -40,7 +40,7 @@ gemini_narrative <- function(input, type = "table", prompt = NULL, ...) {
       input,
       format = "pipe",
       col.names = colnames(input)
-    ), collapse = '\n')
+    ), collapse = "\n")
     # Use user prompt if provided, otherwise use default
     if (is.null(prompt)) {
       # Default prompt for table with a newline before the table
@@ -58,8 +58,8 @@ gemini_narrative <- function(input, type = "table", prompt = NULL, ...) {
   } else if (type == "figure") {
     # Check if input is a valid image file path and a scalar string
     if (!is.character(input) || length(input) != 1 ||
-        !file.exists(input) ||
-        !(tools::file_ext(input) %in% c("png", "jpeg", "jpg", "webp", "heic", "heif"))) {
+      !file.exists(input) ||
+      !(tools::file_ext(input) %in% c("png", "jpeg", "jpg", "webp", "heic", "heif"))) {
       stop("Input must be a single valid image file path (png, jpeg, jpg, webp, heic, heif) when type is 'figure'.")
     }
     # Determine image type

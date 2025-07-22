@@ -13,8 +13,7 @@
 #' @importFrom cli cli_alert_danger
 
 validate_params <- function(prompt, model, temperature = 1, topP = 0.95,
-                                  topK = 40, seed = 1234, api_key = TRUE, tokens = NULL) {
-
+                            topK = 40, seed = 1234, api_key = TRUE, tokens = NULL) {
   # Validate prompt
   if (is.null(prompt)) {
     cli_alert_danger("{.arg prompt} must not be NULL")
@@ -27,7 +26,7 @@ validate_params <- function(prompt, model, temperature = 1, topP = 0.95,
   }
 
   # if api_key, check whether model is NULL
-  if (api_key && is.null(model)){
+  if (api_key && is.null(model)) {
     cli_alert_danger("{.arg model} must not be NULL")
     return(FALSE)
   }
@@ -77,4 +76,3 @@ validate_params <- function(prompt, model, temperature = 1, topP = 0.95,
 trim <- function(x) {
   gsub("^\\s+|\\s+$", "", x)
 }
-
