@@ -11,6 +11,8 @@ gemini_narrative(input, type = "table", prompt = NULL, ...)
 
 \item{type}{Type of input. Default is "table". (e.g., "table", "figure")}
 
+\item{prompt}{Optional prompt string to guide the narrative generation. If NULL, a default prompt is used.}
+
 \item{...}{Additional arguments passed to gemini()}
 }
 \value{

@@ -5,7 +5,9 @@
 #' @param pdf_path Path(s) to the local file(s). Can be a character vector.
 #' @param prompt The prompt to send to Gemini (e.g., "Summarize these documents").
 #' @param type File type. One of "PDF", "JavaScript", "Python", "TXT", "HTML", "CSS", "Markdown", "CSV", "XML", "RTF". Default is "PDF".
-#' @param api_key Gemini API key. Defaults to \code{Sys.getenv("GEMINI_API_KEY")}. The API key is sent via the HTTP header \code{x-goog-api-key}.
+#' @param api_key Gemini API key. Defaults to \code{Sys.getenv("GEMINI_API_KEY")}. The API key is sent via the HTTP header \code{x-goog-api-key}. 
+#' @param large Logical. If \code{TRUE}, use the file upload API for large files (only one file supported). Default is \code{FALSE}.
+#' @param local Logical. If \code{TRUE}, treat \code{pdf_path} as a local file path. If \code{FALSE}, download from URL. Default is \code{FALSE}.
 #'
 #' @return The summary or response text from Gemini.
 #'
@@ -23,6 +25,7 @@
 #'
 #' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json
 #' @importFrom base64enc base64encode
+#' @importFrom utils download.file
 #'
 #' @export
 #' @seealso https://ai.google.dev/gemini-api/docs/document-processing?lang=rest

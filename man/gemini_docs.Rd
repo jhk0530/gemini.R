@@ -21,6 +21,10 @@ gemini_docs(
 \item{type}{File type. One of "PDF", "JavaScript", "Python", "TXT", "HTML", "CSS", "Markdown", "CSV", "XML", "RTF". Default is "PDF".}
 
 \item{api_key}{Gemini API key. Defaults to \code{Sys.getenv("GEMINI_API_KEY")}. The API key is sent via the HTTP header \code{x-goog-api-key}.}
+
+\item{large}{Logical. If \code{TRUE}, use the file upload API for large files (only one file supported). Default is \code{FALSE}.}
+
+\item{local}{Logical. If \code{TRUE}, treat \code{pdf_path} as a local file path. If \code{FALSE}, download from URL. Default is \code{FALSE}.}
 }
 \value{
 The summary or response text from Gemini.
