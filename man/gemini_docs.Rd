@@ -8,6 +8,7 @@ gemini_docs(
   pdf_path,
   prompt,
   type = "PDF",
+  model = "2.5-flash",
   api_key = Sys.getenv("GEMINI_API_KEY"),
   large = FALSE,
   local = FALSE
@@ -19,6 +20,9 @@ gemini_docs(
 \item{prompt}{The prompt to send to Gemini (e.g., "Summarize these documents").}
 
 \item{type}{File type. One of "PDF", "JavaScript", "Python", "TXT", "HTML", "CSS", "Markdown", "CSV", "XML", "RTF". Default is "PDF".}
+
+\item{model}{The model to use. Default is '2.5-flash'.
+see https://ai.google.dev/gemini-api/docs/models/gemini}
 
 \item{api_key}{Gemini API key. Defaults to \code{Sys.getenv("GEMINI_API_KEY")}. The API key is sent via the HTTP header \code{x-goog-api-key}.}
 
@@ -40,7 +44,8 @@ This function encodes one or more local files, sends them along with a prompt to
 gemini_docs(
   pdf_path = c("doc1.pdf", "doc2.pdf"),
   prompt = "Compare these documents",
-  type = "PDF"
+  type = "PDF",
+  model = "2.5-flash"
 )
 }
 

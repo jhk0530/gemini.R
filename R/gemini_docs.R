@@ -5,6 +5,8 @@
 #' @param pdf_path Path(s) to the local file(s). Can be a character vector.
 #' @param prompt The prompt to send to Gemini (e.g., "Summarize these documents").
 #' @param type File type. One of "PDF", "JavaScript", "Python", "TXT", "HTML", "CSS", "Markdown", "CSV", "XML", "RTF". Default is "PDF".
+#' @param model The model to use. Default is '2.5-flash'.
+#'              see https://ai.google.dev/gemini-api/docs/models/gemini
 #' @param api_key Gemini API key. Defaults to \code{Sys.getenv("GEMINI_API_KEY")}. The API key is sent via the HTTP header \code{x-goog-api-key}. 
 #' @param large Logical. If \code{TRUE}, use the file upload API for large files (only one file supported). Default is \code{FALSE}.
 #' @param local Logical. If \code{TRUE}, treat \code{pdf_path} as a local file path. If \code{FALSE}, download from URL. Default is \code{FALSE}.
@@ -19,7 +21,8 @@
 #' gemini_docs(
 #'   pdf_path = c("doc1.pdf", "doc2.pdf"),
 #'   prompt = "Compare these documents",
-#'   type = "PDF"
+#'   type = "PDF",
+#'   model = "2.5-flash"
 #' )
 #' }
 #'
@@ -29,7 +32,7 @@
 #'
 #' @export
 #' @seealso https://ai.google.dev/gemini-api/docs/document-processing?lang=rest
-gemini_docs <- function(pdf_path, prompt, type = "PDF", api_key = Sys.getenv("GEMINI_API_KEY"), large = FALSE, local = FALSE) {
+gemini_docs <- function(pdf_path, prompt, type = "PDF", model = "2.5-flash", api_key = Sys.getenv("GEMINI_API_KEY"), large = FALSE, local = FALSE) {
   # If local = FALSE and input is a URL, download to a temp file
   temp_files <- character(0)
   if (!local) {
@@ -69,6 +72,9 @@ gemini_docs <- function(pdf_path, prompt, type = "PDF", api_key = Sys.getenv("GE
   # Use the first mime type if multiple are available
   mime_type <- if (is.character(mime_types[[type]])) mime_types[[type]][1] else as.character(mime_types[[type]][1])
 
+  # Build model query URL
+  model_query <- paste0("gemini-", model, ":generateContent")
+
   if (!large && !local) {
     # Base64 encode all files and send directly (for small files)
     file_parts <- lapply(pdf_path, function(path) {
@@ -88,7 +94,7 @@ gemini_docs <- function(pdf_path, prompt, type = "PDF", api_key = Sys.getenv("GE
       )
     )
 
-    url <- "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+    url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query)
 
     req <- httr2::request(url) |>
       httr2::req_headers(
@@ -132,7 +138,7 @@ gemini_docs <- function(pdf_path, prompt, type = "PDF", api_key = Sys.getenv("GE
       ))
     )
 
-    url <- "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+    url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query)
 
     req <- httr2::request(url) |>
       httr2::req_headers(
