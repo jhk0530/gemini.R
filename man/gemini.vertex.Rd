@@ -12,7 +12,8 @@ gemini.vertex(
   topK = 40,
   topP = 0.95,
   seed = 1234,
-  timeout = 60
+  timeout = 60,
+  labels = NULL
 )
 }
 \arguments{
@@ -36,6 +37,9 @@ see https://ai.google.dev/gemini-api/docs/models/generative-models#model-paramet
 see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
 
 \item{timeout}{Request timeout in seconds. Default is 60.}
+
+\item{labels}{(Optional) A named list for custom metadata labels.
+Example: \code{list(team = "research", env = "test")}.}
 }
 \value{
 A character string containing the generated text.
@@ -48,6 +52,7 @@ Generate text from text with Gemini Vertex API
 # token should be created before this. using the token.vertex() function
 prompt <- "What is sachins Jersey number?"
 gemini.vertex(prompt, tokens)
+gemini.vertex(prompt, tokens, labels = list(team = "research", env = "test"))
 }
 
 }
