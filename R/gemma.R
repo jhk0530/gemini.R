@@ -28,9 +28,9 @@ gemma <- function(prompt, model = "gemma-3-1b-it", api_key = NULL, timeout = 60)
     cli::cli_alert_danger("API key is missing. Set GEMINI_API_KEY env variable or provide api_key argument.")
     return(NULL)
   }
-  # Build URL
+  # Build URL 
   model_query <- paste0(model, ":generateContent")
-  url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query, "?key=", api_key)
+  url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_query)
   sb <- cli::cli_status("Gemma is answering...")
   # Build request body
   request_body <- list(
@@ -42,22 +42,35 @@ gemma <- function(prompt, model = "gemma-3-1b-it", api_key = NULL, timeout = 60)
       )
     )
   )
-  # Send request
+  # Send request with API key in header for better security
   req <- httr2::request(url) |>
     httr2::req_headers(
-      "Content-Type" = "application/json"
+      "Content-Type" = "application/json",
+      "x-goog-api-key" = api_key 
     ) |>
     httr2::req_body_json(request_body) |>
+    httr2::req_error(is_error = function(resp) FALSE) |>
     httr2::req_timeout(as.integer(timeout))
   resp <- httr2::req_perform(req)
   # Check status code
-  if (resp$status_code != 200) {
-    cli::cli_status_clear(id = sb)
-    cli::cli_alert_danger(paste0("Error in generate request: Status code ", resp$status_code))
+if (resp$status_code != 200) {
+  cli::cli_status_clear(id = sb)
+  # Get error details from response body
+  error_details <- httr2::resp_body_string(resp)
+  cli::cli_alert_danger(paste0("Error in generate request: Status code ", resp$status_code, "\nDetails: ", error_details))
+  return(NULL)
+}
+cli::cli_status_clear(id = sb)
+  candidates <- httr2::resp_body_json(resp)$candidates
+  # Handle case when there are no candidates
+  if (is.null(candidates) || length(candidates) == 0) {
+    cli::cli_alert_danger("No candidates returned in response.")
     return(NULL)
   }
-  cli::cli_status_clear(id = sb)
-  candidates <- httr2::resp_body_json(resp)$candidates
-  outputs <- unlist(lapply(candidates, function(candidate) candidate$content$parts))
+  # Extract and concatenate text fields from each candidate's parts
+  outputs <- sapply(
+    candidates,
+    function(candidate) paste0(sapply(candidate$content$parts, `[[`, "text"), collapse = "")
+  )
   return(outputs)
 }
