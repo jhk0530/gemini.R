@@ -169,7 +169,7 @@ nano_banana <- function(prompt, type = "generate", img_path = NULL, img_path2 = 
 
   if (type == "transfer") {
     img1 <- read_image(img_path)
-    if (is.null(img)) {
+    if (is.null(img1)) {
       cli::cli_alert_danger("Failed to read image from img_path: file does not exist or is invalid.")
       return(NULL)
     }
