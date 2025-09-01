@@ -4,9 +4,9 @@
 
 ## 0.17.1
 
-- `gen_image` has deprecated, use `nano_banana`.
-- `gemini_searchR` has deprecated. See [this](https://ai.google.dev/gemini-api/docs/google-search#grounding_with_gemini_15_models_legacy)
-- Added documents for `gemini.R` package.
+- `gen_image` has been deprecated; use `nano_banana`.
+- `gemini_searchR` has been deprecated. See [this](https://ai.google.dev/gemini-api/docs/google-search#grounding_with_gemini_15_models_legacy)
+- Added documentation for the `gemini.R` package.
 - Updated hexsticker
 
 ## 0.17.0
