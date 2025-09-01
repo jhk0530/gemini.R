@@ -9,7 +9,7 @@ format:
 
 To use Vertex AI, you must download your **JSON token**.
 
-It have structure below:
+It has the structure below:  
 
 ```json
 {
@@ -62,7 +62,11 @@ Use `gemini_image.vertex` function
 gemini_image.vertex(image = "dawn.png", tokens)
 
 # text 
-# "Based on the original image and the provided crops, here is a detailed explanation of the image:\n\nThis is a heartwarming and # cozy photograph of a large, plump cat sleeping soundly inside a cardboard box.\n\n**The Cat:**\n*  
+# "Based on the original image and the provided crops, 
+# here is a detailed explanation of the image:\n\n
+# This is a heartwarming and cozy photograph of a large, 
+# plump cat sleeping soundly inside a cardboard box.
+# \n\n**The Cat:**\n*  
 # ...
 ```
 
@@ -78,7 +82,9 @@ Use `gemini_audio.vertex` function
 gemini_audio.vertex(audio = "http://soundbible.com/grab.php?id=2218&type=mp3", tokens)
 
 # text
-# "The audio clip consists of a series of short, repetitive beeping sounds. The beep s are relatively high-pitched and have a 
-# slightly metallic quality. They occur at a consistent rate, creating a rhythmic pattern. The sound could be from a variety of 
-# sources, such as a device notification, a game alert, or a simple electronic de vice. \n"
+# "The audio clip consists of a series of short, repetitive beeping sounds. 
+# The beep s are relatively high-pitched and have a slightly metallic 
+# quality. They occur at a consistent rate, creating a rhythmic pattern. 
+# The sound could be from a variety of sources, such as a device 
+# notification, a game alert, or a simple electronic de vice. \n"
 ```

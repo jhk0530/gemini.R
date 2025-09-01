@@ -7,7 +7,7 @@ format:
 
 ### Quick start
 
-You can sue gemini_search to get recent information from google.
+You can use gemini_search to get recent information from google.  
 
 - `gemini_searchR` has deprecated
 

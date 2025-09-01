@@ -31,7 +31,7 @@ nano_banana(prompt, type = "edit", img_path = "gemini-native-image.png", output_
 ```
 
 <p style = 'text-align:center;'>
-    <img src='edited_image' width = '80%'>
+    <img src='edited_image.png' width = '80%'>
 </p>
 
 ### Transfer Image
