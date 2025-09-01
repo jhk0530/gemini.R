@@ -1,0 +1,56 @@
+---
+title: "Image Generation"
+format: 
+    html:
+        embed-resources: true
+---
+
+### Quick start
+
+- `gen_image` function has **deprecated** at 0.17.0.
+- `gemini.R` will use `nano_banana` as default image generation function.
+
+```r
+library(gemini.R)
+
+prompt <- "Create a picture of a nano banana dish in a fancy restaurant with a Gemini theme"
+nano_banana(prompt, output_path = "gemini-native-image.png")
+```
+
+<p style = 'text-align:center;'>
+    <img src='gemini-native-image.png' width = '80%'>
+</p>
+
+### Edit Image
+
+Edit Image will require **image file** and **prompt** to guide edit.
+
+```r
+prompt <- "Create a picture of my cat eating a nano-banana in a fancy restaurant under the Gemini constellation"
+nano_banana(prompt, type = "edit", img_path = "gemini-native-image.png", output_path = "edited_image.png")
+```
+
+<p style = 'text-align:center;'>
+    <img src='edited_image' width = '80%'>
+</p>
+
+### Transfer Image
+
+Transfer Image will require **2 image files** and **prompt** to guide.
+
+Use below images
+
+<p style = 'text-align:center;'>
+    <img src='dress.png' width = '45%'>
+    <img src='model.png' width = '45%'>
+</p>
+
+```r
+prompt <- "Take the blue floral dress from the first image and let the woman from the second image wear it."
+nano_banana(prompt, type = "transfer", img_path = "dress.png", img_path2 = "model.png", output_path = "transferred_image.png")
+```
+
+<p style = 'text-align:center;'>
+    <img src='transferred_image.png' width = '80%'>    
+</p>
+

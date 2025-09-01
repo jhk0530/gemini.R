@@ -1,0 +1,60 @@
+---
+title: "Get Started"
+format: 
+    html:
+        embed-resources: true
+---
+
+## Goal
+
+<p style = 'text-align:center;'>
+    <img src='gemini-intro.png' width = '80%'>
+</p>
+
+The goal of `gemini.R` is to make it easy to use Google's Gemini API in R.
+
+## Quick Start
+
+To use the Gemini API, you need to create and save an API key from [Google AI Studio](https://aistudio.google.com/apikey). The Gemini API offers both free and paid plans.
+
+It is recommended to use the `setAPI` function to securely save and use your Gemini API key in your environment.
+
+```r
+library(gemini.R)
+setAPI("YOUR_API_KEY")
+gemini("Explain about the gemini in astrology in one line")
+
+# text
+# "Gemini, the third astrological sign, is associated with
+# communication, adaptability, and a thirst for knowledge."
+```
+
+## Features
+
+Most functions provided by `gemini.R` are based on the [Gemini API documentation](https://ai.google.dev/gemini-api/docs/models/gemini).
+
+`gemini.R` primarily implements features from the Gemini API, with some additional support for Vertex AI features.
+
+If a feature is not yet implemented or mentioned, it is not currently planned for `gemini.R`. Not all features of the Gemini API will be included, but the most important ones will be prioritized.
+
+### Basic
+
+- Text generation
+- Image generation
+- Image description
+
+### Advanced 
+
+- Audio description
+- Document understand (PDF)
+- Multi-turn conversation (Chat)
+- Vertex token management
+- Google search
+- Model garden
+- Generate narrative (Table)
+- Gemma
+
+### Rstudio Addins 
+
+- Generate [roxygen2](https://roxygen2.r-lib.org/)
+- Generate [testthat](https://testthat.r-lib.org/)

@@ -1,0 +1,25 @@
+---
+title: "Document Understand"
+format: 
+    html:
+        embed-resources: true
+---
+
+### Quick start
+
+Use example pdf documents from this [link](https://arxiv.org/pdf/2312.11805) & [link2](https://arxiv.org/pdf/2403.05530) (from Arxiv)
+
+```r
+gemini_docs(
+  c("doc1.pdf", "doc2.pdf"),
+  prompt = "Summarize each document separately."
+)
+
+# text
+# "Here's a summary of the provided documents, separated by document. \n\n
+# **Document 1: GeoAdjust: Adjus ting for Positional Uncertainty in Geostatistical Analysis of DHS Data**\n\n
+# ...
+# **Document 2: SIHR: Statistical Inference in High-D imensional Linear and Logistic Regression Models**\n\n
+# ...
+
+```

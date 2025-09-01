@@ -1,0 +1,23 @@
+---
+title: "Audio Understand"
+format: 
+    html:
+        embed-resources: true
+---
+
+### Quick start
+
+You can use sample audio file from [pixabay](https://pixabay.com/sound-effects/search/hello%20world/)
+
+Note, `gemini_audio` will use **"Describe this audio"** as default prompt.
+
+```r
+library(gemini.R)
+gemini_audio(audio = "helloworld.mp3")
+
+# text
+# "The audio contains a clear, crisp recording of a person saying \"Hello\".
+# Following the phrase is a distinct, repeated percussive sound, possibly a rhythmic
+# tapping or clicking noise. The sound is consistent and mechanical in nature.\n"
+
+```

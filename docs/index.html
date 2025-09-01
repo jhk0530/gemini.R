@@ -6,6 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Interface for Google Gemini API • gemini.R</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" sizes="any" href="favicon.ico">
+<link rel="manifest" href="site.webmanifest">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -13,6 +18,7 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Interface for Google Gemini API">
 <meta name="description" content="Provides a comprehensive interface for Google Gemini API, enabling users to access and utilize Gemini Large Language Model (LLM) functionalities directly from R. This package facilitates seamless integration with Google Gemini, allowing for advanced language processing, text generation, and other AI-driven capabilities within the R environment. For more information, please visit &lt;https://ai.google.dev/docs/gemini_api_overview&gt;.">
 <meta property="og:description" content="Provides a comprehensive interface for Google Gemini API, enabling users to access and utilize Gemini Large Language Model (LLM) functionalities directly from R. This package facilitates seamless integration with Google Gemini, allowing for advanced language processing, text generation, and other AI-driven capabilities within the R environment. For more information, please visit &lt;https://ai.google.dev/docs/gemini_api_overview&gt;.">
+<meta property="og:image" content="https://github.com/jhk0530/gemini.R/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -22,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">gemini.R</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.13.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.17.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,7 +37,20 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="articles/gemini-R.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/audio_understanding.html">Audio Understand</a></li>
+    <li><a class="dropdown-item" href="articles/document_understanding.html">Document Understand</a></li>
+    <li><a class="dropdown-item" href="articles/google-search.html">Use web search</a></li>
+    <li><a class="dropdown-item" href="articles/image_generation.html">Image Generation</a></li>
+    <li><a class="dropdown-item" href="articles/image_understanding.html">Image Understanding</a></li>
+    <li><a class="dropdown-item" href="articles/rstudio-addin.html">Use RStudio Addins</a></li>
+    <li><a class="dropdown-item" href="articles/vertex-ai.html">Use Vertex AI</a></li>
+  </ul>
+</li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -47,8 +66,10 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="geminir-">gemini.R <img alt="hexlogo" src="https://github.com/user-attachments/assets/331ba265-9852-4ca5-9c9a-ff19b9e494b3" width="120" align="right"><a class="anchor" aria-label="anchor" href="#geminir-"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="geminir">gemini.R<a class="anchor" aria-label="anchor" href="#geminir"></a>
+</h1>
+</div>
 <!-- badges: start -->
 
 <!-- badges: end -->
@@ -56,229 +77,34 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<div class="section level4">
-<h4 id="from-cran">From CRAN<a class="anchor" aria-label="anchor" href="#from-cran"></a>
-</h4>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"gemini.R"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="from-r-universe-development-version">From <a href="https://r-universe.dev/search" class="external-link">R-universe</a> (development version)<a class="anchor" aria-label="anchor" href="#from-r-universe-development-version"></a>
-</h4>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"gemini.R"</span>,</span>
-<span>  repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://jhk0530.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="from-github-development-version">From Github (development version)<a class="anchor" aria-label="anchor" href="#from-github-development-version"></a>
-</h4>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"jhk0530/gemini.R"</span><span class="op">)</span></span></code></pre></div>
-</div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"gemini.R"</span><span class="op">)</span> <span class="co"># CRAN</span></span>
+<span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"jhk0530/gemini.R"</span><span class="op">)</span> <span class="co"># GitHub</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+<h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<div class="section level3">
-<h3 id="gemini-with-ai-studio-api">Gemini with AI Studio API<a class="anchor" aria-label="anchor" href="#gemini-with-ai-studio-api"></a>
-</h3>
-<div class="section level4">
-<h4 id="text">Text<a class="anchor" aria-label="anchor" href="#text"></a>
-</h4>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhk0530/gemini.R">gemini.R</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/setAPI.html">setAPI</a></span><span class="op">(</span><span class="st">"your API key"</span><span class="op">)</span> <span class="co"># check https://makersuite.google.com/app/apikey</span></span>
+<span><span class="fu"><a href="reference/setAPI.html">setAPI</a></span><span class="op">(</span><span class="st">"YOUR_API_KEY"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/gemini.html">gemini</a></span><span class="op">(</span><span class="st">"Explain about the gemini in astrology in one line"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># text</span></span>
 <span><span class="co"># "Gemini, the third astrological sign, is associated with</span></span>
 <span><span class="co"># communication, adaptability, and a thirst for knowledge."</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="image">Image<a class="anchor" aria-label="anchor" href="#image"></a>
-</h4>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># uses default prompt as "Explain this image"</span></span>
-<span><span class="co"># uses included image of gemini.R package</span></span>
-<span><span class="fu"><a href="reference/gemini_image.html">gemini_image</a></span><span class="op">(</span>image <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"docs/reference/figures/image.png"</span>, package <span class="op">=</span> <span class="st">"gemini.R"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># text</span></span>
-<span><span class="co"># " The image shows a table with a white tablecloth. On the table are two cups of coffee,</span></span>
-<span><span class="co"># a bowl of blueberries, and five scones. The scones are covered in blueberries and have</span></span>
-<span><span class="co"># a crumbly texture. There are also some pink flowers on the table. The background is a</span></span>
-<span><span class="co"># dark blue color. The image is taken from a top-down perspective."</span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="audio">Audio<a class="anchor" aria-label="anchor" href="#audio"></a>
-</h4>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># use default prompt as "Describe this audio"</span></span>
-<span><span class="co"># uses included audio of gemini.R package</span></span>
-<span><span class="fu"><a href="reference/gemini_audio.html">gemini_audio</a></span><span class="op">(</span>audio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"docs/reference/helloworld.mp3"</span>, package <span class="op">=</span> <span class="st">"gemini.R"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># text</span></span>
-<span><span class="co"># "The audio contains a clear, crisp recording of a person saying \"Hello world\".</span></span>
-<span><span class="co"># Following the phrase is a distinct, repeated percussive sound, possibly a rhythmic</span></span>
-<span><span class="co"># tapping or clicking noise. The sound is consistent and mechanical in nature.\n"</span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="image-via-shiny">Image via Shiny<a class="anchor" aria-label="anchor" href="#image-via-shiny"></a>
-</h4>
-<p>To use <code>gemini_image</code> function, image file required. and I recommend to use shiny app with <code>fileInput</code> function.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhk0530/gemini.R">gemini.R</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/setAPI.html">setAPI</a></span><span class="op">(</span><span class="st">"YOUR KEY"</span><span class="op">)</span></span>
-<span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarLayout</a></span><span class="op">(</span></span>
-<span>    <span class="cn">NULL</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">mainPanel</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fileInput.html" class="external-link">fileInput</a></span><span class="op">(</span></span>
-<span>        inputId <span class="op">=</span> <span class="st">"file"</span>,</span>
-<span>        label <span class="op">=</span> <span class="st">"Choose file to upload"</span>,</span>
-<span>      <span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/plotOutput.html" class="external-link">imageOutput</a></span><span class="op">(</span>outputId <span class="op">=</span> <span class="st">"image1"</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textInput.html" class="external-link">textInput</a></span><span class="op">(</span></span>
-<span>        inputId <span class="op">=</span> <span class="st">"prompt"</span>,</span>
-<span>        label <span class="op">=</span> <span class="st">"Prompt"</span>,</span>
-<span>        placeholder <span class="op">=</span> <span class="st">"Enter Prompts Here"</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"goButton"</span>, <span class="st">"Ask to gemini"</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html" class="external-link">textOutput</a></span><span class="op">(</span><span class="st">"text1"</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span><span class="op">)</span> <span class="op">{</span></span>
-<span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">file</span>, <span class="op">{</span></span>
-<span>    <span class="va">path</span> <span class="op">&lt;-</span> <span class="va">input</span><span class="op">$</span><span class="va">file</span><span class="op">$</span><span class="va">datapath</span></span>
-<span>    <span class="va">output</span><span class="op">$</span><span class="va">image1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderImage.html" class="external-link">renderImage</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        src <span class="op">=</span> <span class="va">path</span></span>
-<span>      <span class="op">)</span></span>
-<span>    <span class="op">}</span>, deleteFile <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span>  <span class="op">}</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">goButton</span>, <span class="op">{</span></span>
-<span>    <span class="va">output</span><span class="op">$</span><span class="va">text1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderText</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>      <span class="fu"><a href="reference/gemini_image.html">gemini_image</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">prompt</span>, <span class="va">input</span><span class="op">$</span><span class="va">file</span><span class="op">$</span><span class="va">datapath</span><span class="op">)</span></span>
-<span>    <span class="op">}</span><span class="op">)</span></span>
-<span>  <span class="op">}</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span><span class="op">)</span></span></code></pre></div>
-<p style="text-align:center;">
-<img alt="shiny app example" src="./reference/figures/shiny.png" width="70%"></p>
-</div>
-<div class="section level4">
-<h4 id="documents">Documents<a class="anchor" aria-label="anchor" href="#documents"></a>
-</h4>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/gemini_docs.html">gemini_docs</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"doc1.pdf"</span>, <span class="st">"doc2.pdf"</span><span class="op">)</span>,</span>
-<span>  prompt <span class="op">=</span> <span class="st">"Summarize each document separately."</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p style="text-align:center;">
-<img alt="document example" src="./reference/figures/docs.png" width="70%"></p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="gemini-with-vertex-ai-api">Gemini with Vertex AI API<a class="anchor" aria-label="anchor" href="#gemini-with-vertex-ai-api"></a>
-</h3>
-<div class="section level4">
-<h4 id="text-1">Text<a class="anchor" aria-label="anchor" href="#text-1"></a>
-</h4>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tokens</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/token.vertex.html">token.vertex</a></span><span class="op">(</span><span class="st">"YOUR_API_KEY.json"</span>, model_id <span class="op">=</span> <span class="st">"1.5-flash"</span><span class="op">)</span></span>
-<span><span class="va">prompt</span> <span class="op">&lt;-</span> <span class="st">"What is sachins Jersy number?"</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/gemini.vertex.html">gemini.vertex</a></span><span class="op">(</span><span class="va">prompt</span>, <span class="va">tokens</span><span class="op">)</span></span></code></pre></div>
-<p style="text-align:center;">
-<img alt="vertex AI text example" src="./reference/figures/vertex_text.png" width="100%"></p>
-</div>
-<div class="section level4">
-<h4 id="image-1">Image<a class="anchor" aria-label="anchor" href="#image-1"></a>
-</h4>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tokens</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/token.vertex.html">token.vertex</a></span><span class="op">(</span><span class="st">"YOUR_API_KEY.json"</span>, model_id <span class="op">=</span> <span class="st">"1.5-flash"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/gemini_image.vertex.html">gemini_image.vertex</a></span><span class="op">(</span>image <span class="op">=</span> <span class="st">"YOUR_IMAGE.png"</span>, <span class="va">type</span>, <span class="va">tokens</span><span class="op">)</span></span></code></pre></div>
-<p style="text-align:center;">
-<img alt="Most lovely cat in the world" src="https://github.com/user-attachments/assets/63bb6245-aa8e-4ce3-aad8-7e9113715aba" width="50%"></p>
-<p style="text-align:center;">
-<img alt="vertex AI image example" src="./reference/figures/vertex_image.png" width="100%"></p>
-</div>
-<div class="section level4">
-<h4 id="audio-1">Audio<a class="anchor" aria-label="anchor" href="#audio-1"></a>
-</h4>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tokens</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/token.vertex.html">token.vertex</a></span><span class="op">(</span><span class="st">"YOUR_API_KEY.json"</span>, model_id <span class="op">=</span> <span class="st">"1.5-flash"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/gemini_audio.vertex.html">gemini_audio.vertex</a></span><span class="op">(</span>audio <span class="op">=</span> <span class="st">"YOUR_AUDIO.mp3"</span>, <span class="va">tokens</span><span class="op">)</span></span></code></pre></div>
-<ul>
-<li>File upload to Google Cloud using API not supported.</li>
-<li>Instead you must use uploaded file. (e.g. Google Cloud Storage)</li>
-<li>Example sound from <a href="https://soundbible.com/2210-SOS-Morse-Code.html" class="external-link">soundbible</a>
-</li>
-</ul>
-<p style="text-align:center;">
-<img alt="vertex AI audio example" src="./reference/figures/vertex_audio.png" width="100%"></p>
-</div>
-<div class="section level4">
-<h4 id="image-generation">Image generation<a class="anchor" aria-label="anchor" href="#image-generation"></a>
-</h4>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/gen_image.html">gen_image</a></span><span class="op">(</span><span class="st">'Draw an image of a cat swimming in the Milky Way'</span><span class="op">)</span></span></code></pre></div>
-<p style="text-align:center;">
-<img alt="image generation" src="./reference/figures/image_gen.png" width="100%"></p>
-</div>
-<div class="section level4">
-<h4 id="answer-using-google-search">Answer using Google Search<a class="anchor" aria-label="anchor" href="#answer-using-google-search"></a>
-</h4>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/gemini_search.html">gemini_search</a></span><span class="op">(</span><span class="st">'What is the current Apple stock price?'</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/gemini_searchR.html">gemini_searchR</a></span><span class="op">(</span><span class="st">"Who won the latest F1 grand prix?"</span><span class="op">)</span></span></code></pre></div>
-<p style="text-align:center;">
-<img alt="search" src="./reference/figures/search.png" width="100%"><img alt="searchR" src="./reference/figures/searchR.png" width="100%"></p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="rstudio-addins">Rstudio Addins<a class="anchor" aria-label="anchor" href="#rstudio-addins"></a>
-</h3>
-<div class="section level4">
-<h4 id="function-documentation-roxygen">Function documentation (Roxygen)<a class="anchor" aria-label="anchor" href="#function-documentation-roxygen"></a>
-</h4>
-<p style="text-align:center;">
-<img alt="gen_doc example" src="./reference/figures/roxygen.gif" width="70%"></p>
-<p>You may customize keyboard shortcut for this feature.</p>
-</div>
-<div class="section level4">
-<h4 id="unit-testing-testthat">Unit testing (testthat)<a class="anchor" aria-label="anchor" href="#unit-testing-testthat"></a>
-</h4>
-<p style="text-align:center;">
-<img alt="gen_test example" src="./reference/figures/testing.gif" width="70%"></p>
-</div>
-</div>
-</div>
 <div class="section level2">
 <h2 id="terms">Terms<a class="anchor" aria-label="anchor" href="#terms"></a>
 </h2>
-<p>Before use the API, I recommend that you to check at least the following.</p>
+<p>Before using the API, please review the following terms:</p>
 <ul>
 <li><a href="https://cloud.google.com/terms" class="external-link">Google Cloud Platform Terms of Service</a></li>
 <li><a href="https://ai.google.dev/gemini-api/terms" class="external-link">Gemini API Additional Terms of Service</a></li>
 </ul>
-<p>There may be more terms and conditions that you need to check. Any app which uses the API should be compliant with the Google Terms of Service.</p>
-<blockquote>
-<p>[!note]</p>
-<p>image is from <a href="https://ai.google.dev/tutorials/rest_quickstart" class="external-link">Google AI for Developers</a></p>
-<p>I’ve got many inspiration from <a href="https://www.linkedin.com/in/deepanshubhalla/" class="external-link">Deepanshu Bhalla</a>’s <a href="https://www.listendata.com/2023/12/google-gemini-r.html" class="external-link">article</a></p>
-</blockquote>
+<p>Additional terms and conditions may apply.<br>
+All applications using this API must comply with Google’s Terms of Service.</p>
+<!-- After build_site, update favicon files of /docs as favicon of root with pkgdown::build_favicons(overwrite = TRUE)-->
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
