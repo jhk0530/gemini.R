@@ -185,6 +185,13 @@ nano_banana <- function(prompt, type = "generate", img_path = NULL, img_path2 = 
   }
 
   res_txt <- gemini_request(url, body)
+    
   output <- save_image(res_txt, output_path)
+
+  if (is.null(output)) {
+    cli::cli_alert_danger("Failed to save image to output_path.")
+    return(NULL)  # Check for failure and return NULL explicitly
+  }
+
   return(normalizePath(output))
 }

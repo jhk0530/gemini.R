@@ -117,12 +117,18 @@ read_image <- function(img_path) {
 #' }
 gemini_request <- function(url, body) {
   api_key <- Sys.getenv("GEMINI_API_KEY")
-  resp <- httr2::request(url) |>
-    httr2::req_url_query(key = api_key) |>
-    httr2::req_headers("Content-Type" = "application/json") |>
-    httr2::req_body_json(body) |>
-    httr2::req_perform()
-  res_txt <- httr2::resp_body_string(resp)
+  # tryCatch for error handling
+  res_txt <- tryCatch({
+    resp <- httr2::request(url) |>
+      httr2::req_url_query(key = api_key) |>
+      httr2::req_headers("Content-Type" = "application/json") |>
+      httr2::req_body_json(body) |>
+      httr2::req_perform()
+    httr2::resp_body_string(resp)
+  }, error = function(e) {
+    cli::cli_alert_danger(paste("API request failed:", e$message))
+    return(NULL)
+  })
   return(res_txt)
 }
 
@@ -137,13 +143,22 @@ gemini_request <- function(url, body) {
 #' \dontrun{
 #' save_image(res_txt, "output.png")
 #' }
-save_image <- function(res_txt, output_path) {
-  data_match <- regmatches(res_txt, regexpr('"data": ?"([^"]*)"', res_txt))
-  if (length(data_match) == 0) {
+save_image <- function(res_txt, output_path) {    
+  if (is.null(output_path)) {
+    cli::cli_alert_danger("`output_path` must be provided to save the image.")
+    return(NULL)
+  }
+  
+  parsed_resp <- tryCatch(jsonlite::fromJSON(res_txt, simplifyVector = FALSE), error = function(e) NULL)
+  
+  if (is.null(parsed_resp) ||
+      is.null(parsed_resp$candidates) ||
+      is.null(parsed_resp$candidates[[1]]$content$parts[[1]]$inlineData$data)) {
     cli::cli_alert_danger("No image data found in response.")
     return(NULL)
   }
-  base64_data <- sub('.*"data": ?"([^"]*)".*', "\\1", data_match)
+  base64_data <- parsed_resp$candidates[[1]]$content$parts[[1]]$inlineData$data
+  
   img_out <- base64enc::base64decode(base64_data)
   writeBin(img_out, output_path)
   cli::cli_alert_success("Image saved to {output_path}")
