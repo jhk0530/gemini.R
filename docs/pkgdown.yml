@@ -10,7 +10,7 @@ articles:
   image_understanding: image_understanding.html
   rstudio-addin: rstudio-addin.html
   vertex-ai: vertex-ai.html
-last_built: 2025-09-01T08:36Z
+last_built: 2025-09-01T09:56Z
 urls:
   reference: https://github.com/jhk0530/gemini.R/reference
   article: https://github.com/jhk0530/gemini.R/articles

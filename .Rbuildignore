@@ -9,8 +9,10 @@
 ^LICENSE\.md$
 ^README\.md$
 ^NEWS\.md$
+^vignettes/
 ^vignettes/\.quarto$
 ^vignettes/*_files$
+^vignettes/.*\.(png|gif|jpg|jpeg|svg)$
 ^logo\.png$
 ^logo\.svg$
 ^favicon$
