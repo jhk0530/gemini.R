@@ -1,6 +1,38 @@
-# gemini.R
+# gemini.R release note
 
-# gemini.R 0.13.0
+# gemini.R 0.17.0
+
+## 0.17.1
+
+- `gen_image` has deprecated, use `nano_banana`.
+- `gemini_searchR` has deprecated. See [this](https://ai.google.dev/gemini-api/docs/google-search#grounding_with_gemini_15_models_legacy)
+- Added documents for `gemini.R` package.
+- Updated hexsticker
+
+## 0.17.0
+
+- Added `nano_banana` for image generation.
+
+## 0.16.0
+
+- API key transmission has been updated for improved security and compatibility.
+  Previously, the API key was sent as a URL query parameter (e.g., ?key=YOUR_API_KEY).
+  Now, all functions send the API key using the HTTP header `x-goog-api-key`, following Google Gemini API best practices.
+
+- This change enhances both security and future compatibility.
+  Users can continue to set their API key using setAPI("YOUR_API_KEY"). There is no change to the user-facing function interfaces.
+  The old method of passing the API key as a URL parameter is no longer supported.
+
+## 0.15.0
+
+- Added `gemini_narrative` for table description
+- Added `gemini_structured` for structured API responses
+
+## 0.14.1
+
+- Added `gemini_docs`
+- Add reading PDF
+- Added timeout parameter to `gemini`, `gemini.vertex`.
 
 ## 0.13.0
 

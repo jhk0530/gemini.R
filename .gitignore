@@ -46,3 +46,6 @@ po/*~
 rsconnect/
 .Rproj.user
 .DS_Store
+inst/doc
+**/.quarto/
+docs

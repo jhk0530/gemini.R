@@ -1,7 +1,8 @@
 url: https://github.com/jhk0530/gemini.R/
+favicon: favicon.svg
 template:
   bootstrap: 5
   navbar:
     structure:
-      left: [intro, reference, articles, tutorials, news]
+      left: [intro, articles, reference, news]
       right: [search, github]

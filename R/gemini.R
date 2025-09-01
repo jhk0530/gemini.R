@@ -49,11 +49,6 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
     seed = seed
   )
 
-  # Add responseModalities only for image generation model
-  if (model == "2.0-flash-exp-image-generation") {
-    generation_config$responseModalities <- list("Text", "Image")
-  }
-
   # Create request body as a separate list
   request_body <- list(
     contents = list(
@@ -104,7 +99,7 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
 #' @param seed The seed to use. Default is 1234 value should be integer
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #' @param timeout Request timeout in seconds. Default is 60.
-#' @param labels (Optional) A named list for custom metadata labels. 
+#' @param labels (Optional) A named list for custom metadata labels.
 #'               Example: \code{list(team = "research", env = "test")}.
 #'
 #' @examples
