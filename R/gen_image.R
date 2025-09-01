@@ -143,7 +143,7 @@ gen_image <- function(prompt, filename = "gemini_image.png", overwrite = TRUE,
 nano_banana <- function(prompt, type = 'generate', img_path = NULL, img_path2 = NULL, output_path = NULL) {
   url <- "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent"
 
-  # Default (type == "Generate")
+  # Default (type == "generate")
   body <- init_body() |>
     add_text(prompt)
 
