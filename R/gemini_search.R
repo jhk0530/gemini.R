@@ -26,7 +26,7 @@
 #' @importFrom httr2 request req_headers req_body_raw req_perform resp_body_json resp_body_string
 #' @importFrom cli cli_alert_danger cli_status_clear cli_status
 #'
-#' @seealso https://ai.google.dev/docs/search_retrieval
+#' @seealso https://ai.google.dev/gemini-api/docs/google-search
 
 gemini_search <- function(prompt, temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234) {
   # 1. Replace parameter validation with validate_params function

@@ -1,0 +1,90 @@
+---
+title: "Use Vertex AI"
+format: 
+    html:
+        embed-resources: true
+---
+
+### JSON Token
+
+To use Vertex AI, you must download your **JSON token**.
+
+It has the structure below:  
+
+```json
+{
+  "type": "service_account",
+  "project_id": "***",
+  "private_key_id": "***",
+  "private_key": "-----BEGIN PRIVATE KEY-----\n*****\n-----END PRIVATE KEY-----\n",
+  "client_email": "***",
+  "client_id": "***",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "***",
+  "universe_domain": "googleapis.com"
+}
+```
+
+Then, make `token` object with `token.vertex` function: 
+The token object is basically list object with `key` and `url`.
+
+in model, remove `gemini-`. for example: **gemini-2.5-flash** should provided as **2.5-flash**
+
+```r
+tokens <- token.vertex(jsonkey = "YOURAPIKEY.json", model_id = "2.5-flash")
+```
+
+Most of function with Vertex AI will have format of `.vertex` to basic functions.
+
+### Text generation
+
+Use `gemini.vertex` function
+
+```r
+prompt <- "What is sachins Jersey number?"
+gemini.vertex(prompt, tokens)
+
+# text                                          
+# "Sachin Tendulkar's jersey number was **10**." 
+```
+
+### Image understanding
+
+Use `gemini_image.vertex` function
+
+<p style = 'text-align:center;'>
+    <img src='dawn.png' width = '80%'>
+</p>
+
+```r
+gemini_image.vertex(image = "dawn.png", tokens)
+
+# text 
+# "Based on the original image and the provided crops, 
+# here is a detailed explanation of the image:\n\n
+# This is a heartwarming and cozy photograph of a large, 
+# plump cat sleeping soundly inside a cardboard box.
+# \n\n**The Cat:**\n*  
+# ...
+```
+
+### Audio understanding
+
+Use `gemini_audio.vertex` function
+
+- File upload to Google Cloud (using API) not supported.
+- Instead you must use **uploaded file**. (e.g. Google Cloud Storage)
+- Example is sound from [soundbible](https://soundbible.com/2210-SOS-Morse-Code.html)
+
+```r
+gemini_audio.vertex(audio = "http://soundbible.com/grab.php?id=2218&type=mp3", tokens)
+
+# text
+# "The audio clip consists of a series of short, repetitive beeping sounds. 
+# The beep s are relatively high-pitched and have a slightly metallic 
+# quality. They occur at a consistent rate, creating a rhythmic pattern. 
+# The sound could be from a variety of sources, such as a device 
+# notification, a game alert, or a simple electronic de vice. \n"
+```

@@ -1,0 +1,23 @@
+---
+title: "Use web search"
+format: 
+    html:
+        embed-resources: true
+---
+
+### Quick start
+
+You can use gemini_search to get recent information from google.  
+
+- `gemini_searchR` has deprecated
+
+```r
+library(gemini.R)
+gemini_search('What is the current Apple stock price?')
+
+# text
+# "As of today, September 1, 2025, the current price of Apple (AAPL) stock is $232.14. It has decreased by -0.18% in the 
+# past 24 hours.\n\nOther details regarding Apple's stock:\n*   **Market Cap:** $3.45T\n*   **Open Price:** $232.55\n*   
+# **Day's High:** $233.38\n*   **Day's Low:** $231.37\n*   **52-Week High:** $260.10 (reached on Dec 25, 2024)\n*   
+# **52-Week Low:** $169.21\n" 
+```

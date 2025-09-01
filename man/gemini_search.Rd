@@ -48,5 +48,5 @@ gemini_search("What is the current Google stock price?")
 }
 }
 \seealso{
-https://ai.google.dev/docs/search_retrieval
+https://ai.google.dev/gemini-api/docs/google-search
 }

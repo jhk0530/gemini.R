@@ -1,0 +1,24 @@
+---
+title: "Use RStudio Addins"
+format: 
+    html:
+        embed-resources: true
+---
+
+### Quick start
+
+`gemini.R` supports some features within RStudio
+
+- make function document with Roxygen
+
+<p style = 'text-align:center;'>
+  <img alt='gen_doc example' src='roxygen.gif' width = '70%'>
+</p>
+
+- make unit testing code with testthat
+
+<p style = 'text-align:center;'>
+  <img alt='gen_test example' src='testing.gif' width = '70%'>
+</p>
+
+Note that, this feature is not considered use in `VS Code` or `Positron`
