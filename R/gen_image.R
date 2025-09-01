@@ -140,9 +140,14 @@ gen_image <- function(prompt, filename = "gemini_image.png", overwrite = TRUE,
 #' nano_banana(prompt, type = "transfer", img_path = "dress.png", img_path2 = "model.png", output_path = "transferred_image.png")
 #' }
 #' @export
-nano_banana <- function(prompt, type = 'generate', img_path = NULL, img_path2 = NULL, output_path) {
+nano_banana <- function(prompt, type = "generate", img_path = NULL, img_path2 = NULL, output_path) {
   if (missing(output_path) || is.null(output_path) || !nzchar(output_path)) {
     cli::cli_alert_danger("output_path is required.")
+    return(NULL)
+  }
+
+  if (!type %in% c("generate", "edit", "transfer")) {
+    cli::cli_alert_danger("Invalid type: '{type}'. Must be one of 'generate', 'edit', or 'transfer'.")
     return(NULL)
   }
 
