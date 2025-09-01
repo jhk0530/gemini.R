@@ -140,7 +140,12 @@ gen_image <- function(prompt, filename = "gemini_image.png", overwrite = TRUE,
 #' nano_banana(prompt, type = "transfer", img_path = "dress.png", img_path2 = "model.png", output_path = "transferred_image.png")
 #' }
 #' @export
-nano_banana <- function(prompt, type = 'generate', img_path = NULL, img_path2 = NULL, output_path = NULL) {
+nano_banana <- function(prompt, type = 'generate', img_path = NULL, img_path2 = NULL, output_path) {
+  if (missing(output_path) || is.null(output_path) || !nzchar(output_path)) {
+    cli::cli_alert_danger("output_path is required.")
+    return(NULL)
+  }
+
   url <- "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent"
 
   # Default (type == "generate")
