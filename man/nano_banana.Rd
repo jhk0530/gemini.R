@@ -9,7 +9,7 @@ nano_banana(
   type = "generate",
   img_path = NULL,
   img_path2 = NULL,
-  output_path = NULL
+  output_path
 )
 }
 \arguments{
@@ -30,13 +30,6 @@ The path to the saved image file, or NULL if an error occurred.
 Generate a new image, edit an existing image, or transfer styles/content between two images using the Gemini API (aka Nano Banana).
 This function supports image generation from text, image editing with a prompt and a base image, and image transfer between two images.
 }
-\details{
-\itemize{
-\item For type = "generate", only prompt and output_path are required.
-\item For type = "edit", prompt, img_path, and output_path are required.
-\item For type = "transfer", prompt, img_path, img_path2, and output_path are required.
-}
-}
 \examples{
 \dontrun{
 # Generate an image from text
@@ -44,11 +37,28 @@ prompt <- "Create a picture of a nano banana dish in a fancy restaurant with a G
 nano_banana(prompt, output_path = "gemini-native-image.png")
 
 # Edit an image with a prompt (continued from generate)
-prompt <- "Create a picture of my cat eating a nano-banana in a fancy restaurant under the Gemini constellation"
-nano_banana(prompt, type = "edit", img_path = "gemini-native-image.png", output_path = "edited_image.png")
+prompt <- paste(
+  "Create a picture of my cat eating a nano-banana",
+  "in a restaurant under the Gemini constellation"
+)
+nano_banana(
+  prompt,
+  type = "edit",
+  img_path = "gemini-native-image.png",
+  output_path = "edited_image.png"
+)
 
 # Transfer style/content between two images
-prompt <- "Take the blue floral dress from the first image and let the woman from the second image wear it."
-nano_banana(prompt, type = "transfer", img_path = "dress.png", img_path2 = "model.png", output_path = "transferred_image.png")
+prompt <- paste(
+  "Take the blue floral dress from the first image",
+  "and let the woman from the second image wear it."
+)
+nano_banana(
+  prompt,
+  type = "transfer",
+  img_path = "dress.png",
+  img_path2 = "model.png",
+  output_path = "transferred_image.png"
+)
 }
 }

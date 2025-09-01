@@ -20,7 +20,9 @@ Sends a POST request to the Gemini API with the specified URL and body, and retu
 \examples{
 \dontrun{
 body <- list(contents = list(list(parts = list(list(text = "Hello!")))))
-gemini_request("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent", body)
+gemini_request(
+  paste0("https://generativelanguage.googleapis.com/v1beta/models/",
+     "gemini-2.5-flash-image-preview:generateContent"), body)
 }
 }
 \keyword{internal}

@@ -121,10 +121,6 @@ gen_image <- function(prompt, filename = "gemini_image.png", overwrite = TRUE,
 #' @param img_path2 Character. Path to the second input image PNG file.
 #' @param output_path Character. The filename to save the result image.
 #' @return The path to the saved image file, or NULL if an error occurred.
-#' @details
-#' - For type = "generate", only prompt and output_path are required.
-#' - For type = "edit", prompt, img_path, and output_path are required.
-#' - For type = "transfer", prompt, img_path, img_path2, and output_path are required.
 #' @examples
 #' \dontrun{
 #' # Generate an image from text
@@ -132,12 +128,29 @@ gen_image <- function(prompt, filename = "gemini_image.png", overwrite = TRUE,
 #' nano_banana(prompt, output_path = "gemini-native-image.png")
 #'
 #' # Edit an image with a prompt (continued from generate)
-#' prompt <- "Create a picture of my cat eating a nano-banana in a fancy restaurant under the Gemini constellation"
-#' nano_banana(prompt, type = "edit", img_path = "gemini-native-image.png", output_path = "edited_image.png")
+#' prompt <- paste(
+#'   "Create a picture of my cat eating a nano-banana",
+#'   "in a restaurant under the Gemini constellation"
+#' )
+#' nano_banana(
+#'   prompt,
+#'   type = "edit",
+#'   img_path = "gemini-native-image.png",
+#'   output_path = "edited_image.png"
+#' )
 #'
 #' # Transfer style/content between two images
-#' prompt <- "Take the blue floral dress from the first image and let the woman from the second image wear it."
-#' nano_banana(prompt, type = "transfer", img_path = "dress.png", img_path2 = "model.png", output_path = "transferred_image.png")
+#' prompt <- paste(
+#'   "Take the blue floral dress from the first image",
+#'   "and let the woman from the second image wear it."
+#' )
+#' nano_banana(
+#'   prompt,
+#'   type = "transfer",
+#'   img_path = "dress.png",
+#'   img_path2 = "model.png",
+#'   output_path = "transferred_image.png"
+#' )
 #' }
 #' @export
 nano_banana <- function(prompt, type = "generate", img_path = NULL, img_path2 = NULL, output_path) {

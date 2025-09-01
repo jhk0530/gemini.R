@@ -113,7 +113,9 @@ read_image <- function(img_path) {
 #' @examples
 #' \dontrun{
 #' body <- list(contents = list(list(parts = list(list(text = "Hello!")))))
-#' gemini_request("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent", body)
+#' gemini_request(
+#'   paste0("https://generativelanguage.googleapis.com/v1beta/models/",
+#'      "gemini-2.5-flash-image-preview:generateContent"), body)
 #' }
 gemini_request <- function(url, body) {
   api_key <- Sys.getenv("GEMINI_API_KEY")
