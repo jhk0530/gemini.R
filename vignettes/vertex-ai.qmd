@@ -3,6 +3,14 @@ title: "Use Vertex AI"
 format: 
     html:
         embed-resources: true
+vignette: >
+  %\VignetteIndexEntry{Use Vertex AI}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: '#>'
 ---
 
 ### JSON Token

@@ -9,11 +9,11 @@
 ^LICENSE\.md$
 ^README\.md$
 ^NEWS\.md$
-^vignettes/articles$
-^vignettes/.quarto$
-^vignettes/articles/\.quarto$
-^vignettes/articles/*_files$
+^vignettes/\.quarto$
+^vignettes/*_files$
 ^logo\.png$
 ^logo\.svg$
 ^favicon$
 ^favicon\.svg$
+^doc$
+^Meta$
