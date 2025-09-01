@@ -3,7 +3,6 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
-
 .github
 ^CRAN-SUBMISSION$
 ^cran-comments\.md$
@@ -17,3 +16,4 @@
 ^logo\.png$
 ^logo\.svg$
 ^favicon$
+^favicon\.svg$
