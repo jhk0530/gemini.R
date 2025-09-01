@@ -91,7 +91,7 @@ trim <- function(x) {
 #' base64_img <- read_image("cat.png")
 #' }
 read_image <- function(img_path) {
-  if (!file.exists(img_path)) {
+  if (is.null(img_path) || !file.exists(img_path)) {
     cli::cli_alert_danger("Image file does not exist: {img_path}")
     return(NULL)
   }
@@ -137,13 +137,13 @@ gemini_request <- function(url, body) {
 #' \dontrun{
 #' save_image(res_txt, "output.png")
 #' }
-save_image <- function(res_txt, output_path) {  
+save_image <- function(res_txt, output_path) {
   data_match <- regmatches(res_txt, regexpr('"data": ?"([^"]*)"', res_txt))
   if (length(data_match) == 0) {
     cli::cli_alert_danger("No image data found in response.")
     return(NULL)
   }
-  base64_data <- sub('.*"data": ?"([^"]*)".*', "\\1", data_match)  
+  base64_data <- sub('.*"data": ?"([^"]*)".*', "\\1", data_match)
   img_out <- base64enc::base64decode(base64_data)
   writeBin(img_out, output_path)
   cli::cli_alert_success("Image saved to {output_path}")
@@ -156,7 +156,7 @@ save_image <- function(res_txt, output_path) {
 #' Creates an empty body structure for Gemini API requests.
 #' @return A list representing an empty Gemini API request body.
 #' @keywords internal
-init_body <- function() {  
+init_body <- function() {
   list(
     contents = list(
       list(
@@ -173,9 +173,9 @@ init_body <- function() {
 #' @param prompt Character. The text prompt to add.
 #' @return The updated body list with the text prompt added.
 #' @keywords internal
-add_text <- function(body, prompt) {    
-    body$contents[[1]]$parts <- append(body$contents[[1]]$parts, list(list(text = prompt)))
-    return(body)
+add_text <- function(body, prompt) {
+  body$contents[[1]]$parts <- append(body$contents[[1]]$parts, list(list(text = prompt)))
+  return(body)
 }
 
 #' @title Add inline image data to Gemini API body
