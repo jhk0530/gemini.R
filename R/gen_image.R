@@ -159,13 +159,25 @@ nano_banana <- function(prompt, type = "generate", img_path = NULL, img_path2 = 
 
   if (type == "edit") {
     img <- read_image(img_path)
+    if (is.null(img)) {
+      cli::cli_alert_danger("Failed to read image from img_path: file does not exist or is invalid.")
+      return(NULL)
+    }
     body <- body |>
       add_inline_data("image/png", img)
   }
 
   if (type == "transfer") {
     img1 <- read_image(img_path)
+    if (is.null(img)) {
+      cli::cli_alert_danger("Failed to read image from img_path: file does not exist or is invalid.")
+      return(NULL)
+    }
     img2 <- read_image(img_path2)
+    if (is.null(img2)) {
+      cli::cli_alert_danger("Failed to read image from img_path2: file does not exist or is invalid.")
+      return(NULL)
+    }
 
     body <- body |>
       add_inline_data("image/png", img1) |>
