@@ -13,6 +13,8 @@
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #' @param maxOutputTokens The maximum number of tokens to generate.
 #'              Default is 8192 and 100 tokens correspond to roughly 60-80 words.
+#' @param thinkingBudget The thinking budget to use. Default is NULL.
+#'              see https://ai.google.dev/gemini-api/docs/thinking#set-budget
 #' @param timeout Request timeout in seconds. Default is 60.
 #' @return Generated text or image
 #' @export
@@ -28,7 +30,7 @@
 #' @seealso https://ai.google.dev/docs/gemini_api_overview#text_input
 #'
 
-gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234, timeout = 60) {
+gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234, thinkingBudget = -1, timeout = 60) {
   # Validate all parameters at once
   if (!validate_params(prompt, model, temperature, topP, topK, seed, api_key = TRUE)) {
     return(NULL)
@@ -48,6 +50,10 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
     topK = topK,
     seed = seed
   )
+
+  if (!is.null(thinkingBudget)) {
+    generation_config$thinkingConfig <- list(thinkingBudget = as.integer(thinkingBudget))
+  }
 
   # Create request body as a separate list
   request_body <- list(
@@ -98,6 +104,8 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #' @param seed The seed to use. Default is 1234 value should be integer
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param thinkingBudget The thinking budget to use. Default is NULL.
+#'              see https://ai.google.dev/gemini-api/docs/thinking#set-budget
 #' @param timeout Request timeout in seconds. Default is 60.
 #' @param labels (Optional) A named list for custom metadata labels.
 #'               Example: \code{list(team = "research", env = "test")}.
@@ -118,7 +126,7 @@ gemini <- function(prompt, model = "2.0-flash", temperature = 1, maxOutputTokens
 #' @export
 
 gemini.vertex <- function(prompt = NULL, tokens = NULL, temperature = 1, maxOutputTokens = 8192,
-                          topK = 40, topP = 0.95, seed = 1234, timeout = 60, labels = NULL) {
+                          topK = 40, topP = 0.95, seed = 1234, thinkingBudget = -1, timeout = 60, labels = NULL) {
   # Validate all parameters at once
   if (!validate_params(prompt, NULL, temperature, topP, topK, seed, api_key = FALSE, tokens = tokens)) {
     return(NULL)
@@ -134,6 +142,10 @@ gemini.vertex <- function(prompt = NULL, tokens = NULL, temperature = 1, maxOutp
     topK = topK,
     seed = seed
   )
+
+  if (!is.null(thinkingBudget)) {
+    generation_config$thinkingConfig <- list(thinkingBudget = as.integer(thinkingBudget))
+  }
 
   # Create request body as a separate list
   request_body <- list(

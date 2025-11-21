@@ -12,6 +12,7 @@ gemini.vertex(
   topK = 40,
   topP = 0.95,
   seed = 1234,
+  thinkingBudget = -1,
   timeout = 60,
   labels = NULL
 )
@@ -35,6 +36,9 @@ see https://ai.google.dev/gemini-api/docs/models/generative-models#model-paramet
 
 \item{seed}{The seed to use. Default is 1234 value should be integer
 see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
+
+\item{thinkingBudget}{The thinking budget to use. Default is NULL.
+see https://ai.google.dev/gemini-api/docs/thinking#set-budget}
 
 \item{timeout}{Request timeout in seconds. Default is 60.}
 
