@@ -13,7 +13,8 @@ gemini_image(
   topK = 40,
   topP = 0.95,
   seed = 1234,
-  type = "png"
+  type = "png",
+  timeout = 60
 )
 }
 \arguments{
@@ -40,6 +41,8 @@ see https://ai.google.dev/gemini-api/docs/models/generative-models#model-paramet
 see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
 
 \item{type}{The type of image. Options are 'png', 'jpeg', 'webp', 'heic', 'heif'. Default is 'png'}
+
+\item{timeout}{Request timeout in seconds. Default is 60.}
 }
 \value{
 Generated text

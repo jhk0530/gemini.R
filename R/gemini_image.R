@@ -15,6 +15,7 @@
 #' @param seed The seed to use. Default is 1234 value should be integer
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #' @param type The type of image. Options are 'png', 'jpeg', 'webp', 'heic', 'heif'. Default is 'png'
+#' @param timeout Request timeout in seconds. Default is 60.
 #'
 #' @return Generated text
 #' @export
@@ -25,7 +26,7 @@
 #' gemini_image(image = system.file("docs/reference/figures/image.png", package = "gemini.R"))
 #' }
 #'
-#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json
+#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json req_timeout
 #' @importFrom base64enc base64encode
 #' @importFrom cli cli_alert_danger cli_status_clear cli_status
 #'
@@ -37,7 +38,7 @@
 
 gemini_image <- function(image = NULL, prompt = "Explain this image", model = "2.0-flash",
                          temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95,
-                         seed = 1234, type = "png") {
+                         seed = 1234, type = "png", timeout = 60) {
   # 1. validate_params 함수 사용
   if (!validate_params(prompt, model, temperature, topP, topK, seed, api_key = TRUE)) {
     return(NULL)
@@ -112,6 +113,7 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "2
   )
 
   req <- request(url) |>
+    req_timeout(as.integer(timeout)) |>
     req_headers(
       "Content-Type" = "application/json",
       "x-goog-api-key" = api_key
@@ -152,16 +154,17 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "2
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #' @param seed The seed to use. Default is 1234 value should be integer
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
+#' @param timeout Request timeout in seconds. Default is 60.
 #'
 #' @return A character vector containing Gemini's description of the image.
 #'
 #' @importFrom cli cli_alert_danger cli_status cli_status_clear
-#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json
+#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json req_timeout
 #' @importFrom base64enc base64encode
 #'
 #' @export
 gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", type = "png", tokens = NULL,
-                                temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234) {
+                                temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234, timeout = 60) {
   # 1. Use validate_params function
   if (!validate_params(prompt, NULL, temperature, topP, topK, seed, api_key = FALSE, tokens = tokens)) {
     return(NULL)
@@ -237,6 +240,7 @@ gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", typ
 
   # Separate API request for status code validation
   req <- request(tokens$url) |>
+    req_timeout(as.integer(timeout)) |>
     req_headers(
       "Authorization" = paste0("Bearer ", tokens$key),
       "Content-Type" = "application/json"
