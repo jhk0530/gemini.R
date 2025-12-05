@@ -2,6 +2,14 @@
 
 # gemini.R 0.17.0
 
+## 0.17.4
+
+- Added `timeout` parameter to `gemini_image` and `gemini_image.vertex`.
+
+## 0.17.3
+
+- Added `thinkingBudget` parameter for `gemini` and `gemini.vertex`.
+
 ## 0.17.1
 
 - `gen_image` has been deprecated; use `nano_banana`.
