@@ -13,7 +13,9 @@ gemini_docs.vertex(
   maxOutputTokens = 8192,
   topK = 40,
   topP = 0.95,
-  seed = 1234
+  seed = 1234,
+  timeout = 60,
+  labels = NULL
 )
 }
 \arguments{
@@ -34,6 +36,11 @@ gemini_docs.vertex(
 \item{topP}{The top-p value to use. Default is 0.95.}
 
 \item{seed}{The seed to use. Default is 1234.}
+
+\item{timeout}{Request timeout in seconds. Default is 60.}
+
+\item{labels}{(Optional) A named list for custom metadata labels.
+Example: \code{list(team = "research", env = "test")}.}
 }
 \value{
 The summary or response text from Gemini Vertex.

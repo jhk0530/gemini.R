@@ -155,16 +155,19 @@ gemini_image <- function(image = NULL, prompt = "Explain this image", model = "2
 #' @param seed The seed to use. Default is 1234 value should be integer
 #'              see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 #' @param timeout Request timeout in seconds. Default is 60.
+#' @param labels (Optional) A named list for custom metadata labels.
+#'               Example: \code{list(team = "research", env = "test")}.
 #'
 #' @return A character vector containing Gemini's description of the image.
 #'
-#' @importFrom cli cli_alert_danger cli_status cli_status_clear
+#' @importFrom cli cli_alert_danger cli_alert_info cli_status cli_status_clear
 #' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json req_timeout
 #' @importFrom base64enc base64encode
 #'
 #' @export
 gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", type = "png", tokens = NULL,
-                                temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234, timeout = 60) {
+                                temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95,
+                                seed = 1234, timeout = 60, labels = NULL) {
   # 1. Use validate_params function
   if (!validate_params(prompt, NULL, temperature, topP, topK, seed, api_key = FALSE, tokens = tokens)) {
     return(NULL)
@@ -234,6 +237,16 @@ gemini_image.vertex <- function(image = NULL, prompt = "Explain this image", typ
     ),
     generationConfig = generation_config
   )
+
+  # Check labels format: must be a named list (key-value pairs)
+  if (!is.null(labels)) {
+    if (!(is.list(labels) && !is.null(names(labels)) && all(nzchar(names(labels))))) {
+      cli_alert_info("labels must be a named list with key-value pairs. Example: list(team = 'research', env = 'test')")
+      return(NULL)
+    } else {
+      request_body$labels <- labels
+    }
+  }
 
   # 4. Improve status message
   sb <- cli_status("Gemini Vertex is analyzing image...")

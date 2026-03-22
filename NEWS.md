@@ -2,6 +2,11 @@
 
 # gemini.R 0.17.0
 
+## 0.17.5
+
+- Added `timeout` to `gemini_docs.vertex`
+- Added `label` to `gemini_docs.vertex` and `gemini_image.vertex`.
+
 ## 0.17.4
 
 - Added `timeout` parameter to `gemini_image` and `gemini_image.vertex`.

@@ -14,7 +14,8 @@ gemini_image.vertex(
   topK = 40,
   topP = 0.95,
   seed = 1234,
-  timeout = 60
+  timeout = 60,
+  labels = NULL
 )
 }
 \arguments{
@@ -42,6 +43,9 @@ see https://ai.google.dev/gemini-api/docs/models/generative-models#model-paramet
 see https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters}
 
 \item{timeout}{Request timeout in seconds. Default is 60.}
+
+\item{labels}{(Optional) A named list for custom metadata labels.
+Example: \code{list(team = "research", env = "test")}.}
 }
 \value{
 A character vector containing Gemini's description of the image.

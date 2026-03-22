@@ -26,7 +26,7 @@
 #' )
 #' }
 #'
-#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json
+#' @importFrom httr2 request req_headers req_body_json req_perform resp_body_json req_timeout
 #' @importFrom base64enc base64encode
 #' @importFrom utils download.file
 #'
@@ -180,6 +180,9 @@ gemini_docs <- function(pdf_path, prompt, type = "PDF", model = "2.5-flash", api
 #' @param topK The top-k value to use. Default is 40.
 #' @param topP The top-p value to use. Default is 0.95.
 #' @param seed The seed to use. Default is 1234.
+#' @param timeout Request timeout in seconds. Default is 60.
+#' @param labels (Optional) A named list for custom metadata labels.
+#'               Example: \code{list(team = "research", env = "test")}.
 #'
 #' @return The summary or response text from Gemini Vertex.
 #' @export
@@ -196,7 +199,8 @@ gemini_docs <- function(pdf_path, prompt, type = "PDF", model = "2.5-flash", api
 #' @seealso https://cloud.google.com/vertex-ai/docs/generative-ai/multimodal/send-request-document
 
 gemini_docs.vertex <- function(file_uri, prompt, mime_type = "application/pdf", tokens = NULL,
-                               temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95, seed = 1234) {
+                               temperature = 1, maxOutputTokens = 8192, topK = 40, topP = 0.95,
+                               seed = 1234, timeout = 60, labels = NULL) {
   # Validate input parameters
   if (missing(file_uri) || length(file_uri) < 1) {
     stop("At least one file_uri must be provided.")
@@ -238,13 +242,22 @@ gemini_docs.vertex <- function(file_uri, prompt, mime_type = "application/pdf", 
     )
   )
 
+  # Check labels format: must be a named list (key-value pairs)
+  if (!is.null(labels)) {
+    if (!(is.list(labels) && !is.null(names(labels)) && all(nzchar(names(labels))))) {
+      stop("labels must be a named list with key-value pairs. Example: list(team = 'research', env = 'test')")
+    }
+    request_body$labels <- labels
+  }
+
   # Send request to Vertex AI Gemini
   req <- httr2::request(tokens$url) |>
     httr2::req_headers(
       "Authorization" = paste0("Bearer ", tokens$key),
       "Content-Type" = "application/json"
     ) |>
-    httr2::req_body_json(request_body)
+    httr2::req_body_json(request_body) |>
+    httr2::req_timeout(as.integer(timeout))
 
   resp <- httr2::req_perform(req)
 
